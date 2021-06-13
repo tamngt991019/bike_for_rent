@@ -1,6 +1,7 @@
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
+import 'package:bike_for_rent/widgets/outline_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
@@ -86,17 +87,18 @@ class _RatingState extends State<Rating> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElavateBtn(
+                      width: 150,
                       title: 'Gửi đánh giá',
                       foregroundColor: Colors.white,
                       backgroundColor: my_colors.primary,
                       onPressedElavateBtn: () => print(contenInput),
                     ),
                     SizedBox(width: 20),
-                    ElavateBtn(
+                    OutlineBtn(
+                      width: 150,
                       title: 'Bỏ qua',
-                      foregroundColor: Colors.black,
-                      backgroundColor: my_colors.secondary,
-                      onPressedElavateBtn: () => runApp(Test()),
+                      foregroundColor: my_colors.danger,
+                      onPressedOutlineBtn: () => runApp(Test()),
                     ),
                   ],
                 ),

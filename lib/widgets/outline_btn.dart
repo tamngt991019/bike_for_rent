@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 
-class ElavateBtn extends StatelessWidget {
+class OutlineBtn extends StatelessWidget {
   final double width;
   final String title;
   final Color foregroundColor;
-  final Color backgroundColor;
-  final void Function() onPressedElavateBtn;
-  const ElavateBtn(
+  final void Function() onPressedOutlineBtn;
+  const OutlineBtn(
       {Key? key,
       required this.width,
       required this.title,
       required this.foregroundColor,
-      required this.backgroundColor,
-      required this.onPressedElavateBtn})
+      required this.onPressedOutlineBtn})
       : super(key: key);
 
   @override
@@ -20,15 +18,14 @@ class ElavateBtn extends StatelessWidget {
     return SizedBox(
       width: width,
       height: 45,
-      child: ElevatedButton(
+      child: OutlinedButton(
         child: Text(
           title,
           style: TextStyle(fontSize: 20),
         ),
         style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(foregroundColor),
-            backgroundColor: MaterialStateProperty.all<Color>(backgroundColor)),
-        onPressed: onPressedElavateBtn,
+            foregroundColor: MaterialStateProperty.all<Color>(foregroundColor)),
+        onPressed: onPressedOutlineBtn,
       ),
     );
   }
