@@ -257,25 +257,19 @@ class _TrackingBookingState extends State<TrackingBooking> {
                   ElavateBtn(
                     width: 180,
                     title: 'Đã nhận xe',
-                    foregroundColor: Colors.white,
-                    backgroundColor: my_colors.primary,
                     onPressedElavateBtn: () {},
                   ),
                   SizedBox(width: 20),
                   OutlineBtn(
                     width: 180,
                     title: 'Hủy thuê xe',
-                    foregroundColor: my_colors.danger,
                     onPressedOutlineBtn: () {},
                   )
                 ]),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  // ElevatedButton(onPressed: onPressed, child: child)
                   ElavateBtn(
                     width: 380,
                     title: 'Yêu cầu trả xe',
-                    foregroundColor: Colors.white,
-                    backgroundColor: my_colors.primary,
                     onPressedElavateBtn: () {},
                   )
                 ]),
@@ -283,8 +277,6 @@ class _TrackingBookingState extends State<TrackingBooking> {
                   ElavateBtn(
                     width: 380,
                     title: 'Thanh toán',
-                    foregroundColor: Colors.white,
-                    backgroundColor: my_colors.primary,
                     onPressedElavateBtn: () {},
                   )
                 ]),
@@ -292,15 +284,12 @@ class _TrackingBookingState extends State<TrackingBooking> {
                   ElavateBtn(
                     width: 180,
                     title: 'Đồng ý cho thuê',
-                    foregroundColor: Colors.white,
-                    backgroundColor: my_colors.primary,
                     onPressedElavateBtn: () {},
                   ),
                   SizedBox(width: 20),
                   OutlineBtn(
                     width: 180,
                     title: 'Từ chối cho thuê',
-                    foregroundColor: my_colors.danger,
                     onPressedOutlineBtn: () {},
                   )
                 ]),
@@ -308,8 +297,6 @@ class _TrackingBookingState extends State<TrackingBooking> {
                   ElavateBtn(
                     width: 380,
                     title: 'Đã nhận xe',
-                    foregroundColor: Colors.white,
-                    backgroundColor: my_colors.primary,
                     onPressedElavateBtn: () {},
                   )
                 ]),
@@ -317,8 +304,6 @@ class _TrackingBookingState extends State<TrackingBooking> {
                   ElavateBtn(
                     width: 380,
                     title: 'Xác nhận thanh toán',
-                    foregroundColor: Colors.white,
-                    backgroundColor: my_colors.primary,
                     onPressedElavateBtn: () {},
                   )
                 ]),

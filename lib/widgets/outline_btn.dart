@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
 class OutlineBtn extends StatelessWidget {
   final double width;
   final String title;
-  final Color foregroundColor;
   final void Function() onPressedOutlineBtn;
   const OutlineBtn(
       {Key? key,
       required this.width,
       required this.title,
-      required this.foregroundColor,
       required this.onPressedOutlineBtn})
       : super(key: key);
 
@@ -24,7 +23,8 @@ class OutlineBtn extends StatelessWidget {
           style: TextStyle(fontSize: 20),
         ),
         style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(foregroundColor)),
+            foregroundColor:
+                MaterialStateProperty.all<Color>(my_colors.danger)),
         onPressed: onPressedOutlineBtn,
       ),
     );
