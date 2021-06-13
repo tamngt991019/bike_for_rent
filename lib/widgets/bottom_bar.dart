@@ -1,4 +1,4 @@
-import 'package:bike_for_rent/pages/test.dart';
+// import 'package:bike_for_rent/pages/test.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
