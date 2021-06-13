@@ -89,15 +89,12 @@ class _RatingState extends State<Rating> {
                     ElavateBtn(
                       width: 150,
                       title: 'Gửi đánh giá',
-                      foregroundColor: Colors.white,
-                      backgroundColor: my_colors.primary,
                       onPressedElavateBtn: () => print(contenInput),
                     ),
                     SizedBox(width: 20),
                     OutlineBtn(
                       width: 150,
                       title: 'Bỏ qua',
-                      foregroundColor: my_colors.danger,
                       onPressedOutlineBtn: () => runApp(Test()),
                     ),
                   ],

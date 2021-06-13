@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
 class ElavateBtn extends StatelessWidget {
   final double width;
   final String title;
-  final Color foregroundColor;
-  final Color backgroundColor;
   final void Function() onPressedElavateBtn;
   const ElavateBtn(
       {Key? key,
       required this.width,
       required this.title,
-      required this.foregroundColor,
-      required this.backgroundColor,
       required this.onPressedElavateBtn})
       : super(key: key);
 
@@ -26,8 +23,9 @@ class ElavateBtn extends StatelessWidget {
           style: TextStyle(fontSize: 20),
         ),
         style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(foregroundColor),
-            backgroundColor: MaterialStateProperty.all<Color>(backgroundColor)),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            backgroundColor:
+                MaterialStateProperty.all<Color>(my_colors.primary)),
         onPressed: onPressedElavateBtn,
       ),
     );
