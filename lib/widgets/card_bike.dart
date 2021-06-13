@@ -30,7 +30,7 @@ class _CardBikeState extends State<CardBike> {
           // Hình ảnh xe
           ImageSlideshow(
             width: double.infinity,
-            height: 250,
+            height: 200,
             initialPage: 0,
             indicatorColor: my_colors.primary,
             indicatorBackgroundColor: Colors.white,

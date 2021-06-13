@@ -1,5 +1,6 @@
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
+import 'package:bike_for_rent/widgets/card_bike.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
@@ -31,7 +32,7 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                 tabs: [
                   Tab(text: "Yêu cầu"),
                   Tab(text: "Đang cho thuê"),
-                  Tab(text: "Hoàn thành"),
+                  Tab(text: "Lịch sử"),
                 ],
               ),
               onPressedBackBtn: () {},
@@ -39,9 +40,45 @@ class _RentBikeManagerState extends State<RentBikeManager> {
             // Body app
             body: TabBarView(
               children: [
-                Icon(Icons.directions_car),
-                Icon(Icons.directions_transit),
-                Icon(Icons.directions_bike),
+                // Yêu cầu
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      CardBike(),
+                      CardBike(),
+                      CardBike(),
+                      CardBike(),
+                      CardBike(),
+                    ],
+                  ),
+                ),
+                // Đang cho thuê
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      CardBike(),
+                      CardBike(),
+                      CardBike(),
+                      CardBike(),
+                      CardBike(),
+                    ],
+                  ),
+                ),
+                // Lịch sử
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      CardBike(),
+                      CardBike(),
+                      CardBike(),
+                      CardBike(),
+                      CardBike(),
+                    ],
+                  ),
+                ),
               ],
             ),
             // Bottom bar app
