@@ -35,8 +35,10 @@ class _TrackingBookingState extends State<TrackingBooking> {
         home: Scaffold(
           // Header app
           appBar: Appbar(
+            height: 50,
             titles: "Titles text",
             isShowBackBtn: true,
+            bottomAppBar: null,
             onPressedBackBtn: () => runApp(Test()),
           ),
           // Body app

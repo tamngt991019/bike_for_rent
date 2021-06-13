@@ -28,8 +28,10 @@ class _RatingState extends State<Rating> {
       home: Scaffold(
         // Header app
         appBar: Appbar(
+          height: 50,
           titles: "Titles text",
           isShowBackBtn: true,
+          bottomAppBar: null,
           onPressedBackBtn: () => runApp(Test()),
         ),
         // Body app

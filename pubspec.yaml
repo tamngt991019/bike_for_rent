@@ -23,8 +23,9 @@ environment:
 dependencies:
   flutter_rating_stars: ^1.0.3+1
   flutter_image_slideshow: ^0.1.0
-  # direct_select_flutter: ^1.1.1
   dropdown_plus: ^0.0.4
+  flutter_point_tab_bar: ^0.2.0
+
   flutter:
     sdk: flutter
 
