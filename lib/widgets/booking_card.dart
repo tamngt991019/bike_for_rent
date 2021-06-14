@@ -2,22 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
-class CardBike extends StatefulWidget {
-  // final Bike bike;
-  const CardBike({Key? key}) : super(key: key);
+class BookingCard extends StatelessWidget {
+  final Object user;
+  final Object booking;
+  final bool isCustomerHistory;
+  final bool isRequestRentBike;
+  final bool isOnGoingRentBike;
+  final bool isOwnerHistory;
+  BookingCard(
+      {Key key,
+      this.user,
+      this.booking,
+      this.isCustomerHistory,
+      this.isRequestRentBike,
+      this.isOnGoingRentBike,
+      this.isOwnerHistory})
+      : super(key: key);
 
-  @override
-  _CardBikeState createState() => _CardBikeState();
-}
+  List<String> imageUrls() {
+    List<String> image_urls = [
+      "https://media.publit.io/file/BikeForRent/banner/banner1.jpg",
+      "https://media.publit.io/file/BikeForRent/banner/banner2.jpg",
+      "https://media.publit.io/file/BikeForRent/banner/banner3.jpg",
+      "https://media.publit.io/file/BikeForRent/banner/banner4.jpg",
+      "https://media.publit.io/file/BikeForRent/banner/banner5.jpg",
+    ];
+    return image_urls;
+  }
 
-class _CardBikeState extends State<CardBike> {
-  List<String> image_urls = [
-    "https://media.publit.io/file/BikeForRent/banner/banner1.jpg",
-    "https://media.publit.io/file/BikeForRent/banner/banner2.jpg",
-    "https://media.publit.io/file/BikeForRent/banner/banner3.jpg",
-    "https://media.publit.io/file/BikeForRent/banner/banner4.jpg",
-    "https://media.publit.io/file/BikeForRent/banner/banner5.jpg",
-  ];
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -30,11 +42,11 @@ class _CardBikeState extends State<CardBike> {
           // Hình ảnh xe
           ImageSlideshow(
             width: double.infinity,
-            height: 250,
+            height: 200,
             initialPage: 0,
             indicatorColor: my_colors.primary,
             indicatorBackgroundColor: Colors.white,
-            children: image_urls
+            children: imageUrls()
                 .map((img) => ClipRRect(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(15),
@@ -46,7 +58,6 @@ class _CardBikeState extends State<CardBike> {
             },
             autoPlayInterval: 60000,
           ),
-          // SizedBox(height: 10),
           // Thông tin chi tiết xe
           Padding(
             padding: const EdgeInsets.all(15),
@@ -55,7 +66,7 @@ class _CardBikeState extends State<CardBike> {
                 // Tên xe
                 Row(
                   children: [
-                    Text("Tên xe: " + "SIRIUS",
+                    Text("Tên xe: ",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold)),
                   ],
@@ -71,7 +82,9 @@ class _CardBikeState extends State<CardBike> {
                           Text("Loại xe: " + "Xe số / tay ga",
                               style: TextStyle(fontSize: 15)),
                           SizedBox(height: 10),
-                          Text("Háng: " + "YAMAHA / HONDA",
+                          Text(
+                              "Háng: " +
+                                  (isCustomerHistory ? "HONDA" : "YAMAHA"),
                               style: TextStyle(fontSize: 15)),
                         ],
                       ),
