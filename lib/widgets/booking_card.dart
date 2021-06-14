@@ -3,8 +3,21 @@ import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
 class BookingCard extends StatelessWidget {
-  final String testStr;
-  const BookingCard({Key? key, required this.testStr}) : super(key: key);
+  final Object user;
+  final Object booking;
+  final bool isCustomerHistory;
+  final bool isRequestRentBike;
+  final bool isOnGoingRentBike;
+  final bool isOwnerHistory;
+  const BookingCard(
+      {Key key,
+      this.user,
+      this.booking,
+      this.isCustomerHistory,
+      this.isRequestRentBike,
+      this.isOnGoingRentBike,
+      this.isOwnerHistory})
+      : super(key: key);
 
   List<String> imageUrls() {
     List<String> image_urls = [
@@ -70,7 +83,8 @@ class BookingCard extends StatelessWidget {
                               style: TextStyle(fontSize: 15)),
                           SizedBox(height: 10),
                           Text(
-                              "Háng: " + (testStr.isEmpty ? "HONDA" : "YAMAHA"),
+                              "Háng: " +
+                                  (isCustomerHistory ? "HONDA" : "YAMAHA"),
                               style: TextStyle(fontSize: 15)),
                         ],
                       ),

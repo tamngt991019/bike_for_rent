@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Test extends StatefulWidget {
-  const Test({Key? key}) : super(key: key);
+  final bool isTestPage;
+  const Test({Key key, this.isTestPage}) : super(key: key);
 
   @override
   _TestState createState() => _TestState();
@@ -12,7 +13,9 @@ class _TestState extends State<Test> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Center(
-        child: Text("ĐÂY LÀ TRANG TEST"),
+        child: Text(widget.isTestPage
+            ? "ĐÂY LÀ TRANG TEST"
+            : "ĐÂY LÀ KHÔNG PHẢI LÀ TRANG TEST"),
       ),
     );
   }

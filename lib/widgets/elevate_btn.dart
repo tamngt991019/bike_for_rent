@@ -5,11 +5,7 @@ class ElavateBtn extends StatelessWidget {
   final double width;
   final String title;
   final void Function() onPressedElavateBtn;
-  const ElavateBtn(
-      {Key? key,
-      required this.width,
-      required this.title,
-      required this.onPressedElavateBtn})
+  const ElavateBtn({Key key, this.width, this.title, this.onPressedElavateBtn})
       : super(key: key);
 
   @override

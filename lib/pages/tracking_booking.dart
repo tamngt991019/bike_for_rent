@@ -15,7 +15,7 @@ import 'package:dropdown_plus/dropdown_plus.dart';
 import 'test.dart';
 
 class TrackingBooking extends StatefulWidget {
-  const TrackingBooking({Key? key}) : super(key: key);
+  const TrackingBooking({Key key}) : super(key: key);
 
   @override
   _TrackingBookingState createState() => _TrackingBookingState();
@@ -31,10 +31,6 @@ class _TrackingBookingState extends State<TrackingBooking> {
   ];
 
   @override
-  // ignore: must_call_super
-  void initState() {}
-
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: ThemeData(
@@ -47,7 +43,9 @@ class _TrackingBookingState extends State<TrackingBooking> {
             titles: "Titles text",
             isShowBackBtn: true,
             bottomAppBar: null,
-            onPressedBackBtn: () => runApp(Test()),
+            onPressedBackBtn: () => runApp(Test(
+              isTestPage: true,
+            )),
           ),
           // Body app
           body: SingleChildScrollView(

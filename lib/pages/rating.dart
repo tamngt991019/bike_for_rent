@@ -9,7 +9,7 @@ import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'test.dart';
 
 class Rating extends StatefulWidget {
-  const Rating({Key? key}) : super(key: key);
+  Rating({Key key}) : super(key: key);
 
   @override
   _RatingState createState() => _RatingState();
@@ -32,7 +32,9 @@ class _RatingState extends State<Rating> {
           titles: "Titles text",
           isShowBackBtn: true,
           bottomAppBar: null,
-          onPressedBackBtn: () => runApp(Test()),
+          onPressedBackBtn: () => runApp(Test(
+            isTestPage: false,
+          )),
         ),
         // Body app
         body: SingleChildScrollView(
@@ -95,7 +97,9 @@ class _RatingState extends State<Rating> {
                   OutlineBtn(
                     width: 150,
                     title: 'Bỏ qua',
-                    onPressedOutlineBtn: () => runApp(Test()),
+                    onPressedOutlineBtn: () => runApp(Test(
+                      isTestPage: false,
+                    )),
                   ),
                 ],
               ),

@@ -4,15 +4,15 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
   final String titles;
   final bool isShowBackBtn;
-  final PreferredSizeWidget? bottomAppBar;
+  final PreferredSizeWidget bottomAppBar;
   final void Function() onPressedBackBtn;
   const Appbar(
-      {Key? key,
-      required this.height,
-      required this.titles,
-      required this.isShowBackBtn,
-      required this.bottomAppBar,
-      required this.onPressedBackBtn})
+      {Key key,
+      this.height,
+      this.titles,
+      this.isShowBackBtn,
+      this.bottomAppBar,
+      this.onPressedBackBtn})
       : super(key: key);
   Size get preferredSize => Size.fromHeight(height);
   @override

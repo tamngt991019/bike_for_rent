@@ -1,3 +1,4 @@
+import 'package:bike_for_rent/pages/test.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/booking_card.dart';
@@ -7,7 +8,7 @@ import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:flutter_point_tab_bar/pointTabIndicator.dart';
 
 class RentBikeManager extends StatefulWidget {
-  const RentBikeManager({Key? key}) : super(key: key);
+  const RentBikeManager({Key key}) : super(key: key);
 
   @override
   _RentBikeManagerState createState() => _RentBikeManagerState();
@@ -35,7 +36,9 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                   Tab(text: "Lịch sử"),
                 ],
               ),
-              onPressedBackBtn: () {},
+              onPressedBackBtn: () {
+                runApp(Test(isTestPage: false));
+              },
             ),
             // Body app
             body: TabBarView(
@@ -52,7 +55,6 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           elevation: 5,
-                          borderOnForeground: true,
                           child: Padding(
                               padding: const EdgeInsets.all(10),
                               child: Row(
@@ -544,26 +546,14 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                 SingleChildScrollView(
                   padding: const EdgeInsets.all(10),
                   child: Column(
-                    children: [
-                      BookingCard(testStr: ''),
-                      BookingCard(testStr: ''),
-                      BookingCard(testStr: ''),
-                      BookingCard(testStr: ''),
-                      BookingCard(testStr: ''),
-                    ],
+                    children: [],
                   ),
                 ),
                 // Lịch sử
                 SingleChildScrollView(
                   padding: const EdgeInsets.all(10),
                   child: Column(
-                    children: [
-                      BookingCard(testStr: 'a'),
-                      BookingCard(testStr: 'a'),
-                      BookingCard(testStr: 'a'),
-                      BookingCard(testStr: 'a'),
-                      BookingCard(testStr: 'a'),
-                    ],
+                    children: [],
                   ),
                 ),
               ],
