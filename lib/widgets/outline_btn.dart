@@ -5,7 +5,7 @@ class OutlineBtn extends StatelessWidget {
   final double width;
   final String title;
   final void Function() onPressedOutlineBtn;
-  const OutlineBtn({Key key, this.width, this.title, this.onPressedOutlineBtn})
+  OutlineBtn({Key key, this.width, this.title, this.onPressedOutlineBtn})
       : super(key: key);
 
   @override

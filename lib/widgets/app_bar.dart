@@ -6,7 +6,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   final bool isShowBackBtn;
   final PreferredSizeWidget bottomAppBar;
   final void Function() onPressedBackBtn;
-  const Appbar(
+  Appbar(
       {Key key,
       this.height,
       this.titles,

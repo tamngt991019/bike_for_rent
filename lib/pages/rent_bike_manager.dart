@@ -8,7 +8,7 @@ import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:flutter_point_tab_bar/pointTabIndicator.dart';
 
 class RentBikeManager extends StatefulWidget {
-  const RentBikeManager({Key key}) : super(key: key);
+  RentBikeManager({Key key}) : super(key: key);
 
   @override
   _RentBikeManagerState createState() => _RentBikeManagerState();

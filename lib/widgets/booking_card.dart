@@ -9,7 +9,7 @@ class BookingCard extends StatelessWidget {
   final bool isRequestRentBike;
   final bool isOnGoingRentBike;
   final bool isOwnerHistory;
-  const BookingCard(
+  BookingCard(
       {Key key,
       this.user,
       this.booking,

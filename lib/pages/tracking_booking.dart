@@ -15,7 +15,7 @@ import 'package:dropdown_plus/dropdown_plus.dart';
 import 'test.dart';
 
 class TrackingBooking extends StatefulWidget {
-  const TrackingBooking({Key key}) : super(key: key);
+  TrackingBooking({Key key}) : super(key: key);
 
   @override
   _TrackingBookingState createState() => _TrackingBookingState();
