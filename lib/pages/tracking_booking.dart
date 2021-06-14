@@ -1,6 +1,6 @@
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
-import 'package:bike_for_rent/widgets/card_bike.dart';
+import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:bike_for_rent/widgets/outline_btn.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +22,14 @@ class TrackingBooking extends StatefulWidget {
 }
 
 class _TrackingBookingState extends State<TrackingBooking> {
+  List<String> image_urls = [
+    "https://media.publit.io/file/BikeForRent/banner/banner1.jpg",
+    "https://media.publit.io/file/BikeForRent/banner/banner2.jpg",
+    "https://media.publit.io/file/BikeForRent/banner/banner3.jpg",
+    "https://media.publit.io/file/BikeForRent/banner/banner4.jpg",
+    "https://media.publit.io/file/BikeForRent/banner/banner5.jpg",
+  ];
+
   @override
   // ignore: must_call_super
   void initState() {}
@@ -90,7 +98,87 @@ class _TrackingBookingState extends State<TrackingBooking> {
                             ]))),
                 SizedBox(height: 10),
                 // Thông tin xe máy
-                CardBike(),
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  elevation: 5,
+                  child: Column(
+                    children: [
+                      // Hình ảnh xe
+                      ImageSlideshow(
+                        width: double.infinity,
+                        height: 200,
+                        initialPage: 0,
+                        indicatorColor: my_colors.primary,
+                        indicatorBackgroundColor: Colors.white,
+                        children: image_urls
+                            .map((img) => ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15)),
+                                child: Image.network(img, fit: BoxFit.cover)))
+                            .toList(),
+                        onPageChanged: (value) {
+                          print('Page changed: $value');
+                        },
+                        autoPlayInterval: 60000,
+                      ),
+                      // SizedBox(height: 10),
+                      // Thông tin chi tiết xe
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          children: [
+                            // Tên xe
+                            Row(
+                              children: [
+                                Text("Tên xe: " + "SIRIUS",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Loại xe: " + "Xe số / tay ga",
+                                          style: TextStyle(fontSize: 15)),
+                                      SizedBox(height: 10),
+                                      Text("Háng: " + "YAMAHA / HONDA",
+                                          style: TextStyle(fontSize: 15)),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Biển số xe: " + "59X2-12345",
+                                          style: TextStyle(fontSize: 15)),
+                                      SizedBox(height: 10),
+                                      Text("Màu sắc: " + "Đỏ đen",
+                                          style: TextStyle(fontSize: 15)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
                 SizedBox(height: 10),
                 // Thông tin địa điểm
                 Card(
@@ -233,24 +321,19 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Expanded(
-                                        child: TextDropdown(
-                                      options: ["Tiền mặt", "Ví điện tử Momo"],
-                                      decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          suffixIcon:
-                                              Icon(Icons.arrow_drop_down),
-                                          labelText: "Hình thức thanh toán"),
-                                      dropdownHeight: 96,
-                                    ))
-                                    // TextDropdown(
-                                    //   options: ["Male", "Female"],
-                                    //   decoration: InputDecoration(
-                                    //     border: OutlineInputBorder(),
-                                    //     suffixIcon: Icon(Icons.keyboard_arrow_down),
-                                    //     labelText: "Hình thức thanh toán",
-                                    //   ),
-                                    //   dropdownHeight: 96,
-                                    // ),
+                                      child: TextDropdown(
+                                        options: [
+                                          "Tiền mặt",
+                                          "Ví điện tử Momo"
+                                        ],
+                                        decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            suffixIcon:
+                                                Icon(Icons.arrow_drop_down),
+                                            labelText: "Hình thức thanh toán"),
+                                        dropdownHeight: 100,
+                                      ),
+                                    )
                                   ])
                             ]))),
                 SizedBox(height: 20),
