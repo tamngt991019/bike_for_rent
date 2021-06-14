@@ -1,4 +1,4 @@
-import 'package:bike_for_rent/pages/test.dart';
+import 'package:bike_for_rent/test_api/test.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/booking_card.dart';
@@ -36,9 +36,7 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                   Tab(text: "Lịch sử"),
                 ],
               ),
-              onPressedBackBtn: () {
-                runApp(Test(isTestPage: false));
-              },
+              onPressedBackBtn: () {},
             ),
             // Body app
             body: TabBarView(

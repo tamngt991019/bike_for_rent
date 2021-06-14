@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 
-import 'test.dart';
-
 class Rating extends StatefulWidget {
   Rating({Key key}) : super(key: key);
 
@@ -28,14 +26,11 @@ class _RatingState extends State<Rating> {
       home: Scaffold(
         // Header app
         appBar: Appbar(
-          height: 50,
-          titles: "Titles text",
-          isShowBackBtn: true,
-          bottomAppBar: null,
-          onPressedBackBtn: () => runApp(Test(
-            isTestPage: false,
-          )),
-        ),
+            height: 50,
+            titles: "Titles text",
+            isShowBackBtn: true,
+            bottomAppBar: null,
+            onPressedBackBtn: () {}),
         // Body app
         body: SingleChildScrollView(
           child: Column(
@@ -95,12 +90,7 @@ class _RatingState extends State<Rating> {
                   ),
                   SizedBox(width: 20),
                   OutlineBtn(
-                    width: 150,
-                    title: 'Bỏ qua',
-                    onPressedOutlineBtn: () => runApp(Test(
-                      isTestPage: false,
-                    )),
-                  ),
+                      width: 150, title: 'Bỏ qua', onPressedOutlineBtn: () {}),
                 ],
               ),
             ],
