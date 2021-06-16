@@ -19,6 +19,8 @@ class ElavateBtn extends StatelessWidget {
           style: TextStyle(fontSize: 20),
         ),
         style: ButtonStyle(
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15))),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
             backgroundColor:
                 MaterialStateProperty.all<Color>(my_colors.primary)),

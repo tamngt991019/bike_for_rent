@@ -19,6 +19,8 @@ class OutlineBtn extends StatelessWidget {
           style: TextStyle(fontSize: 20),
         ),
         style: ButtonStyle(
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15))),
             foregroundColor:
                 MaterialStateProperty.all<Color>(my_colors.danger)),
         onPressed: onPressedOutlineBtn,
