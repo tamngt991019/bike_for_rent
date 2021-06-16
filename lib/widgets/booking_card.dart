@@ -6,28 +6,18 @@ class BookingCard extends StatelessWidget {
   final Object user;
   final Object booking;
   final bool isCustomerHistory;
-  final bool isRequestRentBike;
-  final bool isOnGoingRentBike;
-  final bool isOwnerHistory;
-  BookingCard(
-      {Key key,
-      this.user,
-      this.booking,
-      this.isCustomerHistory,
-      this.isRequestRentBike,
-      this.isOnGoingRentBike,
-      this.isOwnerHistory})
+  BookingCard({Key key, this.user, this.booking, this.isCustomerHistory})
       : super(key: key);
 
   List<String> imageUrls() {
-    List<String> image_urls = [
+    List<String> imageUrls = [
       "https://media.publit.io/file/BikeForRent/banner/banner1.jpg",
       "https://media.publit.io/file/BikeForRent/banner/banner2.jpg",
       "https://media.publit.io/file/BikeForRent/banner/banner3.jpg",
       "https://media.publit.io/file/BikeForRent/banner/banner4.jpg",
       "https://media.publit.io/file/BikeForRent/banner/banner5.jpg",
     ];
-    return image_urls;
+    return imageUrls;
   }
 
   @override
@@ -66,13 +56,15 @@ class BookingCard extends StatelessWidget {
                 // Tên xe
                 Row(
                   children: [
-                    Text("Tên xe: ",
+                    Text("Tên xe: " + "SIRIUS",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold)),
                   ],
                 ),
                 SizedBox(height: 10),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                       child: Column(
@@ -86,6 +78,10 @@ class BookingCard extends StatelessWidget {
                               "Háng: " +
                                   (isCustomerHistory ? "HONDA" : "YAMAHA"),
                               style: TextStyle(fontSize: 15)),
+                          if (isCustomerHistory) SizedBox(height: 15),
+                          if (isCustomerHistory)
+                            Text("Thời gian thuê: " + "1 ngày 10 tiếng",
+                                style: TextStyle(fontSize: 15)),
                         ],
                       ),
                     ),
@@ -100,6 +96,10 @@ class BookingCard extends StatelessWidget {
                           SizedBox(height: 10),
                           Text("Màu sắc: " + "Đỏ đen",
                               style: TextStyle(fontSize: 15)),
+                          if (isCustomerHistory) SizedBox(height: 15),
+                          if (isCustomerHistory)
+                            Text("Tổng tiền: " + "123456 vnd",
+                                style: TextStyle(fontSize: 15)),
                         ],
                       ),
                     ),
