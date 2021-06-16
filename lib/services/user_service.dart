@@ -12,7 +12,7 @@ class UserService {
   }
 
   Future<List<UserModel>> getUserModels() async {
-    final response = await get('https://localhost:44374/api/users');
+    final response = await get(Uri.parse(apiUrl));
     if (response.statusCode == 200) {
       return parseProducts(response.body);
     } else {
