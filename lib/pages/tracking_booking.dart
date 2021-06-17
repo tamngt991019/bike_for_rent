@@ -92,7 +92,8 @@ class _TrackingBookingState extends State<TrackingBooking> {
                 SizedBox(height: 10),
                 // Thông tin xe máy
                 BookingCard(
-                  isCustomerHistory: true,
+                  isCustomerHistory: false,
+                  isCustomerHistoryDetail: false,
                 ),
                 // Card(
                 //   shape: RoundedRectangleBorder(

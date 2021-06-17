@@ -6,7 +6,13 @@ class BookingCard extends StatelessWidget {
   final Object user;
   final Object booking;
   final bool isCustomerHistory;
-  BookingCard({Key key, this.user, this.booking, this.isCustomerHistory})
+  final bool isCustomerHistoryDetail;
+  BookingCard(
+      {Key key,
+      this.user,
+      this.booking,
+      this.isCustomerHistory,
+      this.isCustomerHistoryDetail})
       : super(key: key);
 
   List<String> imageUrls() {
@@ -74,14 +80,8 @@ class BookingCard extends StatelessWidget {
                           Text("Loại xe: " + "Xe số / tay ga",
                               style: TextStyle(fontSize: 15)),
                           SizedBox(height: 10),
-                          Text(
-                              "Háng: " +
-                                  (isCustomerHistory ? "HONDA" : "YAMAHA"),
+                          Text("Háng: " + "HONDA / YAMAHA",
                               style: TextStyle(fontSize: 15)),
-                          if (isCustomerHistory) SizedBox(height: 15),
-                          if (isCustomerHistory)
-                            Text("Thời gian thuê: " + "1 ngày 10 tiếng",
-                                style: TextStyle(fontSize: 15)),
                         ],
                       ),
                     ),
@@ -96,6 +96,58 @@ class BookingCard extends StatelessWidget {
                           SizedBox(height: 10),
                           Text("Màu sắc: " + "Đỏ đen",
                               style: TextStyle(fontSize: 15)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                if (isCustomerHistory && isCustomerHistoryDetail)
+                  SizedBox(height: 20),
+                if (isCustomerHistory && isCustomerHistoryDetail)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                            "Ngày / giờ thuê xe: " + "30/12/2021 - 15:30",
+                            style: TextStyle(fontSize: 15)),
+                      ),
+                    ],
+                  ),
+                if (isCustomerHistory && isCustomerHistoryDetail)
+                  SizedBox(height: 10),
+                if (isCustomerHistory && isCustomerHistoryDetail)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                            "Ngày / giờ trả xe: " + "31/12/2021 - 15:30",
+                            style: TextStyle(fontSize: 15)),
+                      ),
+                    ],
+                  ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (isCustomerHistory) SizedBox(height: 15),
+                          if (isCustomerHistory)
+                            Text("Thời gian thuê: " + "1 ngày 10 tiếng",
+                                style: TextStyle(fontSize: 15)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           if (isCustomerHistory) SizedBox(height: 15),
                           if (isCustomerHistory)
                             Text("Tổng tiền: " + "123456 vnd",
@@ -105,6 +157,14 @@ class BookingCard extends StatelessWidget {
                     ),
                   ],
                 ),
+                // if (isCustomerHistory) SizedBox(height: 15),
+                // if (isCustomerHistory)
+                //   Text("Thời gian thuê: " + "1 ngày 10 tiếng",
+                //       style: TextStyle(fontSize: 15)),
+                // if (isCustomerHistory) SizedBox(height: 15),
+                // if (isCustomerHistory)
+                //   Text("Tổng tiền: " + "123456 vnd",
+                //       style: TextStyle(fontSize: 15)),
               ],
             ),
           )

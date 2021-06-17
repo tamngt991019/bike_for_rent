@@ -34,7 +34,9 @@ class _TestState extends State<Test> {
   @override
   void initState() {
     super.initState();
-    loadList();
+    setState(() {
+      loadList();
+    });
   }
 
   @override
