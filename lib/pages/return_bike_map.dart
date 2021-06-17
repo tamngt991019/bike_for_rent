@@ -140,27 +140,51 @@ class _ReturnBikeMapState extends State<ReturnBikeMap> {
                                   EdgeInsets.only(left: 20, right: 10, top: 20),
                               child: Container(
                                 padding: EdgeInsets.all(10),
-                                child: TextField(
-                                  controller: TextEditingController()
-                                    ..text = _currentAddress,
-                                  minLines: 1,
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: null,
-                                  readOnly: true,
-                                  autofocus: true,
-                                  decoration: InputDecoration(
-                                    labelText: "Địa chỉ hiện tại",
-                                    labelStyle: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Địa chỉ hiện tại: ",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          decoration: TextDecoration.underline,
+                                          color: my_colors.primary),
                                     ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      _currentAddress,
+                                      style: TextStyle(fontSize: 15),
                                     ),
-                                  ),
-                                  style: TextStyle(fontSize: 15),
-                                  onChanged: (text) => {},
+                                    Divider(
+                                      height: 10,
+                                      color: my_colors.primary,
+                                      thickness: 2,
+                                    ),
+                                  ],
                                 ),
+                                // TextField(
+                                //   controller: TextEditingController()
+                                //     ..text = _currentAddress,
+                                //   minLines: 1,
+                                //   keyboardType: TextInputType.multiline,
+                                //   maxLines: null,
+                                //   readOnly: true,
+                                //   autofocus: true,
+                                //   decoration: InputDecoration(
+                                //     labelText: "Địa chỉ hiện tại",
+                                //     labelStyle: TextStyle(
+                                //       fontSize: 20,
+                                //       fontWeight: FontWeight.bold,
+                                //     ),
+                                //     border: OutlineInputBorder(
+                                //       borderRadius: BorderRadius.circular(15),
+                                //     ),
+                                //   ),
+                                //   style: TextStyle(fontSize: 15),
+                                //   onChanged: (text) => {},
+                                // ),
                               ),
                             ),
                           ),
@@ -217,6 +241,7 @@ class _ReturnBikeMapState extends State<ReturnBikeMap> {
                                 left: 10, right: 20, bottom: 20),
                             child: IconButton(
                               icon: Icon(Icons.more_horiz),
+                              color: my_colors.primary,
                               iconSize: 25,
                               onPressed: () {
                                 _listLocationBottomSheet(context);
@@ -240,209 +265,68 @@ class _ReturnBikeMapState extends State<ReturnBikeMap> {
 
   void _listLocationBottomSheet(context) {
     showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            height: MediaQuery.of(context).size.height,
-            margin: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Text(
-                    "Danh sách địa điểm trả xe",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  Divider(
-                    height: 20,
-                    color: Colors.black,
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.only(
-                            left: 10, right: 10, top: 5, bottom: 5),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: InkWell(
-                            onTap: () {
-                              getLocation(10.841493, 106.810038);
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.all(10),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'lib/assets/images/location.png',
-                                    scale: 10,
-                                  ),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                    child: Text(
-                                      "Đại học FPT Hồ Chí Mính",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.only(
-                            left: 10, right: 10, top: 5, bottom: 5),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: InkWell(
-                            onTap: () {
-                              getLocation(10.841493, 106.810038);
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.all(10),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'lib/assets/images/location.png',
-                                    scale: 10,
-                                  ),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                    child: Text(
-                                      "Đại học FPT Hồ Chí Mính",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.only(
-                            left: 10, right: 10, top: 5, bottom: 5),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: InkWell(
-                            onTap: () {
-                              getLocation(10.841493, 106.810038);
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.all(10),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'lib/assets/images/location.png',
-                                    scale: 10,
-                                  ),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                    child: Text(
-                                      "Đại học FPT Hồ Chí Mính",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.only(
-                            left: 10, right: 10, top: 5, bottom: 5),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: InkWell(
-                            onTap: () {
-                              getLocation(10.841493, 106.810038);
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.all(10),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'lib/assets/images/location.png',
-                                    scale: 10,
-                                  ),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                    child: Text(
-                                      "Đại học FPT Hồ Chí Mính",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.only(
-                            left: 10, right: 10, top: 5, bottom: 5),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: InkWell(
-                            onTap: () {
-                              getLocation(10.841493, 106.810038);
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.all(10),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'lib/assets/images/location.png',
-                                    scale: 10,
-                                  ),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                    child: Text(
-                                      "Đại học FPT Hồ Chí Mính",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+      context: context,
+      builder: (BuildContext bc) {
+        return Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 40,
+            title: Center(
+              child: Text(
+                "Danh sách địa điểm trả xe",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: my_colors.primary,
+                ),
               ),
             ),
-          );
-        });
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.green,
+            automaticallyImplyLeading: false,
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                // loop cái card thôi
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  elevation: 5,
+                  margin:
+                      EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                  child: InkWell(
+                    onTap: () {
+                      getLocation(10.841493, 106.810038);
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            'lib/assets/images/location.png',
+                            scale: 10,
+                          ),
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: Text(
+                              "Đại học FPT Hồ Chí Mính",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
