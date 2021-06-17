@@ -1,8 +1,7 @@
-// UserModel counterModelFromJson(String str) =>
-//     UserModel.fromJson(json.decode(str));
+import 'package:json_annotation/json_annotation.dart';
+part 'user_model.g.dart';
 
-// String counterModelToJson(UserModel data) => json.encode(data.toJson());
-
+@JsonSerializable()
 class UserModel {
   String username;
   String fullname;
@@ -10,13 +9,43 @@ class UserModel {
   DateTime dateCreated;
   String status;
 
-  UserModel({
+  UserModel();
+  UserModel.n(
     this.username,
     this.fullname,
     this.avatar,
     this.dateCreated,
     this.status,
-  });
+  );
+
+  // UserModel.n(this.phoneNum, this.email, this.role, this.status);
+
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
+  Map<String, dynamic> toJson() => _$UserModelToJson(this);
+}
+
+
+
+// UserModel counterModelFromJson(String str) =>
+//     UserModel.fromJson(json.decode(str));
+
+// String counterModelToJson(UserModel data) => json.encode(data.toJson());
+
+// class UserModel {
+//   String username;
+//   String fullname;
+//   String avatar;
+//   DateTime dateCreated;
+//   String status;
+
+//   UserModel({
+//     this.username,
+//     this.fullname,
+//     this.avatar,
+//     this.dateCreated,
+//     this.status,
+//   });
 
   // factory UserModel.fromJson(Map<String, dynamic> data) => UserModel(
   //       data['username'],
@@ -33,13 +62,13 @@ class UserModel {
   //       json['status'],
   //     );
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        username: json['username'] as String,
-        fullname: json['fullname'] as String,
-        avatar: json['avatar'] as String,
-        dateCreated: json['dateCreated'] as DateTime,
-        status: json['status'] as String,
-      );
+  // factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+  //       username: json['username'] as String,
+  //       fullname: json['fullname'] as String,
+  //       avatar: json['avatar'] as String,
+  //       dateCreated: json['dateCreated'] as DateTime,
+  //       status: json['status'] as String,
+  //     );
 
   // Map<String, dynamic> toJson() => {
   //       "username": username,
@@ -48,4 +77,4 @@ class UserModel {
   //       "dateCreated": dateCreated.toIso8601String(),
   //       "status": status,
   //     };
-}
+// }
