@@ -1,21 +1,25 @@
 // import 'package:bike_for_rent/pages/test.dart';
+import 'package:bike_for_rent/pages/history.dart';
+import 'package:bike_for_rent/pages/home.dart';
+import 'package:bike_for_rent/test_api/test.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
-  BottomBar({Key key}) : super(key: key);
+  final int bottomBarIndex;
+  final History history;
+  BottomBar({Key key, this.bottomBarIndex, this.history}) : super(key: key);
 
   @override
   _BottomBarState createState() => _BottomBarState();
 }
 
 class _BottomBarState extends State<BottomBar> {
-  int bottomBarIndex = 0;
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       selectedItemColor: Colors.green,
       unselectedItemColor: Colors.grey,
-      currentIndex: bottomBarIndex,
+      currentIndex: widget.bottomBarIndex,
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.home_outlined, size: 30),
@@ -40,18 +44,17 @@ class _BottomBarState extends State<BottomBar> {
       ],
       // press for switch tab
       onTap: (index) {
-        setState(() {
-          bottomBarIndex = index;
-          if (index == 0) {
-            // runApp(Test());
-          } else if (index == 1) {
-            // runApp(Test());
-          } else if (index == 2) {
-            // runApp(Test());
-          } else if (index == 3) {
-            // runApp(Test());
-          }
-        });
+        if (index == 0) {
+          runApp(MaterialApp(
+            home: Home(),
+          ));
+        } else if (index == 1) {
+          // runApp(Test());
+        } else if (index == 2) {
+          runApp(widget.history);
+        } else if (index == 3) {
+          runApp(Test());
+        }
       },
     );
   }

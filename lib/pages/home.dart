@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
-import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:geocoder/geocoder.dart';
@@ -516,7 +514,9 @@ class _HomeState extends State<Home> {
               ),
             ),
             // Bottom bar app
-            bottomNavigationBar: BottomBar(),
+            bottomNavigationBar: BottomBar(
+              bottomBarIndex: 0,
+            ),
           ),
         ],
       ),

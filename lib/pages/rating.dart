@@ -97,7 +97,9 @@ class _RatingState extends State<Rating> {
           ),
         ),
         // Bottom bar app
-        bottomNavigationBar: BottomBar(),
+        bottomNavigationBar: BottomBar(
+          bottomBarIndex: 1,
+        ),
       ),
     );
   }

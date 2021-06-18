@@ -164,27 +164,6 @@ class _ReturnBikeMapState extends State<ReturnBikeMap> {
                                     ),
                                   ],
                                 ),
-                                // TextField(
-                                //   controller: TextEditingController()
-                                //     ..text = _currentAddress,
-                                //   minLines: 1,
-                                //   keyboardType: TextInputType.multiline,
-                                //   maxLines: null,
-                                //   readOnly: true,
-                                //   autofocus: true,
-                                //   decoration: InputDecoration(
-                                //     labelText: "Địa chỉ hiện tại",
-                                //     labelStyle: TextStyle(
-                                //       fontSize: 20,
-                                //       fontWeight: FontWeight.bold,
-                                //     ),
-                                //     border: OutlineInputBorder(
-                                //       borderRadius: BorderRadius.circular(15),
-                                //     ),
-                                //   ),
-                                //   style: TextStyle(fontSize: 15),
-                                //   onChanged: (text) => {},
-                                // ),
                               ),
                             ),
                           ),
@@ -256,7 +235,9 @@ class _ReturnBikeMapState extends State<ReturnBikeMap> {
               ),
             ),
             // Bottom bar app
-            bottomNavigationBar: BottomBar(),
+            bottomNavigationBar: BottomBar(
+              bottomBarIndex: 1,
+            ),
           ),
         ],
       ),

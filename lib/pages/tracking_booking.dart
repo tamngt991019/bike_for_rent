@@ -394,7 +394,9 @@ class _TrackingBookingState extends State<TrackingBooking> {
             ),
           ),
           // Bottom bar app
-          bottomNavigationBar: BottomBar(),
+          bottomNavigationBar: BottomBar(
+            bottomBarIndex: 1,
+          ),
         ));
   }
 }
