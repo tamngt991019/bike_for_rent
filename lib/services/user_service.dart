@@ -2,11 +2,9 @@ import 'package:bike_for_rent/models/user_model.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
 
 class UserService {
-  final String apiUrl = // 10.0.2.2 /
-      "https://bfr-test.herokuapp.com/api/users";
-
   // List<UserModel> parseProducts(String responseBody) {
   //   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
   //   return parsed.map<UserModel>((json) => UserModel.fromJson(json)).toList();
@@ -23,7 +21,7 @@ class UserService {
   // }
 
   Future<List<UserModel>> getUserModels() async {
-    Response res = await get(Uri.parse(apiUrl));
+    Response res = await get(Uri.parse(apiUrl.user));
 
     if (res.statusCode == 200) {
       List<dynamic> body = jsonDecode(res.body);
