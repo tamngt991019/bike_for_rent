@@ -4,34 +4,36 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 class UserService {
-  final String apiUrl = 'https://localhost:44374/api/users';
+  final String apiUrl = // 10.0.2.2 /
+      "https://bfr-test.herokuapp.com/api/users";
 
-  List<UserModel> parseProducts(String responseBody) {
-    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-    return parsed.map<UserModel>((json) => UserModel.fromJson(json)).toList();
-  }
-
-  Future<List<UserModel>> getUserModels() async {
-    final response = await get(Uri.parse(apiUrl));
-    if (response.statusCode == 200) {
-      return parseProducts(response.body);
-    } else {
-      throw Exception('Unable to fetch products from the REST API');
-    }
-  }
+  // List<UserModel> parseProducts(String responseBody) {
+  //   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+  //   return parsed.map<UserModel>((json) => UserModel.fromJson(json)).toList();
+  // }
 
   // Future<List<UserModel>> getUserModels() async {
-  //   Response res = await get(apiUrl);
-
-  //   if (res.statusCode == 200) {
-  //     List<dynamic> body = jsonDecode(res.body);
-  //     List<UserModel> userModel =
-  //         body.map((dynamic item) => UserModel.fromJson(item)).toList();
-  //     return userModel;
+  //   final response = await get(Uri.parse(apiUrl));
+  //   print("Status code nè: " + response.statusCode.toString());
+  //   if (response.statusCode == 200) {
+  //     return parseProducts(response.body);
   //   } else {
-  //     throw "Failed to load UserModel list";
+  //     throw Exception("Lỗi mẹ rồi");
   //   }
   // }
+
+  Future<List<UserModel>> getUserModels() async {
+    Response res = await get(Uri.parse(apiUrl));
+
+    if (res.statusCode == 200) {
+      List<dynamic> body = jsonDecode(res.body);
+      List<UserModel> userModel =
+          body.map((dynamic item) => UserModel.fromJson(item)).toList();
+      return userModel;
+    } else {
+      throw "Failed to load UserModel list";
+    }
+  }
 
   // Future<UserModel> getUserById(String id) async {
   //   final Response response = await get('$apiUrl/$id');

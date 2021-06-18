@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
 class History extends StatelessWidget {
-  History({Key key}) : super(key: key);
+  final bool isCustomerHistory;
+  final bool isCustomerHistoryDetail;
+  History({Key key, this.isCustomerHistory, this.isCustomerHistoryDetail})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,29 +30,36 @@ class History extends StatelessWidget {
           child: Column(
             children: [
               BookingCard(
-                isCustomerHistory: true,
+                isCustomerHistory: isCustomerHistory,
+                isCustomerHistoryDetail: isCustomerHistoryDetail,
               ),
               SizedBox(height: 10),
               BookingCard(
-                isCustomerHistory: true,
+                isCustomerHistory: isCustomerHistory,
+                isCustomerHistoryDetail: isCustomerHistoryDetail,
               ),
               SizedBox(height: 10),
               BookingCard(
-                isCustomerHistory: true,
+                isCustomerHistory: isCustomerHistory,
+                isCustomerHistoryDetail: isCustomerHistoryDetail,
               ),
               SizedBox(height: 10),
               BookingCard(
-                isCustomerHistory: true,
+                isCustomerHistory: isCustomerHistory,
+                isCustomerHistoryDetail: isCustomerHistoryDetail,
               ),
               SizedBox(height: 10),
               BookingCard(
-                isCustomerHistory: true,
+                isCustomerHistory: isCustomerHistory,
+                isCustomerHistoryDetail: isCustomerHistoryDetail,
               ),
             ],
           ),
         ),
         // Bottom bar app
-        bottomNavigationBar: BottomBar(),
+        bottomNavigationBar: BottomBar(
+          bottomBarIndex: 2,
+        ),
       ),
     );
   }
