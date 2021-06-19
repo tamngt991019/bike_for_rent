@@ -26,29 +26,25 @@ class History extends StatelessWidget {
             onPressedBackBtn: () {}),
         // Body app
         body: SingleChildScrollView(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
           child: Column(
             children: [
               BookingCard(
                 isCustomerHistory: isCustomerHistory,
                 isCustomerHistoryDetail: isCustomerHistoryDetail,
               ),
-              SizedBox(height: 10),
               BookingCard(
                 isCustomerHistory: isCustomerHistory,
                 isCustomerHistoryDetail: isCustomerHistoryDetail,
               ),
-              SizedBox(height: 10),
               BookingCard(
                 isCustomerHistory: isCustomerHistory,
                 isCustomerHistoryDetail: isCustomerHistoryDetail,
               ),
-              SizedBox(height: 10),
               BookingCard(
                 isCustomerHistory: isCustomerHistory,
                 isCustomerHistoryDetail: isCustomerHistoryDetail,
               ),
-              SizedBox(height: 10),
               BookingCard(
                 isCustomerHistory: isCustomerHistory,
                 isCustomerHistoryDetail: isCustomerHistoryDetail,
@@ -57,9 +53,9 @@ class History extends StatelessWidget {
           ),
         ),
         // Bottom bar app
-        bottomNavigationBar: BottomBar(
-          bottomBarIndex: 2,
-        ),
+        // bottomNavigationBar: BottomBar(
+        //   bottomBarIndex: 2,
+        // ),
       ),
     );
   }

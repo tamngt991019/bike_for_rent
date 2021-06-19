@@ -106,33 +106,36 @@ class _HomeState extends State<Home> {
             ),
             // Body app
             body: SingleChildScrollView(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // thông tin người dùng
-                  Row(
-                    children: [
-                      // avatar
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(
-                            "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
-                      ),
-                      SizedBox(width: 20),
-                      // tên người dùng và sđt
-                      Expanded(
-                        // tên người dùng
-                        child: Text(
-                          "Tên người thuê / cho thuê",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                  Container(
+                    margin: EdgeInsets.only(top: 10, left: 10),
+                    child: Row(
+                      children: [
+                        // avatar
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(
+                              "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
+                        ),
+                        SizedBox(width: 20),
+                        // tên người dùng và sđt
+                        Expanded(
+                          // tên người dùng
+                          child: Text(
+                            "Tên người thuê / cho thuê",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   SizedBox(height: 20),
                   // thông tin vị trí
@@ -180,7 +183,6 @@ class _HomeState extends State<Home> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
                   // map
                   Container(
                     height: 300,
@@ -194,7 +196,7 @@ class _HomeState extends State<Home> {
                       onMapCreated: _onMapCreated,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   // nút chọn loại xe / địa điểm thuê
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -251,7 +253,7 @@ class _HomeState extends State<Home> {
                       SizedBox(width: 20),
                       SizedBox(
                         width: MediaQuery.of(context).size.width - 80 - 150,
-                        height: 45,
+                        height: 30,
                         child: ElevatedButton(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -259,12 +261,12 @@ class _HomeState extends State<Home> {
                             children: [
                               Text(
                                 "Vị trí khác",
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 15),
                               ),
                               SizedBox(width: 10),
                               Icon(
                                 Icons.arrow_forward_ios,
-                                size: 30,
+                                size: 20,
                               ),
                             ],
                           ),
@@ -514,9 +516,9 @@ class _HomeState extends State<Home> {
               ),
             ),
             // Bottom bar app
-            bottomNavigationBar: BottomBar(
-              bottomBarIndex: 0,
-            ),
+            // bottomNavigationBar: BottomBar(
+            //   bottomBarIndex: 0,
+            // ),
           ),
         ],
       ),
