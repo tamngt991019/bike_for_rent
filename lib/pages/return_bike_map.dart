@@ -20,8 +20,6 @@ class ReturnBikeMap extends StatefulWidget {
 class _ReturnBikeMapState extends State<ReturnBikeMap> {
   static double _latitude = 10.841493;
   static double _longitude = 106.810038;
-  String _markerId = "ID-1";
-  String locMess = "";
   String _currentAddress = "";
 
   Position position;
@@ -31,7 +29,6 @@ class _ReturnBikeMapState extends State<ReturnBikeMap> {
   CameraPosition _initialCameraPosition =
       CameraPosition(target: _myLatLing, zoom: 15);
 
-  // GoogleMapController _ggMapController;
   Completer<GoogleMapController> _ggMapController = Completer();
 
   Set<Marker> _markers = {};
@@ -64,12 +61,11 @@ class _ReturnBikeMapState extends State<ReturnBikeMap> {
       _myLatLing = LatLng(_latitude, _longitude);
       _initialCameraPosition = CameraPosition(target: _myLatLing, zoom: 15);
 
-      locMess = "\n _Latitude: $_latitude \n _Longitude: $_longitude";
       // _markers.
       _markers.clear();
       _markers.add(
         Marker(
-          markerId: MarkerId(_markerId),
+          markerId: MarkerId("ID-1"),
           position: _myLatLing,
         ),
       );

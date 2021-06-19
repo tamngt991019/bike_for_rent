@@ -33,6 +33,7 @@ class _RatingState extends State<Rating> {
             onPressedBackBtn: () {}),
         // Body app
         body: SingleChildScrollView(
+          padding: EdgeInsets.all(10),
           child: Column(
             children: [
               Row(
@@ -97,9 +98,9 @@ class _RatingState extends State<Rating> {
           ),
         ),
         // Bottom bar app
-        bottomNavigationBar: BottomBar(
-          bottomBarIndex: 1,
-        ),
+        // bottomNavigationBar: BottomBar(
+        //   bottomBarIndex: 1,
+        // ),
       ),
     );
   }
