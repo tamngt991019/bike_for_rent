@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
+import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:geocoder/geocoder.dart';
@@ -17,8 +18,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   static double _latitude = 10.841493;
   static double _longitude = 106.810038;
-  String _markerId = "ID-1";
-  String locMess = "";
   String _currentAddress = "";
 
   Position position;
@@ -28,7 +27,6 @@ class _HomeState extends State<Home> {
   CameraPosition _initialCameraPosition =
       CameraPosition(target: _myLatLing, zoom: 13);
 
-  // GoogleMapController _ggMapController;
   Completer<GoogleMapController> _ggMapController = Completer();
 
   Set<Marker> _markers = {};
@@ -45,13 +43,9 @@ class _HomeState extends State<Home> {
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
-    // print("${first.featureName} : ${first.addressLine}");
     setState(() {
       _currentAddress = first.addressLine.toString();
     });
-
-    // print(
-    //     ' ${first.locality} - ${first.adminArea} - ${first.subLocality} - ${first.subAdminArea} - ${first.addressLine} - ${first.featureName} - ${first.thoroughfare} - ${first.subThoroughfare}');
   }
 
   void getLocation(double _inLatitude, double _inLongitude) {
@@ -61,12 +55,11 @@ class _HomeState extends State<Home> {
       _myLatLing = LatLng(_latitude, _longitude);
       _initialCameraPosition = CameraPosition(target: _myLatLing, zoom: 13);
 
-      locMess = "\n _Latitude: $_latitude \n _Longitude: $_longitude";
       // _markers.
       _markers.clear();
       _markers.add(
         Marker(
-          markerId: MarkerId(_markerId),
+          markerId: MarkerId("ID-1"),
           position: _myLatLing,
         ),
       );
@@ -143,31 +136,9 @@ class _HomeState extends State<Home> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Địa chỉ hiện tại:",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                  color: my_colors.primary),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              _currentAddress,
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            Divider(
-                              height: 20,
-                              color: my_colors.primary,
-                              thickness: 2,
-                            ),
-                          ],
-                        ),
+                      FrameText(
+                        title: "Địa chỉ hiện tại:",
+                        content: _currentAddress,
                       ),
                       Card(
                         shape: RoundedRectangleBorder(
