@@ -1,6 +1,7 @@
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_card.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
+import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
@@ -59,6 +60,7 @@ class _RentBikeListState extends State<RentBikeList> {
                         width: 40,
                         height: 40,
                         child: Card(
+                          color: my_colors.primary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -66,7 +68,10 @@ class _RentBikeListState extends State<RentBikeList> {
                           margin: EdgeInsets.all(0),
                           child: Center(
                             child: IconButton(
-                              icon: Icon(Icons.edit),
+                              icon: Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ),
                               iconSize: 20,
                               onPressed: () {},
                             ),
@@ -83,29 +88,10 @@ class _RentBikeListState extends State<RentBikeList> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Địa chỉ hiện tại:",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "_currentAddress",
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        Divider(
-                          height: 20,
-                          color: Colors.black,
-                          thickness: 1,
-                        ),
-                      ],
-                    ),
-                  ),
+                  FrameText(
+                    title: "Địa chỉ hiện tại",
+                    content: "Đây là nội dung địa chỉ",
+                  )
                 ],
               ),
               SizedBox(height: 10),

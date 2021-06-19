@@ -45,13 +45,9 @@ class _ReturnBikeMapState extends State<ReturnBikeMap> {
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
-    // print("${first.featureName} : ${first.addressLine}");
     setState(() {
       _currentAddress = first.addressLine.toString();
     });
-
-    // print(
-    //     ' ${first.locality} - ${first.adminArea} - ${first.subLocality} - ${first.subAdminArea} - ${first.addressLine} - ${first.featureName} - ${first.thoroughfare} - ${first.subThoroughfare}');
   }
 
   void getLocation(double _inLatitude, double _inLongitude) {
@@ -156,7 +152,7 @@ class _ReturnBikeMapState extends State<ReturnBikeMap> {
                                     Divider(
                                       height: 10,
                                       color: my_colors.primary,
-                                      thickness: 2,
+                                      thickness: 1,
                                     ),
                                   ],
                                 ),
