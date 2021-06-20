@@ -97,7 +97,7 @@ class _ReturnBikeMapState extends State<ReturnBikeMap> {
             // Header app
             appBar: Appbar(
                 height: 50,
-                titles: "Titles text",
+                titles: "Thuê xe",
                 isShowBackBtn: true,
                 bottomAppBar: null,
                 onPressedBackBtn: () {}),

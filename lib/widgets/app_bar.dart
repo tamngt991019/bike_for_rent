@@ -18,17 +18,42 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Padding(
-        padding: EdgeInsets.only(left: 10),
-        child: Text(titles),
+      title: Stack(
+        children: [
+          if (isShowBackBtn)
+            InkWell(
+              onTap: onPressedBackBtn,
+              child: Icon(
+                Icons.arrow_back_ios_new,
+                color: Colors.white,
+              ),
+            ),
+          // IconButton(
+          //   icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          //   onPressed: onPressedBackBtn,
+          // ),
+          Center(
+            child: Text(
+              titles.toUpperCase(),
+              style: TextStyle(fontSize: 25),
+            ),
+          ),
+        ],
       ),
-      leading: isShowBackBtn
-          ? IconButton(
-              icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
-              onPressed: onPressedBackBtn,
-            )
-          : null,
       bottom: bottomAppBar,
     );
+    // AppBar(
+    //   title: Padding(
+    //     padding: EdgeInsets.only(left: 10),
+    //     child: Text(titles),
+    //   ),
+    //   leading: isShowBackBtn
+    //       ? IconButton(
+    //           icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+    //           onPressed: onPressedBackBtn,
+    //         )
+    //       : null,
+    //   bottom: bottomAppBar,
+    // );
   }
 }

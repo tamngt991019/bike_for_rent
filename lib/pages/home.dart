@@ -89,409 +89,404 @@ class _HomeState extends State<Home> {
       theme: ThemeData(
         primarySwatch: my_colors.materialPimary,
       ),
-      home: Stack(
-        children: [
-          Scaffold(
-            // Header app
-            appBar: AppBar(
-              toolbarHeight: 0,
-              //   title:
-            ),
-            // Body app
-            body: SingleChildScrollView(
-              padding: EdgeInsets.all(10),
-              child: Column(
+      home: Scaffold(
+        // Header app
+        appBar: AppBar(
+          toolbarHeight: 0,
+          //   title:
+        ),
+        // Body app
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // thông tin người dùng
+              Container(
+                margin: EdgeInsets.only(top: 10, left: 10),
+                child: Row(
+                  children: [
+                    // avatar
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(
+                          "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
+                    ),
+                    SizedBox(width: 20),
+                    // tên người dùng và sđt
+                    Expanded(
+                      // tên người dùng
+                      child: Text(
+                        "Tên người thuê / cho thuê",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              // thông tin vị trí
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // thông tin người dùng
-                  Container(
-                    margin: EdgeInsets.only(top: 10, left: 10),
-                    child: Row(
-                      children: [
-                        // avatar
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: NetworkImage(
-                              "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
-                        ),
-                        SizedBox(width: 20),
-                        // tên người dùng và sđt
-                        Expanded(
-                          // tên người dùng
-                          child: Text(
-                            "Tên người thuê / cho thuê",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
+                  FrameText(
+                    title: "Địa chỉ hiện tại:",
+                    content: _currentAddress,
+                  ),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    elevation: 5,
+                    margin: EdgeInsets.only(left: 10),
+                    child: IconButton(
+                      icon: Image.asset('lib/assets/images/location.png'),
+                      iconSize: 35,
+                      onPressed: getCurrentLocation,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  // thông tin vị trí
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                ],
+              ),
+              // map
+              Container(
+                height: 300,
+                child: GoogleMap(
+                  myLocationEnabled: false,
+                  myLocationButtonEnabled: false,
+                  zoomControlsEnabled: false,
+                  mapToolbarEnabled: false,
+                  initialCameraPosition: _initialCameraPosition,
+                  markers: _markers,
+                  onMapCreated: _onMapCreated,
+                ),
+              ),
+              SizedBox(height: 10),
+              // nút chọn loại xe / địa điểm thuê
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
                     children: [
-                      FrameText(
-                        title: "Địa chỉ hiện tại:",
-                        content: _currentAddress,
-                      ),
                       Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
                         elevation: 5,
-                        margin: EdgeInsets.only(left: 10),
                         child: IconButton(
-                          icon: Image.asset('lib/assets/images/location.png'),
-                          iconSize: 35,
-                          onPressed: getCurrentLocation,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // map
-                  Container(
-                    height: 300,
-                    child: GoogleMap(
-                      myLocationEnabled: false,
-                      myLocationButtonEnabled: false,
-                      zoomControlsEnabled: false,
-                      mapToolbarEnabled: false,
-                      initialCameraPosition: _initialCameraPosition,
-                      markers: _markers,
-                      onMapCreated: _onMapCreated,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  // nút chọn loại xe / địa điểm thuê
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        children: [
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            elevation: 5,
-                            child: IconButton(
-                              icon: Image.asset('lib/assets/images/xeso.png'),
-                              iconSize: 50,
-                              onPressed: () {},
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            "Xe số",
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: my_colors.primary),
-                          )
-                        ],
-                      ),
-                      SizedBox(width: 20),
-                      Column(
-                        children: [
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            elevation: 5,
-                            child: IconButton(
-                              icon:
-                                  Image.asset('lib/assets/images/xetayga.png'),
-                              iconSize: 50,
-                              onPressed: () {},
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            "Xe tay ga",
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: my_colors.primary),
-                          )
-                        ],
-                      ),
-                      SizedBox(width: 20),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width - 80 - 150,
-                        height: 30,
-                        child: ElevatedButton(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Vị trí khác",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              SizedBox(width: 10),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 20,
-                              ),
-                            ],
-                          ),
-                          style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15))),
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  my_colors.primary)),
+                          icon: Image.asset('lib/assets/images/xeso.png'),
+                          iconSize: 50,
                           onPressed: () {},
                         ),
                       ),
+                      SizedBox(height: 5),
+                      Text(
+                        "Xe số",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: my_colors.primary),
+                      )
                     ],
                   ),
-                  SizedBox(height: 20),
-                  Text(
-                    "Các địa điểm nổi bật ở gần bạn:",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.underline,
+                  SizedBox(width: 20),
+                  Column(
+                    children: [
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 5,
+                        child: IconButton(
+                          icon: Image.asset('lib/assets/images/xetayga.png'),
+                          iconSize: 50,
+                          onPressed: () {},
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        "Xe tay ga",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: my_colors.primary),
+                      )
+                    ],
+                  ),
+                  SizedBox(width: 20),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 80 - 150,
+                    height: 30,
+                    child: ElevatedButton(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Vị trí khác",
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          SizedBox(width: 10),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 20,
+                          ),
+                        ],
+                      ),
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15))),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              my_colors.primary)),
+                      onPressed: () {},
                     ),
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Image.asset(
-                              'lib/assets/images/location.png',
-                              scale: 10,
-                            ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Thác Dalanta",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Quốc lộ 20, đèo Prenn, phường 3, thành phố Đà Lạt, tỉnh Lâm Đồng",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        color: Colors.black,
-                        height: 20,
-                        thickness: 1,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Image.asset(
-                              'lib/assets/images/location.png',
-                              scale: 10,
-                            ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Thác Dalanta",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Quốc lộ 20, đèo Prenn, phường 3, thành phố Đà Lạt, tỉnh Lâm Đồng",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        color: Colors.black,
-                        height: 20,
-                        thickness: 1,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Image.asset(
-                              'lib/assets/images/location.png',
-                              scale: 10,
-                            ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Thác Dalanta",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Quốc lộ 20, đèo Prenn, phường 3, thành phố Đà Lạt, tỉnh Lâm Đồng",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        color: Colors.black,
-                        height: 20,
-                        thickness: 1,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Image.asset(
-                              'lib/assets/images/location.png',
-                              scale: 10,
-                            ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Thác Dalanta",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Quốc lộ 20, đèo Prenn, phường 3, thành phố Đà Lạt, tỉnh Lâm Đồng",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        color: Colors.black,
-                        height: 20,
-                        thickness: 1,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Image.asset(
-                              'lib/assets/images/location.png',
-                              scale: 10,
-                            ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Thác Dalanta",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Quốc lộ 20, đèo Prenn, phường 3, thành phố Đà Lạt, tỉnh Lâm Đồng",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        color: Colors.black,
-                        height: 20,
-                        thickness: 1,
-                      ),
-                    ],
                   ),
                 ],
               ),
-            ),
-            // Bottom bar app
-            // bottomNavigationBar: BottomBar(
-            //   bottomBarIndex: 0,
-            // ),
+              SizedBox(height: 20),
+              Text(
+                "Các địa điểm nổi bật ở gần bạn:",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          'lib/assets/images/location.png',
+                          scale: 10,
+                        ),
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Thác Dalanta",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "Quốc lộ 20, đèo Prenn, phường 3, thành phố Đà Lạt, tỉnh Lâm Đồng",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.black,
+                    height: 20,
+                    thickness: 1,
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          'lib/assets/images/location.png',
+                          scale: 10,
+                        ),
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Thác Dalanta",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "Quốc lộ 20, đèo Prenn, phường 3, thành phố Đà Lạt, tỉnh Lâm Đồng",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.black,
+                    height: 20,
+                    thickness: 1,
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          'lib/assets/images/location.png',
+                          scale: 10,
+                        ),
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Thác Dalanta",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "Quốc lộ 20, đèo Prenn, phường 3, thành phố Đà Lạt, tỉnh Lâm Đồng",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.black,
+                    height: 20,
+                    thickness: 1,
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          'lib/assets/images/location.png',
+                          scale: 10,
+                        ),
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Thác Dalanta",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "Quốc lộ 20, đèo Prenn, phường 3, thành phố Đà Lạt, tỉnh Lâm Đồng",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.black,
+                    height: 20,
+                    thickness: 1,
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          'lib/assets/images/location.png',
+                          scale: 10,
+                        ),
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Thác Dalanta",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "Quốc lộ 20, đèo Prenn, phường 3, thành phố Đà Lạt, tỉnh Lâm Đồng",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.black,
+                    height: 20,
+                    thickness: 1,
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
+        // Bottom bar app
+        // bottomNavigationBar: BottomBar(
+        //   bottomBarIndex: 0,
+        // ),
       ),
     );
   }
