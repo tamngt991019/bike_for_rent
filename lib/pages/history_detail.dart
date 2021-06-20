@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HistoryDetail extends StatefulWidget {
@@ -197,18 +196,12 @@ class _HistoryDetailState extends State<HistoryDetail> {
                             children: [
                               // tên người dùng
                               Text(
-                                "Tên của bạn",
+                                "Tên của bạn (Bạn)",
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 5),
-                              Text("0987654321",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                  )),
-                              SizedBox(height: 5),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +210,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                     Icon(
                                       Icons.star,
                                       color: Colors.yellow,
-                                      size: 30,
+                                      size: 25,
                                     ),
                                 ],
                               ),
@@ -271,17 +264,12 @@ class _HistoryDetailState extends State<HistoryDetail> {
                             children: [
                               // tên người dùng
                               Text(
-                                "Tên chủ xe",
+                                "Tên chủ xe (Chủ xe)",
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 5),
-                              Text("0987654321",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                  )),
                               SizedBox(height: 5),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -291,7 +279,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                     Icon(
                                       Icons.star,
                                       color: Colors.yellow,
-                                      size: 30,
+                                      size: 22,
                                     ),
                                 ],
                               ),

@@ -3,14 +3,11 @@ import 'package:bike_for_rent/widgets/booking_card.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:bike_for_rent/widgets/outline_btn.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
-import 'package:dropdown_plus/dropdown_plus.dart';
-
-// import 'package:direct_select_flutter/direct_select_container.dart';
-// import 'package:direct_select_flutter/direct_select_item.dart';
-// import 'package:direct_select_flutter/direct_select_list.dart';
+// import 'package:dropdown_plus/dropdown_plus.dart';
 
 class TrackingBooking extends StatefulWidget {
   TrackingBooking({Key key}) : super(key: key);
@@ -38,7 +35,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
           // Header app
           appBar: Appbar(
               height: 50,
-              titles: "Titles text",
+              titles: "Thuê xe",
               isShowBackBtn: true,
               bottomAppBar: null,
               onPressedBackBtn: () {}),
@@ -53,7 +50,6 @@ class _TrackingBookingState extends State<TrackingBooking> {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     elevation: 5,
-                    borderOnForeground: true,
                     child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Row(
@@ -149,110 +145,114 @@ class _TrackingBookingState extends State<TrackingBooking> {
                 SizedBox(height: 10),
                 // Gói thuê
                 Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  elevation: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Gói thuê: ",
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                            Expanded(
+                              child: Text("100000 vnd / ngày",
+                                  style: TextStyle(fontSize: 15)),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Thời gian thuê: ",
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                            Expanded(
+                              child: Text("1 ngày 10 tiếng 30 phút",
+                                  style: TextStyle(fontSize: 15)),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Trạng thái: ",
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                            Expanded(
+                              child: Text(
+                                  "Đang xử lý / hủy / thuê / trả xe / thanh toán",
+                                  style: TextStyle(
+                                      fontSize: 15, color: my_colors.danger)),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Tổng tiền: ",
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                            Expanded(
+                              child: Text("123456 vnd",
+                                  style: TextStyle(fontSize: 15)),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Thanh toán: ",
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        DropdownSearch<String>(
+                          mode: Mode.BOTTOM_SHEET,
+                          showSelectedItem: true,
+                          items: ["Tiền mặt", "Momo"],
+                          // label: "Menu mode",
+                          hint: "country in menu mode",
+                          popupItemDisabled: (String s) => s.startsWith('I'),
+                          onChanged: print,
+                          selectedItem: "Tiền mặt",
+                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.end,
+                        //   crossAxisAlignment: CrossAxisAlignment.end,
+                        //   children: [
+                        //     Expanded(
+                        //       child: TextDropdown(
+                        //         options: ["Tiền mặt", "Ví điện tử Momo"],
+                        //         decoration: InputDecoration(
+                        //             border: OutlineInputBorder(),
+                        //             suffixIcon: Icon(Icons.arrow_drop_down),
+                        //             labelText: "Hình thức thanh toán"),
+                        //         dropdownHeight: 100,
+                        //       ),
+                        //     )
+                        //   ],
+                        // )
+                      ],
                     ),
-                    elevation: 5,
-                    child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Gói thuê: ",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)),
-                                  Expanded(
-                                    child: Text("100000 vnd / ngày",
-                                        style: TextStyle(fontSize: 15)),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Thời gian thuê: ",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)),
-                                  Expanded(
-                                    child: Text("1 ngày 10 tiếng 30 phút",
-                                        style: TextStyle(fontSize: 15)),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Trạng thái: ",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)),
-                                  Expanded(
-                                    child: Text(
-                                        "Đang xử lý / hủy / thuê / trả xe / thanh toán",
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: my_colors.danger)),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Tổng tiền: ",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)),
-                                  Expanded(
-                                    child: Text("123456 vnd",
-                                        style: TextStyle(fontSize: 15)),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Thanh toán: ",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Expanded(
-                                      child: TextDropdown(
-                                        options: [
-                                          "Tiền mặt",
-                                          "Ví điện tử Momo"
-                                        ],
-                                        decoration: InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            suffixIcon:
-                                                Icon(Icons.arrow_drop_down),
-                                            labelText: "Hình thức thanh toán"),
-                                        dropdownHeight: 100,
-                                      ),
-                                    )
-                                  ])
-                            ]))),
+                  ),
+                ),
                 SizedBox(height: 20),
                 // Các nút cập nhật trạng thái của booking
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [

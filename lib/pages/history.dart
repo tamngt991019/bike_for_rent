@@ -20,7 +20,7 @@ class History extends StatelessWidget {
         // Header app
         appBar: Appbar(
             height: 50,
-            titles: "Titles text",
+            titles: "lịch sử thuê",
             isShowBackBtn: true,
             bottomAppBar: null,
             onPressedBackBtn: () {}),
