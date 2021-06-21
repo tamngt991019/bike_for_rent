@@ -1,4 +1,5 @@
 import 'package:bike_for_rent/widgets/app_bar.dart';
+import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
@@ -52,6 +53,41 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FrameText(
+                      title: "Vị trí của bạn:",
+                      content: _bikeGetAddress,
+                    ),
+                  ],
+                ),
+              ),
+              // map
+              Container(
+                height: 250,
+                child: GoogleMap(
+                  rotateGesturesEnabled: false,
+                  scrollGesturesEnabled: false,
+                  tiltGesturesEnabled: false,
+                  zoomGesturesEnabled: false,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(10.867108878090859, 106.8030191050504),
+                    zoom: 13,
+                  ),
+                  markers: <Marker>{
+                    Marker(
+                      markerId: MarkerId("ID-1"),
+                      position: LatLng(10.867108878090859, 106.8030191050504),
+                    )
+                  },
+                  onMapCreated: onMapCreated,
+                ),
+              ),
+              SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
@@ -123,41 +159,14 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FrameText(
-                      title: "Vị trí nhận xe:",
-                      content: _bikeGetAddress,
-                    ),
-                  ],
-                ),
-              ),
-              // map
-              Container(
-                height: 250,
-                child: GoogleMap(
-                  rotateGesturesEnabled: false,
-                  scrollGesturesEnabled: false,
-                  tiltGesturesEnabled: false,
-                  zoomGesturesEnabled: false,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(10.867108878090859, 106.8030191050504),
-                    zoom: 13,
-                  ),
-                  markers: <Marker>{
-                    Marker(
-                      markerId: MarkerId("ID-1"),
-                      position: LatLng(10.867108878090859, 106.8030191050504),
-                    )
-                  },
-                  onMapCreated: onMapCreated,
-                ),
-              ),
               SizedBox(height: 10),
+              Center(
+                child: ElavateBtn(
+                  width: 380,
+                  title: 'Chọn địa điểm nhận xe',
+                  onPressedElavateBtn: () {},
+                ),
+              )
             ],
           ),
         ),
