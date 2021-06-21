@@ -26,6 +26,7 @@ dependencies:
   flutter_image_slideshow: ^0.1.0
   dropdown_search: ^0.6.3
   expand_widget: ^2.1.0
+  flutter_signin_button: ^2.0.0
   # Google API
   google_maps_flutter: ^2.0.6
   permission_handler: ^8.1.1

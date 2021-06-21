@@ -311,7 +311,7 @@ class _BikeGetMapState extends State<BikeGetMap> {
             toolbarHeight: 40,
             title: Center(
               child: Text(
-                "Danh sách địa điểm trả xe",
+                "Danh sách địa điểm nhận xe gần bạn",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
