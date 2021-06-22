@@ -74,7 +74,7 @@ class _UserDetailState extends State<UserDetail> {
                             )),
                         SizedBox(width: 20),
                         Expanded(
-                          child: Text(widget.usermodel.fullname,
+                          child: Text(widget.usermodel.fullName,
                               style: TextStyle(
                                 fontSize: 15,
                               )),
