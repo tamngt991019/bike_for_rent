@@ -33,22 +33,6 @@ class History extends StatelessWidget {
                 isCustomerHistory: isCustomerHistory,
                 isCustomerHistoryDetail: isCustomerHistoryDetail,
               ),
-              BookingCard(
-                isCustomerHistory: isCustomerHistory,
-                isCustomerHistoryDetail: isCustomerHistoryDetail,
-              ),
-              BookingCard(
-                isCustomerHistory: isCustomerHistory,
-                isCustomerHistoryDetail: isCustomerHistoryDetail,
-              ),
-              BookingCard(
-                isCustomerHistory: isCustomerHistory,
-                isCustomerHistoryDetail: isCustomerHistoryDetail,
-              ),
-              BookingCard(
-                isCustomerHistory: isCustomerHistory,
-                isCustomerHistoryDetail: isCustomerHistoryDetail,
-              ),
             ],
           ),
         ),
