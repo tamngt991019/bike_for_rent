@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,28 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  UserModel userModel = new UserModel(
+    // username: "testcustomer1",
+    // password: null,
+    // fullName: "Customer Number 1",
+    // dateCreated: "2021-06-22T09:33:42.937",
+    // email: null,
+    // phone: null,
+    username: "testcustomer1",
+    password: null,
+    fullName: "Customer Number 1",
+    email: null,
+    phone: null,
+    avatar: null,
+    dateCreated: "2021-06-22T09:33:42.937",
+    userVerified: null,
+    identityNo: null,
+    frontIdentityImage: null,
+    backIdentityImage: null,
+    ownerVerified: null,
+    isRenting: null,
+    status: "ACTIVE",
+  );
   static double _latitude = 10.841493;
   static double _longitude = 106.810038;
   String _currentAddress = "";

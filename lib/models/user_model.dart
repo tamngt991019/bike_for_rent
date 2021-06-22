@@ -6,12 +6,12 @@ class UserModel {
   String phone;
   String avatar;
   String dateCreated;
-  String userVerified;
+  bool userVerified;
   String identityNo;
   String frontIdentityImage;
   String backIdentityImage;
-  String ownerVerified;
-  String isRenting;
+  bool ownerVerified;
+  bool isRenting;
   String status;
 
   UserModel({
@@ -39,12 +39,12 @@ class UserModel {
         phone: json['phone'] as String,
         avatar: json['avatar'] as String,
         dateCreated: json['dateCreated'] as String,
-        userVerified: json['userVerified'] as String,
+        userVerified: json['userVerified'] as bool,
         identityNo: json['identityNo'] as String,
         frontIdentityImage: json['frontIdentityImage'] as String,
         backIdentityImage: json['backIdentityImage'] as String,
-        ownerVerified: json['ownerVerified'] as String,
-        isRenting: json['isRenting'] as String,
+        ownerVerified: json['ownerVerified'] as bool,
+        isRenting: json['isRenting'] as bool,
         status: json['status'] as String,
       );
 
