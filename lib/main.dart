@@ -14,4 +14,4 @@ import 'package:flutter/material.dart';
 
 import 'pages/rent_bike_manager.dart';
 
-void main() => runApp(MaterialApp(home: Login()));
+void main() => runApp(MaterialApp(home: Test()));
