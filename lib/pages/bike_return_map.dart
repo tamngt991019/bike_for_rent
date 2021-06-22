@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +8,16 @@ import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:expand_widget/expand_widget.dart';
 
-class ReturnBikeMap extends StatefulWidget {
-  ReturnBikeMap({Key key}) : super(key: key);
+class BikeReturnMap extends StatefulWidget {
+  BikeReturnMap({Key key}) : super(key: key);
 
   @override
-  _ReturnBikeMapState createState() => _ReturnBikeMapState();
+  _BikeReturnMapState createState() => _BikeReturnMapState();
 }
 
-class _ReturnBikeMapState extends State<ReturnBikeMap> {
+class _BikeReturnMapState extends State<BikeReturnMap> {
   static double _latitude = 10.841493;
   static double _longitude = 106.810038;
   String _currentAddress = "";
@@ -114,67 +114,75 @@ class _ReturnBikeMapState extends State<ReturnBikeMap> {
                     markers: _markers,
                     onMapCreated: _onMapCreated,
                   ),
-                  SizedBox(height: 10),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  ExpandChild(
+                    arrowColor: my_colors.primary,
+                    arrowSize: 50,
+                    expandedHint: "Xem thêm",
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              elevation: 5,
-                              margin:
-                                  EdgeInsets.only(left: 20, right: 10, top: 20),
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Địa chỉ hiện tại: ",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          decoration: TextDecoration.underline,
-                                          color: my_colors.primary),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  elevation: 5,
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Địa chỉ hiện tại: ",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              color: my_colors.primary),
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          _currentAddress,
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        Divider(
+                                          height: 10,
+                                          color: my_colors.primary,
+                                          thickness: 1,
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      _currentAddress,
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    Divider(
-                                      height: 10,
-                                      color: my_colors.primary,
-                                      thickness: 1,
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            elevation: 5,
-                            margin: EdgeInsets.only(right: 20, top: 20),
-                            child: IconButton(
-                              icon:
-                                  Image.asset('lib/assets/images/location.png'),
-                              iconSize: 35,
-                              onPressed: getCurrentLocation,
-                            ),
+                              SizedBox(width: 5),
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                elevation: 5,
+                                child: IconButton(
+                                  icon: Image.asset(
+                                      'lib/assets/images/location.png'),
+                                  iconSize: 35,
+                                  onPressed: getCurrentLocation,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                   SizedBox(height: 10),
                   Column(
