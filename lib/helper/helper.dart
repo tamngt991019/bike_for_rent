@@ -1,4 +1,3 @@
-// class Helper {
 bool checkEmptyText(String value) {
   if (value.isEmpty) {
     return true;
@@ -6,4 +5,3 @@ bool checkEmptyText(String value) {
     return false;
   }
 }
-// }
