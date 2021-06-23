@@ -116,7 +116,7 @@ class _UserDetailState extends State<UserDetail> {
                   ]),
                 ))),
         // Bottom bar app
-        bottomNavigationBar: BottomBar(bottomBarIndex: 3),
+        // bottomNavigationBar: BottomBar(bottomBarIndex: 3),
       ),
     );
   }

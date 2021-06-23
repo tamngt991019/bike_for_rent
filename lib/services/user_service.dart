@@ -5,120 +5,91 @@ import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
 
 class UserService {
-  // List<UserModel> parseProducts(String responseBody) {
-  //   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-  //   return parsed.map<UserModel>((json) => UserModel.fromJson(json)).toList();
-  // }
-
-  // Future<List<UserModel>> getUserModels() async {
-  //   final response = await get(Uri.parse(apiUrl));
-  //   print("Status code nè: " + response.statusCode.toString());
-  //   if (response.statusCode == 200) {
-  //     return parseProducts(response.body);
-  //   } else {
-  //     throw Exception("Lỗi mẹ rồi");
-  //   }
-  // }
-
+  //get trả về response code 200
   Future<List<UserModel>> getUserModels() async {
-    Response res = await get(Uri.parse(apiUrl.user));
+    Response response;
+    List<UserModel> result;
+    try {
+      response = response = await get(Uri.parse(apiUrl.user));
 
-    if (res.statusCode == 200) {
-      List<dynamic> body = jsonDecode(res.body);
-      List<UserModel> userModel =
-          body.map((dynamic item) => UserModel.fromJson(item)).toList();
-      return userModel;
-    } else {
-      throw "Failed to load UserModel list";
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        result = body.map((dynamic item) => UserModel.fromJson(item)).toList();
+      }
+    } catch (Exception) {
+      throw Exception;
     }
+    return result;
   }
 
-  // Future<UserModel> getUserById(String id) async {
-  //   final Response response = await get('$apiUrl/$id');
-
-  //   if (response.statusCode == 200) {
-  //     return UserModel.fromJson(json.decode(response.body));
-  //   } else {
-  //     throw Exception('Failed to load a User');
-  //   }
-  // }
-
-  Future<UserModel> createUser(UserModel userModel) async {
-    // Map data = {
-    //   "username": userModel.username,
-    //   "password": userModel.password,
-    //   "fullName": userModel.fullName,
-    //   "email": userModel.email,
-    //   "phone": userModel.phone,
-    //   "avatar": userModel.avatar,
-    //   "dateCreated": userModel.dateCreated,
-    //   "userVerified": userModel.userVerified,
-    //   "identityNo": userModel.identityNo,
-    //   "frontIdentityImage": userModel.frontIdentityImage,
-    //   "backIdentityImage": userModel.backIdentityImage,
-    //   "ownerVerified": userModel.ownerVerified,
-    //   "isRenting": userModel.isRenting,
-    //   "status": userModel.status,
-    // };
-
+  //get trả về response code 200
+  Future<UserModel> getUserById(String id) async {
+    Response response;
+    UserModel result;
     try {
-      final Response response = await post(Uri.parse(apiUrl.user),
+      response = await get(Uri.parse('${apiUrl.user}/$id'));
+
+      if (response.statusCode == 200) {
+        result = UserModel.fromJson(json.decode(response.body));
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
+  //post trả về response code 201
+  Future<UserModel> createUser(UserModel userModel) async {
+    Response response;
+    UserModel result;
+    try {
+      response = await post(Uri.parse(apiUrl.user),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
-          body: jsonEncode(userModel.toJson())
-          // body: jsonEncode(<String, dynamic>{
-          //   "username": userModel.username,
-          //   "password": userModel.password,
-          //   "fullName": userModel.fullName,
-          //   "email": userModel.email,
-          //   "phone": userModel.phone,
-          //   "avatar": userModel.avatar,
-          //   "dateCreated": userModel.dateCreated,
-          //   "userVerified": userModel.userVerified,
-          //   "identityNo": userModel.identityNo,
-          //   "frontIdentityImage": userModel.frontIdentityImage,
-          //   "backIdentityImage": userModel.backIdentityImage,
-          //   "ownerVerified": userModel.ownerVerified,
-          //   "isRenting": userModel.isRenting,
-          //   "status": userModel.status,
-          // }),
-
-          );
-      return UserModel.fromJson(json.decode(response.body));
+          body: jsonEncode(userModel.toJson()));
+      if (response.statusCode == 201) {
+        result = UserModel.fromJson(json.decode(response.body));
+      }
     } catch (Exception) {
-      return Exception;
+      throw Exception;
     }
-
-    // if (response.statusCode == 200) {
-    //   return UserModel.fromJson(json.decode(response.body));
-    // } else {
-    //   throw Exception();
-    // }
+    return result;
   }
 
-  // Future<UserModel> updateUserModel(String id, UserModel userModel) async {
-  //   final Response response = await put(
-  //     '$apiUrl/$id',
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //     body: jsonEncode(userModel.toJson()),
-  //   );
-  //   if (response.statusCode == 200) {
-  //     return UserModel.fromJson(json.decode(response.body));
-  //   } else {
-  //     throw Exception('Failed to update a User');
-  //   }
-  // }
+  //put trả về response code 204
+  Future<bool> updateUserModel(String id, UserModel userModel) async {
+    Response response;
+    bool result = false;
+    try {
+      response = await put(
+        Uri.parse('${apiUrl.user}/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(userModel.toJson()),
+      );
+      if (response.statusCode == 204) {
+        result = true;
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
 
-  // Future<void> deleteUser(String id) async {
-  //   Response res = await delete('$apiUrl/$id');
-
-  //   if (res.statusCode == 200) {
-  //     print("User deleted");
-  //   } else {
-  //     throw "Failed to delete a User.";
-  //   }
-  // }
+  //delete trả về response code 204
+  Future<bool> deleteUser(String id) async {
+    Response response;
+    bool result = false;
+    try {
+      response = await delete(Uri.parse('${apiUrl.user}/$id'));
+      if (response.statusCode == 204) {
+        result = true;
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
 }
