@@ -23,7 +23,7 @@ class _AddState extends State<Add> {
     super.initState();
     setState(() {
       userModel = new UserModel(
-        username: "ahihihihiihi",
+        username: "zzz",
         password: null,
         fullName: "Cuời cl nha",
         email: null,
