@@ -26,10 +26,12 @@ class _TestState extends State<Test> {
     }
     Future<List<UserModel>> futureCases = userApi.getUserModels();
     futureCases.then((_userList) {
-      setState(() {
-        this.userList = _userList;
-        // print(userList.length);
-      });
+      if (this.mounted) {
+        setState(() {
+          this.userList = _userList;
+          // print(userList.length);
+        });
+      }
     });
     return futureCases;
   }
