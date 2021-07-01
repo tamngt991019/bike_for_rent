@@ -79,7 +79,7 @@ class _TestState extends State<Test> {
                                     radius: 30,
                                     backgroundImage: (userList[index].avatar !=
                                             null)
-                                        ? NetworkImage(userList[index].avatar)
+                                        ? NetworkImage("https://media.publit.io/file/BikeForRent/test_avatar.jpg")
                                         : AssetImage(
                                             "lib/assets/images/default.png")),
                                 SizedBox(width: 20),

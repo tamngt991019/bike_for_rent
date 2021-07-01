@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/history.dart';
+import 'package:bike_for_rent/pages/personal.dart';
+import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +13,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key key}) : super(key: key);
+  final UserModel userModel;
+  Home({Key key, this.userModel}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -103,6 +107,15 @@ class _HomeState extends State<Home> {
 
     setState(() {
       getLocation(_latitude, _longitude);
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      // this.userModel = widget.userModel;/
     });
   }
 
@@ -507,9 +520,10 @@ class _HomeState extends State<Home> {
           ),
         ),
         // Bottom bar app
-        // bottomNavigationBar: BottomBar(
-        //   bottomBarIndex: 0,
-        // ),
+        bottomNavigationBar: BottomBar(
+          bottomBarIndex: 0,
+          userModel: widget.userModel,
+        ),
       ),
     );
   }

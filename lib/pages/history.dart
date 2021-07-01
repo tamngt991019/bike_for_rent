@@ -1,3 +1,7 @@
+import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/login_valid.dart';
+import 'package:bike_for_rent/pages/personal.dart';
+import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_card.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
@@ -5,9 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
 class History extends StatelessWidget {
+  final UserModel userModel;
   final bool isCustomerHistory;
   final bool isCustomerHistoryDetail;
-  History({Key key, this.isCustomerHistory, this.isCustomerHistoryDetail})
+  History(
+      {Key key,
+      this.userModel,
+      this.isCustomerHistory,
+      this.isCustomerHistoryDetail})
       : super(key: key);
 
   @override
@@ -25,21 +34,28 @@ class History extends StatelessWidget {
             bottomAppBar: null,
             onPressedBackBtn: () {}),
         // Body app
-        body: SingleChildScrollView(
-          padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-          child: Column(
-            children: [
-              BookingCard(
-                isCustomerHistory: isCustomerHistory,
-                isCustomerHistoryDetail: isCustomerHistoryDetail,
+        body: (userModel == null)
+            ? LoginValid(
+                currentIndex: 2,
+                content: "Vui lòng đăng nhập để xem lịch sử thuê xe!",
+              )
+            : SingleChildScrollView(
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                child: Column(
+                  children: [
+                    BookingCard(
+                      isCustomerHistory: isCustomerHistory,
+                      isCustomerHistoryDetail: isCustomerHistoryDetail,
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
         // Bottom bar app
-        // bottomNavigationBar: BottomBar(
-        //   bottomBarIndex: 2,
-        // ),
+        bottomNavigationBar: BottomBar(
+          bottomBarIndex: 0,
+          userModel: userModel,
+        ),
       ),
     );
   }

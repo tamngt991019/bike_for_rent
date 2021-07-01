@@ -1,13 +1,17 @@
 // import 'package:bike_for_rent/pages/test.dart';
+import 'package:bike_for_rent/constants/api_url.dart';
+import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/history.dart';
 import 'package:bike_for_rent/pages/home.dart';
+import 'package:bike_for_rent/pages/personal.dart';
+import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/test_api/test.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
   final int bottomBarIndex;
-  final History history;
-  BottomBar({Key key, this.bottomBarIndex, this.history}) : super(key: key);
+  final UserModel userModel;
+  BottomBar({Key key, this.bottomBarIndex, this.userModel}) : super(key: key);
 
   @override
   _BottomBarState createState() => _BottomBarState();
@@ -45,15 +49,19 @@ class _BottomBarState extends State<BottomBar> {
       // press for switch tab
       onTap: (index) {
         if (index == 0) {
-          runApp(MaterialApp(
-            home: Home(),
-          ));
+          runApp(MaterialApp(home: Home(userModel: widget.userModel)));
         } else if (index == 1) {
-          // runApp(Test());
+          runApp(
+              MaterialApp(home: RentBikeFilter(userModel: widget.userModel)));
         } else if (index == 2) {
-          runApp(widget.history);
+          runApp(MaterialApp(
+              home: History(
+            userModel: widget.userModel,
+            isCustomerHistory: false,
+            isCustomerHistoryDetail: false,
+          )));
         } else if (index == 3) {
-          runApp(Test());
+          runApp(MaterialApp(home: Personal(userModel: widget.userModel)));
         }
       },
     );
