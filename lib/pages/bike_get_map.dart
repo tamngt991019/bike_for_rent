@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/pages/rent_bike_filter.dart';
+import 'package:bike_for_rent/pages/rent_bike_list.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
@@ -24,8 +26,8 @@ class _BikeGetMapState extends State<BikeGetMap> {
 
   LatLng _currentLatLing;
 
-  CameraPosition _initialCameraPosition =
-      CameraPosition(target: LatLng(0, 0), zoom: 15);
+  CameraPosition _initialCameraPosition = CameraPosition(
+      target: LatLng(10.82414068863801, 106.63065063707423), zoom: 15);
 
   Completer<GoogleMapController> _ggMapController = Completer();
   Set<Marker> _markers = {};
@@ -115,11 +117,13 @@ class _BikeGetMapState extends State<BikeGetMap> {
           Scaffold(
             // Header app
             appBar: Appbar(
-                height: 50,
-                titles: "Thuê xe",
-                isShowBackBtn: true,
-                bottomAppBar: null,
-                onPressedBackBtn: () {}),
+              height: 50,
+              titles: "Thuê xe",
+              isShowBackBtn: true,
+              bottomAppBar: null,
+              onPressedBackBtn: () => Navigator.pop(context),
+              // runApp(MaterialApp(home: RentBikeFilter()))
+            ),
             // Body app
             body: Container(
               child: Stack(
@@ -253,10 +257,15 @@ class _BikeGetMapState extends State<BikeGetMap> {
                             Container(
                               margin: EdgeInsets.only(bottom: 20),
                               child: ElavateBtn(
-                                title: "Xác nhận vị trí",
-                                width: 200,
-                                onPressedElavateBtn: () {},
-                              ),
+                                  title: "Xác nhận vị trí",
+                                  width: 200,
+                                  onPressedElavateBtn: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RentBikeList()),
+                                    );
+                                  }),
                             ),
                           ],
                         ),

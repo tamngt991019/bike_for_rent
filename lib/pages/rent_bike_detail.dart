@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/pages/rent_bike_list.dart';
+import 'package:bike_for_rent/pages/tracking_booking.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_detail.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
@@ -56,11 +58,13 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
       home: Scaffold(
         // Header app
         appBar: Appbar(
-            height: 50,
-            titles: "Thuê xe",
-            isShowBackBtn: true,
-            bottomAppBar: null,
-            onPressedBackBtn: () {}),
+          height: 50,
+          titles: "Thuê xe",
+          isShowBackBtn: true,
+          bottomAppBar: null,
+          // onPressedBackBtn: () => runApp(MaterialApp(home: RentBikeList())),
+          onPressedBackBtn: () => Navigator.pop(context),
+        ),
         // Body app
         body: SingleChildScrollView(
           child: Column(
@@ -201,6 +205,16 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
               ElavateBtn(
                 width: MediaQuery.of(context).size.width * 80 / 100,
                 title: "Thuê ngay",
+                onPressedElavateBtn: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        TrackingBooking(isCustomer: true),
+                  ),
+                  (route) => false,
+                ),
+                // runApp(
+                //     MaterialApp(home: TrackingBooking(isCustomer: true))),
               ),
               SizedBox(height: 5),
               Padding(

@@ -27,12 +27,8 @@ class History extends StatelessWidget {
       ),
       home: Scaffold(
         // Header app
-        appBar: Appbar(
-            height: 50,
-            titles: "lịch sử thuê",
-            isShowBackBtn: true,
-            bottomAppBar: null,
-            onPressedBackBtn: () {}),
+        appBar:
+            Appbar(height: 50, titles: "lịch sử thuê", isShowBackBtn: false),
         // Body app
         body: (userModel == null)
             ? LoginValid(
@@ -53,7 +49,7 @@ class History extends StatelessWidget {
               ),
         // Bottom bar app
         bottomNavigationBar: BottomBar(
-          bottomBarIndex: 0,
+          bottomBarIndex: 2,
           userModel: userModel,
         ),
       ),

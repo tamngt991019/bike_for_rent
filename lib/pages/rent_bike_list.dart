@@ -1,3 +1,6 @@
+import 'package:bike_for_rent/pages/bike_get_map.dart';
+import 'package:bike_for_rent/pages/rent_bike_detail.dart';
+import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_card.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
@@ -24,11 +27,12 @@ class _RentBikeListState extends State<RentBikeList> {
       home: Scaffold(
         // Header app
         appBar: Appbar(
-            height: 50,
-            titles: "Thuê xe",
-            isShowBackBtn: true,
-            bottomAppBar: null,
-            onPressedBackBtn: () {}),
+          height: 50,
+          titles: "Thuê xe",
+          isShowBackBtn: true,
+          bottomAppBar: null,
+          onPressedBackBtn: () => Navigator.pop(context),
+        ),
         // Body app
         body: SingleChildScrollView(
           padding: EdgeInsets.all(10),
@@ -73,7 +77,12 @@ class _RentBikeListState extends State<RentBikeList> {
                                 color: Colors.white,
                               ),
                               iconSize: 20,
-                              onPressed: () {},
+                              onPressed: () {
+                                // int count = 0;
+
+                                Navigator.pop(context, '/RentBikeFilter');
+                              },
+                              // runApp(MaterialApp(home: RentBikeFilter())),
                             ),
                           ),
                         ),
@@ -110,9 +119,18 @@ class _RentBikeListState extends State<RentBikeList> {
                 ],
               ),
               SizedBox(height: 10),
-              BookingCard(
-                isCustomerHistory: false,
-                isCustomerHistoryDetail: false,
+              InkWell(
+                // onTap: () => runApp(MaterialApp(home: RentBikeDetail())),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RentBikeDetail()),
+                  );
+                },
+                child: BookingCard(
+                  isCustomerHistory: false,
+                  isCustomerHistoryDetail: false,
+                ),
               ),
               BookingCard(
                 isCustomerHistory: false,

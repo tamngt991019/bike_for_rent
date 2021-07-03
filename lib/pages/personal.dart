@@ -327,7 +327,7 @@ class Personal extends StatelessWidget {
               ),
         // Bottom bar app
         bottomNavigationBar: BottomBar(
-          bottomBarIndex: 0,
+          bottomBarIndex: 3,
           userModel: userModel,
         ),
       ),

@@ -10,7 +10,8 @@ import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 // import 'package:dropdown_plus/dropdown_plus.dart';
 
 class TrackingBooking extends StatefulWidget {
-  TrackingBooking({Key key}) : super(key: key);
+  final bool isCustomer;
+  TrackingBooking({Key key, this.isCustomer}) : super(key: key);
 
   @override
   _TrackingBookingState createState() => _TrackingBookingState();
@@ -34,11 +35,11 @@ class _TrackingBookingState extends State<TrackingBooking> {
         home: Scaffold(
           // Header app
           appBar: Appbar(
-              height: 50,
-              titles: "Thuê xe",
-              isShowBackBtn: true,
-              bottomAppBar: null,
-              onPressedBackBtn: () {}),
+            height: 50,
+            titles: "Thuê xe",
+            isShowBackBtn: false,
+            bottomAppBar: null,
+          ),
           // Body app
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(10),
@@ -255,60 +256,78 @@ class _TrackingBookingState extends State<TrackingBooking> {
                 ),
                 SizedBox(height: 20),
                 // Các nút cập nhật trạng thái của booking
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  ElavateBtn(
-                    width: 180,
-                    title: 'Đã nhận xe',
-                    onPressedElavateBtn: () {},
+                // các nút của người thuê
+                if (widget.isCustomer)
+                  Column(
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElavateBtn(
+                              width: 180,
+                              title: 'Đã nhận xe',
+                              onPressedElavateBtn: () {},
+                            ),
+                            SizedBox(width: 20),
+                            OutlineBtn(
+                              width: 180,
+                              title: 'Hủy thuê xe',
+                              onPressedOutlineBtn: () {},
+                            )
+                          ]),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElavateBtn(
+                              width: 380,
+                              title: 'Yêu cầu trả xe',
+                              onPressedElavateBtn: () {},
+                            )
+                          ]),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElavateBtn(
+                              width: 380,
+                              title: 'Thanh toán',
+                              onPressedElavateBtn: () {},
+                            )
+                          ]),
+                    ],
                   ),
-                  SizedBox(width: 20),
-                  OutlineBtn(
-                    width: 180,
-                    title: 'Hủy thuê xe',
-                    onPressedOutlineBtn: () {},
-                  )
-                ]),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  ElavateBtn(
-                    width: 380,
-                    title: 'Yêu cầu trả xe',
-                    onPressedElavateBtn: () {},
-                  )
-                ]),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  ElavateBtn(
-                    width: 380,
-                    title: 'Thanh toán',
-                    onPressedElavateBtn: () {},
-                  )
-                ]),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  ElavateBtn(
-                    width: 180,
-                    title: 'Đồng ý cho thuê',
-                    onPressedElavateBtn: () {},
-                  ),
-                  SizedBox(width: 20),
-                  OutlineBtn(
-                    width: 180,
-                    title: 'Từ chối cho thuê',
-                    onPressedOutlineBtn: () {},
-                  )
-                ]),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  ElavateBtn(
-                    width: 380,
-                    title: 'Đã nhận xe',
-                    onPressedElavateBtn: () {},
-                  )
-                ]),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  ElavateBtn(
-                    width: 380,
-                    title: 'Xác nhận thanh toán',
-                    onPressedElavateBtn: () {},
-                  )
-                ]),
+                // các nút của chủ xe
+                Column(
+                  children: [
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      ElavateBtn(
+                        width: 180,
+                        title: 'Đồng ý cho thuê',
+                        onPressedElavateBtn: () {},
+                      ),
+                      SizedBox(width: 20),
+                      OutlineBtn(
+                        width: 180,
+                        title: 'Từ chối cho thuê',
+                        onPressedOutlineBtn: () {},
+                      )
+                    ]),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      ElavateBtn(
+                        width: 380,
+                        title: 'Đã nhận xe',
+                        onPressedElavateBtn: () {},
+                      )
+                    ]),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      ElavateBtn(
+                        width: 380,
+                        title: 'Xác nhận đã thanh toán',
+                        onPressedElavateBtn: () {},
+                      )
+                    ]),
+                  ],
+                ),
+
                 //===========================================
               ],
             ),
