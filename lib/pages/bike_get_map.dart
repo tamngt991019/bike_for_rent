@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/pages/rent_bike_list.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
@@ -11,9 +12,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:expand_widget/expand_widget.dart';
+import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class BikeGetMap extends StatefulWidget {
-  const BikeGetMap({Key key}) : super(key: key);
+  final UserModel userModel;
+  const BikeGetMap({Key key, this.userModel}) : super(key: key);
 
   @override
   _BikeGetMapState createState() => _BikeGetMapState();
@@ -121,8 +124,8 @@ class _BikeGetMapState extends State<BikeGetMap> {
               titles: "Thuê xe",
               isShowBackBtn: true,
               bottomAppBar: null,
-              onPressedBackBtn: () => Navigator.pop(context),
-              // runApp(MaterialApp(home: RentBikeFilter()))
+              onPressedBackBtn: () => helper.pushInto(
+                  context, RentBikeFilter(userModel: widget.userModel), false),
             ),
             // Body app
             body: Container(
@@ -257,15 +260,13 @@ class _BikeGetMapState extends State<BikeGetMap> {
                             Container(
                               margin: EdgeInsets.only(bottom: 20),
                               child: ElavateBtn(
-                                  title: "Xác nhận vị trí",
-                                  width: 200,
-                                  onPressedElavateBtn: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => RentBikeList()),
-                                    );
-                                  }),
+                                title: "Xác nhận vị trí",
+                                width: 200,
+                                onPressedElavateBtn: () => helper.pushInto(
+                                    context,
+                                    RentBikeList(userModel: widget.userModel),
+                                    true),
+                              ),
                             ),
                           ],
                         ),

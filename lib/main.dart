@@ -8,7 +8,7 @@ import 'package:bike_for_rent/test_api/test_add.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(
-      home: RentBikeFilter(),
+      home: Home(),
       // initialRoute: '/RentBikeFilter',
       // routes: {
       //   // When navigating to the "/" route, build the FirstScreen widget.

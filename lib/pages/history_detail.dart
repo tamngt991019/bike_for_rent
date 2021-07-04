@@ -1,7 +1,11 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/helper/helper.dart';
+import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/history.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_detail.dart';
+import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
@@ -10,7 +14,8 @@ import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HistoryDetail extends StatefulWidget {
-  const HistoryDetail({Key key}) : super(key: key);
+  final UserModel userModel;
+  const HistoryDetail({Key key, this.userModel}) : super(key: key);
 
   @override
   _HistoryDetailState createState() => _HistoryDetailState();
@@ -65,7 +70,14 @@ class _HistoryDetailState extends State<HistoryDetail> {
             titles: "Chi tiết lịch sử thuê",
             isShowBackBtn: true,
             bottomAppBar: null,
-            onPressedBackBtn: () {}),
+            onPressedBackBtn: () {
+              Navigator.of(context).push(route(
+                  History(
+                    isCustomerHistory: true,
+                    isCustomerHistoryDetail: false,
+                  ),
+                  false));
+            }),
         // Body app
         body: SingleChildScrollView(
           child: Column(
@@ -304,9 +316,10 @@ class _HistoryDetailState extends State<HistoryDetail> {
           ),
         ),
         // Bottom bar app
-        // bottomNavigationBar: BottomBar(
-        //   bottomBarIndex: 1,
-        // ),
+        bottomNavigationBar: BottomBar(
+          bottomBarIndex: 2,
+          userModel: widget.userModel,
+        ),
       ),
     );
   }

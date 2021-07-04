@@ -1,3 +1,4 @@
+import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/bike_get_map.dart';
 import 'package:bike_for_rent/pages/rent_bike_detail.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
@@ -7,11 +8,14 @@ import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
+import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class RentBikeList extends StatefulWidget {
+  final UserModel userModel;
   final double inLatitude;
   final double inLongitude;
-  RentBikeList({Key key, this.inLatitude, this.inLongitude}) : super(key: key);
+  RentBikeList({Key key, this.userModel, this.inLatitude, this.inLongitude})
+      : super(key: key);
 
   @override
   _RentBikeListState createState() => _RentBikeListState();
@@ -31,7 +35,8 @@ class _RentBikeListState extends State<RentBikeList> {
           titles: "Thuê xe",
           isShowBackBtn: true,
           bottomAppBar: null,
-          onPressedBackBtn: () => Navigator.pop(context),
+          onPressedBackBtn: () => helper.pushInto(
+              context, BikeGetMap(userModel: widget.userModel), false),
         ),
         // Body app
         body: SingleChildScrollView(
@@ -77,12 +82,10 @@ class _RentBikeListState extends State<RentBikeList> {
                                 color: Colors.white,
                               ),
                               iconSize: 20,
-                              onPressed: () {
-                                // int count = 0;
-
-                                Navigator.pop(context, '/RentBikeFilter');
-                              },
-                              // runApp(MaterialApp(home: RentBikeFilter())),
+                              onPressed: () => helper.pushInto(
+                                  context,
+                                  RentBikeFilter(userModel: widget.userModel),
+                                  false),
                             ),
                           ),
                         ),
@@ -122,10 +125,7 @@ class _RentBikeListState extends State<RentBikeList> {
               InkWell(
                 // onTap: () => runApp(MaterialApp(home: RentBikeDetail())),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RentBikeDetail()),
-                  );
+                  helper.pushInto(context, RentBikeDetail(), true);
                 },
                 child: BookingCard(
                   isCustomerHistory: false,
@@ -144,9 +144,10 @@ class _RentBikeListState extends State<RentBikeList> {
           ),
         ),
         // Bottom bar app
-        // bottomNavigationBar: BottomBar(
-        //   bottomBarIndex: 1,
-        // ),
+        bottomNavigationBar: BottomBar(
+          bottomBarIndex: 1,
+          userModel: widget.userModel,
+        ),
       ),
     );
   }

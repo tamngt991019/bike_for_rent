@@ -20,13 +20,13 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   // UserModel userModel = new UserModel();
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      // userModel = widget.userModel;
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   setState(() {
+  //     // userModel = widget.userModel;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -60,43 +60,41 @@ class _BottomBarState extends State<BottomBar> {
       onTap: (index) {
         if (index != widget.bottomBarIndex) {
           bool isRightToLeft = false;
-          if (index < widget.bottomBarIndex) {
+          if (index > widget.bottomBarIndex) {
             isRightToLeft = true;
           }
           if (index == 0) {
-            Navigator.of(context).push(
-              helper.route(Home(userModel: widget.userModel), isRightToLeft),
+            helper.pushInto(
+              context,
+              Home(userModel: widget.userModel),
+              isRightToLeft,
             );
+            // Navigator.of(context).push(
+            //   helper.route(Home(userModel: widget.userModel), isRightToLeft),
+            // );
             // runApp(MaterialApp(home: Home(userModel: widget.userModel)));
           } else if (index == 1) {
-            Navigator.of(context).push(
-              helper.route(
-                  RentBikeFilter(userModel: widget.userModel), isRightToLeft),
+            helper.pushInto(
+              context,
+              RentBikeFilter(userModel: widget.userModel),
+              isRightToLeft,
             );
-            // runApp(
-            //     MaterialApp(home: RentBikeFilter(userModel: widget.userModel)));
           } else if (index == 2) {
-            Navigator.of(context).push(
-              helper.route(
-                  History(
-                    userModel: widget.userModel,
-                    isCustomerHistory: false,
-                    isCustomerHistoryDetail: false,
-                  ),
-                  isRightToLeft),
+            helper.pushInto(
+              context,
+              History(
+                userModel: widget.userModel,
+                isCustomerHistory: true,
+                isCustomerHistoryDetail: false,
+              ),
+              isRightToLeft,
             );
-            // runApp(MaterialApp(
-            //     home: History(
-            //   userModel: widget.userModel,
-            //   isCustomerHistory: false,
-            //   isCustomerHistoryDetail: false,
-            // )));
           } else if (index == 3) {
-            Navigator.of(context).push(
-              helper.route(
-                  Personal(userModel: widget.userModel), isRightToLeft),
+            helper.pushInto(
+              context,
+              Personal(userModel: widget.userModel),
+              isRightToLeft,
             );
-            // runApp(MaterialApp(home: Personal(userModel: widget.userModel)));
           }
         }
       },

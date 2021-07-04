@@ -1,4 +1,6 @@
+import 'package:bike_for_rent/helper/helper.dart';
 import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/history_detail.dart';
 import 'package:bike_for_rent/pages/login_valid.dart';
 import 'package:bike_for_rent/pages/personal.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
@@ -30,23 +32,30 @@ class History extends StatelessWidget {
         appBar:
             Appbar(height: 50, titles: "lịch sử thuê", isShowBackBtn: false),
         // Body app
-        body: (userModel == null)
-            ? LoginValid(
-                currentIndex: 2,
-                content: "Vui lòng đăng nhập để xem lịch sử thuê xe!",
-              )
-            : SingleChildScrollView(
-                padding:
-                    EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                child: Column(
-                  children: [
-                    BookingCard(
-                      isCustomerHistory: isCustomerHistory,
-                      isCustomerHistoryDetail: isCustomerHistoryDetail,
-                    ),
-                  ],
+        body:
+            // (userModel == null)
+            //     ? LoginValid(
+            //         currentIndex: 2,
+            //         content: "Vui lòng đăng nhập để xem lịch sử thuê xe!",
+            //       )
+            //     :
+            SingleChildScrollView(
+          padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      route(HistoryDetail(), true), (route) => false);
+                },
+                child: BookingCard(
+                  isCustomerHistory: isCustomerHistory,
+                  isCustomerHistoryDetail: isCustomerHistoryDetail,
                 ),
               ),
+            ],
+          ),
+        ),
         // Bottom bar app
         bottomNavigationBar: BottomBar(
           bottomBarIndex: 2,

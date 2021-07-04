@@ -1,3 +1,4 @@
+import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_card.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
@@ -10,8 +11,9 @@ import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 // import 'package:dropdown_plus/dropdown_plus.dart';
 
 class TrackingBooking extends StatefulWidget {
+  final UserModel userModel;
   final bool isCustomer;
-  TrackingBooking({Key key, this.isCustomer}) : super(key: key);
+  TrackingBooking({Key key, this.userModel, this.isCustomer}) : super(key: key);
 
   @override
   _TrackingBookingState createState() => _TrackingBookingState();
@@ -296,37 +298,44 @@ class _TrackingBookingState extends State<TrackingBooking> {
                     ],
                   ),
                 // các nút của chủ xe
-                Column(
-                  children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      ElavateBtn(
-                        width: 180,
-                        title: 'Đồng ý cho thuê',
-                        onPressedElavateBtn: () {},
-                      ),
-                      SizedBox(width: 20),
-                      OutlineBtn(
-                        width: 180,
-                        title: 'Từ chối cho thuê',
-                        onPressedOutlineBtn: () {},
-                      )
-                    ]),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      ElavateBtn(
-                        width: 380,
-                        title: 'Đã nhận xe',
-                        onPressedElavateBtn: () {},
-                      )
-                    ]),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      ElavateBtn(
-                        width: 380,
-                        title: 'Xác nhận đã thanh toán',
-                        onPressedElavateBtn: () {},
-                      )
-                    ]),
-                  ],
-                ),
+                if (!widget.isCustomer)
+                  Column(
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElavateBtn(
+                              width: 180,
+                              title: 'Đồng ý cho thuê',
+                              onPressedElavateBtn: () {},
+                            ),
+                            SizedBox(width: 20),
+                            OutlineBtn(
+                              width: 180,
+                              title: 'Từ chối cho thuê',
+                              onPressedOutlineBtn: () {},
+                            )
+                          ]),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElavateBtn(
+                              width: 380,
+                              title: 'Đã nhận xe',
+                              onPressedElavateBtn: () {},
+                            )
+                          ]),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElavateBtn(
+                              width: 380,
+                              title: 'Xác nhận đã thanh toán',
+                              onPressedElavateBtn: () {},
+                            )
+                          ]),
+                    ],
+                  ),
 
                 //===========================================
               ],

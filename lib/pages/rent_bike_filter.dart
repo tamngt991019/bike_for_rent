@@ -1,3 +1,4 @@
+import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/bike_get_map.dart';
 import 'package:bike_for_rent/pages/history.dart';
@@ -13,10 +14,16 @@ import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class RentBikeFilter extends StatefulWidget {
   final UserModel userModel;
-  RentBikeFilter({Key key, this.userModel}) : super(key: key);
+  final BookingModel bookingModel;
+  RentBikeFilter({
+    Key key,
+    this.userModel,
+    this.bookingModel,
+  }) : super(key: key);
 
   @override
   _RentBikeFilterState createState() => _RentBikeFilterState();
@@ -42,6 +49,13 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // widget.userModel = new UserModel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
@@ -49,9 +63,7 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
       ),
       home: Scaffold(
         // Header app
-        appBar: Appbar(height: 50, titles: "Thuê xe", isShowBackBtn: false
-            // runApp(MaterialApp(home: Home(userModel: widget.userModel))),
-            ),
+        appBar: Appbar(height: 50, titles: "Thuê xe", isShowBackBtn: false),
         // Body app
         body:
             // (widget.userModel == null)
@@ -176,10 +188,8 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
                 child: ElavateBtn(
                   width: 380,
                   title: 'Chọn địa điểm nhận xe',
-                  onPressedElavateBtn: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => BikeGetMap()),
-                  ),
+                  onPressedElavateBtn: () => helper.pushInto(
+                      context, BikeGetMap(userModel: widget.userModel), true),
                   // runApp(MaterialApp(home: BikeGetMap())),
                 ),
               )
