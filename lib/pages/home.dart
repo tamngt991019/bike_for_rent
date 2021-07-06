@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/bike_get_map.dart';
 import 'package:bike_for_rent/pages/history.dart';
 import 'package:bike_for_rent/pages/personal.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
@@ -11,6 +12,7 @@ import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class Home extends StatefulWidget {
   final UserModel userModel;
@@ -162,7 +164,7 @@ class _HomeState extends State<Home> {
                       // tên người dùng
                       child: Text(
                         (widget.userModel != null)
-                            ? "Tên người thuê / cho thuê"
+                            ? "Tên người dùng"
                             : "Xin chào,",
                         style: TextStyle(
                           fontSize: 20,
@@ -198,6 +200,7 @@ class _HomeState extends State<Home> {
                 ],
               ),
               // map
+
               Container(
                 height: 300,
                 child: GoogleMap(
@@ -205,6 +208,14 @@ class _HomeState extends State<Home> {
                   myLocationButtonEnabled: false,
                   zoomControlsEnabled: false,
                   mapToolbarEnabled: false,
+                  zoomGesturesEnabled: false,
+                  onTap: (val) {
+                    helper.pushInto(
+                      context,
+                      BikeGetMap(userModel: widget.userModel),
+                      true,
+                    );
+                  },
                   initialCameraPosition: _initialCameraPosition,
                   markers: _markers,
                   onMapCreated: _onMapCreated,
@@ -226,7 +237,11 @@ class _HomeState extends State<Home> {
                         child: IconButton(
                           icon: Image.asset('lib/assets/images/xeso.png'),
                           iconSize: 50,
-                          onPressed: () {},
+                          onPressed: () => helper.pushInto(
+                            context,
+                            BikeGetMap(userModel: widget.userModel),
+                            true,
+                          ),
                         ),
                       ),
                       SizedBox(height: 5),
@@ -250,7 +265,11 @@ class _HomeState extends State<Home> {
                         child: IconButton(
                           icon: Image.asset('lib/assets/images/xetayga.png'),
                           iconSize: 50,
-                          onPressed: () {},
+                          onPressed: () => helper.pushInto(
+                            context,
+                            BikeGetMap(userModel: widget.userModel),
+                            true,
+                          ),
                         ),
                       ),
                       SizedBox(height: 5),
@@ -264,36 +283,36 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                   SizedBox(width: 20),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 80 - 150,
-                    height: 30,
-                    child: ElevatedButton(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Vị trí khác",
-                            style: TextStyle(fontSize: 15),
-                          ),
-                          SizedBox(width: 10),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 20,
-                          ),
-                        ],
-                      ),
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15))),
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              my_colors.primary)),
-                      onPressed: () {},
-                    ),
-                  ),
+                  // SizedBox(
+                  //   width: MediaQuery.of(context).size.width - 80 - 150,
+                  //   height: 30,
+                  //   child: ElevatedButton(
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       children: [
+                  //         Text(
+                  //           "Vị trí khác",
+                  //           style: TextStyle(fontSize: 15),
+                  //         ),
+                  //         SizedBox(width: 10),
+                  //         Icon(
+                  //           Icons.arrow_forward_ios,
+                  //           size: 20,
+                  //         ),
+                  //       ],
+                  //     ),
+                  //     style: ButtonStyle(
+                  //         shape: MaterialStateProperty.all(
+                  //             RoundedRectangleBorder(
+                  //                 borderRadius: BorderRadius.circular(15))),
+                  //         foregroundColor:
+                  //             MaterialStateProperty.all<Color>(Colors.white),
+                  //         backgroundColor: MaterialStateProperty.all<Color>(
+                  //             my_colors.primary)),
+                  //     onPressed: () {},
+                  //   ),
+                  // ),
                 ],
               ),
               SizedBox(height: 20),

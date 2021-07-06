@@ -1,4 +1,4 @@
-import 'package:bike_for_rent/helper/helper.dart' as helper;
+import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/history_detail.dart';
 import 'package:bike_for_rent/pages/login_valid.dart';
@@ -9,6 +9,7 @@ import 'package:bike_for_rent/widgets/booking_card.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
+import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class History extends StatelessWidget {
   final UserModel userModel;
@@ -21,6 +22,7 @@ class History extends StatelessWidget {
       this.isCustomerHistoryDetail})
       : super(key: key);
 
+  BookingModel _bookingModel;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -44,7 +46,14 @@ class History extends StatelessWidget {
           child: Column(
             children: [
               InkWell(
-                onTap: () => helper.pushInto(context, HistoryDetail(), true),
+                onTap: () => helper.pushInto(
+                    context,
+                    HistoryDetail(
+                      userModel: userModel,
+                      bookingModel: _bookingModel,
+                      isCustomer: true,
+                    ),
+                    true),
                 child: BookingCard(
                   isCustomerHistory: isCustomerHistory,
                   isCustomerHistoryDetail: isCustomerHistoryDetail,

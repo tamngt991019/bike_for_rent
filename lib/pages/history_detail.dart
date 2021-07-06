@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:bike_for_rent/helper/helper.dart' as helper;
+import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/history.dart';
+import 'package:bike_for_rent/pages/rent_bike_manager.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_detail.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
@@ -15,7 +17,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HistoryDetail extends StatefulWidget {
   final UserModel userModel;
-  const HistoryDetail({Key key, this.userModel}) : super(key: key);
+  final BookingModel bookingModel;
+  final bool isCustomer;
+  const HistoryDetail({
+    Key key,
+    this.userModel,
+    this.bookingModel,
+    this.isCustomer,
+  }) : super(key: key);
 
   @override
   _HistoryDetailState createState() => _HistoryDetailState();
@@ -72,10 +81,12 @@ class _HistoryDetailState extends State<HistoryDetail> {
           bottomAppBar: null,
           onPressedBackBtn: () => helper.pushInto(
               context,
-              History(
-                isCustomerHistory: true,
-                isCustomerHistoryDetail: false,
-              ),
+              (widget.isCustomer)
+                  ? History(
+                      isCustomerHistory: true,
+                      isCustomerHistoryDetail: false,
+                    )
+                  : RentBikeManager(userModel: widget.userModel, tabIndex: 2),
               false),
         ),
         // Body app
@@ -317,7 +328,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
         ),
         // Bottom bar app
         bottomNavigationBar: BottomBar(
-          bottomBarIndex: 2,
+          bottomBarIndex: (widget.isCustomer) ? 2 : 3,
           userModel: widget.userModel,
         ),
       ),

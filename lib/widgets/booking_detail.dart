@@ -134,73 +134,74 @@ class Bookingdetail extends StatelessWidget {
               ),
             ],
           ),
-        Column(
-          children: [
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (isCustomerHistory && isCustomerHistoryDetail)
+        if (isCustomerHistory)
+          Column(
+            children: [
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (isCustomerHistoryDetail)
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Thời gian thuê: ",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold)),
+                              Expanded(
+                                child: Text("1 ngày 10 tiếng",
+                                    style: TextStyle(fontSize: 15)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (isCustomerHistoryDetail) SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Thời gian thuê: ",
+                            Text("Trạng thái: ",
                                 style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold)),
                             Expanded(
-                              child: Text("1 ngày 10 tiếng",
-                                  style: TextStyle(fontSize: 15)),
+                              child: Text(
+                                  // helper.getStatus(
+                                  //     bookingModel.status.toUpperCase()),
+                                  helper.getStatus("FINISHED"),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    // color: (bookingModel.status == "CANCELED")
+                                    //     ? my_colors.danger
+                                    //     : my_colors.primary,
+                                    color: ("FINISHED" == "CANCELED")
+                                        ? my_colors.danger
+                                        : my_colors.primary,
+                                  )),
+                              // Text("Hoàn thành / Huỷ",
+                              // style: TextStyle(fontSize: 15)),
                             ),
                           ],
                         ),
                       ],
                     ),
                   ),
-                if (isCustomerHistory && isCustomerHistoryDetail)
-                  SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text("Trạng thái: ",
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold)),
-                          Expanded(
-                            child: Text(
-                                // helper.getStatus(
-                                //     bookingModel.status.toUpperCase()),
-                                helper.getStatus("FINISHED"),
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  // color: (bookingModel.status == "CANCELED")
-                                  //     ? my_colors.danger
-                                  //     : my_colors.primary,
-                                  color: ("FINISHED" == "CANCELED")
-                                      ? my_colors.danger
-                                      : my_colors.primary,
-                                )),
-                            // Text("Hoàn thành / Huỷ",
-                            // style: TextStyle(fontSize: 15)),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+                ],
+              ),
+            ],
+          ),
         if (isCustomerHistory)
           Column(
             children: [
