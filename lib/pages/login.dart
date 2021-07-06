@@ -40,22 +40,25 @@ class _LoginState extends State<Login> {
     }
   }
 
-  void returnPreviousScreen(int index, UserModel userModel) {
-    if (index == 0) {
-      runApp(MaterialApp(home: Home(userModel: userModel)));
-    } else if (index == 1) {
-      runApp(MaterialApp(home: RentBikeFilter(userModel: userModel)));
-    } else if (index == 2) {
-      runApp(MaterialApp(
-          home: History(
-        userModel: userModel,
-        isCustomerHistory: false,
-        isCustomerHistoryDetail: false,
-      )));
-    } else if (index == 3) {
-      runApp(MaterialApp(home: Personal(userModel: userModel)));
-    }
-  }
+  // void returnPreviousScreen(int index, UserModel userModel) {
+  //   if (index == 0) {
+  //     // helper.pushInto(context, Home(userModel: userModel), false);
+  //     runApp(MaterialApp(home: Home(userModel: userModel)));
+  //   } else if (index == 1) {
+  //     // helper.pushInto(context, RentBikeFilter(userModel: userModel), false);
+  //     runApp(MaterialApp(home: RentBikeFilter(userModel: userModel)));
+  //   } else if (index == 2) {
+  //     runApp(MaterialApp(
+  //         home: History(
+  //       userModel: userModel,
+  //       isCustomerHistory: false,
+  //       isCustomerHistoryDetail: false,
+  //     )));
+  //   } else if (index == 3) {
+  //     // helper.pushInto(context, Personal(userModel: userModel), false);
+  //     runApp(MaterialApp(home: Personal(userModel: userModel)));
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -75,21 +78,32 @@ class _LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    SizedBox(width: 5),
-                    IconButton(
-                        icon: Icon(Icons.arrow_back_ios_new),
-                        onPressed: () {
-                          // returnPreviousScreen(widget.currentIndex, null);
-                          runApp(MaterialApp(
-                              home: getScreen(widget.currentIndex, null)));
-                        }),
-                    Text(
-                      "Trở về",
-                      style: TextStyle(fontSize: 20),
-                    )
-                  ],
+                InkWell(
+                  onTap: () {
+                    helper.pushInto(
+                        context, getScreen(widget.currentIndex, null), false);
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(top: 10, left: 10),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          "Trở về",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
 
                 Image.asset(
@@ -116,11 +130,11 @@ class _LoginState extends State<Login> {
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(
                                 Icons.person,
-                                size: 30,
+                                size: 35,
                                 color: my_colors.primary,
                               ),
                               SizedBox(width: 10),
@@ -131,7 +145,7 @@ class _LoginState extends State<Login> {
                                     labelText: "Tên đăng nhập",
                                     hintText: "Tên đăng nhặp",
                                     errorText: isEmptyUsername
-                                        ? 'Không được bỏ trống'
+                                        ? 'Vui lòng nhập tên đăng nhập'
                                         : null,
                                   ),
                                   style: TextStyle(fontSize: 15),
@@ -142,11 +156,11 @@ class _LoginState extends State<Login> {
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(
                                 Icons.lock,
-                                size: 30,
+                                size: 35,
                                 color: my_colors.primary,
                               ),
                               SizedBox(width: 10),
@@ -157,7 +171,7 @@ class _LoginState extends State<Login> {
                                     labelText: "Mật khẩu",
                                     hintText: "Mật khẩu",
                                     errorText: isEmptyPassword
-                                        ? 'Không được bỏ trống'
+                                        ? 'Vui lòng nhập mật khẩu'
                                         : null,
                                   ),
                                   obscureText: true,

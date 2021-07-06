@@ -5,6 +5,7 @@ import 'package:bike_for_rent/pages/history.dart';
 import 'package:bike_for_rent/pages/home.dart';
 import 'package:bike_for_rent/pages/login_valid.dart';
 import 'package:bike_for_rent/pages/personal.dart';
+import 'package:bike_for_rent/pages/rent_bike_list.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
@@ -63,7 +64,13 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
       ),
       home: Scaffold(
         // Header app
-        appBar: Appbar(height: 50, titles: "Thuê xe", isShowBackBtn: false),
+        appBar: Appbar(
+          height: 50,
+          titles: "Thuê xe",
+          isShowBackBtn: true,
+          onPressedBackBtn: () => helper.pushInto(
+              context, BikeGetMap(userModel: widget.userModel), false),
+        ),
         // Body app
         body:
             // (widget.userModel == null)
@@ -84,7 +91,7 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     FrameText(
-                      title: "Vị trí của bạn:",
+                      title: "Địa điểm nhận xe:",
                       content: _bikeGetAddress,
                     ),
                   ],
@@ -187,9 +194,9 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
               Center(
                 child: ElavateBtn(
                   width: 380,
-                  title: 'Chọn địa điểm nhận xe',
+                  title: 'Tìm xe',
                   onPressedElavateBtn: () => helper.pushInto(
-                      context, BikeGetMap(userModel: widget.userModel), true),
+                      context, RentBikeList(userModel: widget.userModel), true),
                   // runApp(MaterialApp(home: BikeGetMap())),
                 ),
               )

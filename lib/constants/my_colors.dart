@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 
 const MaterialColor materialPimary = Colors.green;
 
-const Color primary = Colors.green;
+const Color primary = Colors.green; // 0xFF4CAF50
 const Color secondary = Colors.grey;
 const Color danger = Colors.red;
 const Color warning = Colors.yellow;

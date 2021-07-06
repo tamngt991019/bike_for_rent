@@ -145,16 +145,25 @@ class _HomeState extends State<Home> {
                   children: [
                     // avatar
                     CircleAvatar(
+                      foregroundColor: Colors.white,
                       radius: 30,
-                      backgroundImage: NetworkImage(
-                          "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
+                      backgroundImage: (widget.userModel != null)
+                          ? NetworkImage(widget.userModel.avatar)
+                          : AssetImage(
+                              "lib/assets/images/avatar_logo.png",
+                            ),
+
+                      // NetworkImage(
+                      //     "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 15),
                     // tên người dùng và sđt
                     Expanded(
                       // tên người dùng
                       child: Text(
-                        "Tên người thuê / cho thuê",
+                        (widget.userModel != null)
+                            ? "Tên người thuê / cho thuê"
+                            : "Xin chào,",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

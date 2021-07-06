@@ -36,7 +36,7 @@ class _RentBikeListState extends State<RentBikeList> {
           isShowBackBtn: true,
           bottomAppBar: null,
           onPressedBackBtn: () => helper.pushInto(
-              context, BikeGetMap(userModel: widget.userModel), false),
+              context, RentBikeFilter(userModel: widget.userModel), false),
         ),
         // Body app
         body: SingleChildScrollView(
@@ -45,10 +45,24 @@ class _RentBikeListState extends State<RentBikeList> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Thông tin loại xe
+              Row(
+                children: [
+                  Text(
+                    "Loại xe: ",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Xe tay ga",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15),
               // Thông tin gói thuê
               Row(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Gói thuê: ",
@@ -60,41 +74,41 @@ class _RentBikeListState extends State<RentBikeList> {
                       style: TextStyle(fontSize: 15),
                     ),
                   ),
-                  SizedBox(width: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        child: Card(
-                          color: my_colors.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          margin: EdgeInsets.all(0),
-                          child: Center(
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.edit,
-                                color: Colors.white,
-                              ),
-                              iconSize: 20,
-                              onPressed: () => helper.pushInto(
-                                  context,
-                                  RentBikeFilter(userModel: widget.userModel),
-                                  false),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // SizedBox(width: 10),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     Container(
+                  //       width: 40,
+                  //       height: 40,
+                  //       child: Card(
+                  //         color: my_colors.primary,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius: BorderRadius.circular(15),
+                  //         ),
+                  //         elevation: 5,
+                  //         margin: EdgeInsets.all(0),
+                  //         child: Center(
+                  //           child: IconButton(
+                  //             icon: Icon(
+                  //               Icons.edit,
+                  //               color: Colors.white,
+                  //             ),
+                  //             iconSize: 20,
+                  //             onPressed: () => helper.pushInto(
+                  //                 context,
+                  //                 RentBikeFilter(userModel: widget.userModel),
+                  //                 false),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 15),
               // thông tin vị trí thuê
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,

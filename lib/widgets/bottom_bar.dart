@@ -1,12 +1,9 @@
-// import 'package:bike_for_rent/pages/test.dart';
-import 'package:bike_for_rent/constants/api_url.dart';
 import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/bike_get_map.dart';
 import 'package:bike_for_rent/pages/history.dart';
 import 'package:bike_for_rent/pages/home.dart';
 import 'package:bike_for_rent/pages/personal.dart';
-import 'package:bike_for_rent/pages/rent_bike_filter.dart';
-import 'package:bike_for_rent/test_api/test.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
@@ -76,7 +73,7 @@ class _BottomBarState extends State<BottomBar> {
           } else if (index == 1) {
             helper.pushInto(
               context,
-              RentBikeFilter(userModel: widget.userModel),
+              BikeGetMap(userModel: widget.userModel),
               isRightToLeft,
             );
           } else if (index == 2) {

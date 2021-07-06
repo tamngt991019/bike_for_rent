@@ -1,4 +1,4 @@
-import 'package:bike_for_rent/helper/helper.dart';
+import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/history_detail.dart';
 import 'package:bike_for_rent/pages/login_valid.dart';
@@ -44,10 +44,7 @@ class History extends StatelessWidget {
           child: Column(
             children: [
               InkWell(
-                onTap: () {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      route(HistoryDetail(), true), (route) => false);
-                },
+                onTap: () => helper.pushInto(context, HistoryDetail(), true),
                 child: BookingCard(
                   isCustomerHistory: isCustomerHistory,
                   isCustomerHistoryDetail: isCustomerHistoryDetail,

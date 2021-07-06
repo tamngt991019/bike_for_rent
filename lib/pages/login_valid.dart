@@ -6,6 +6,7 @@ import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
+import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class LoginValid extends StatelessWidget {
   final currentIndex;
@@ -25,11 +26,12 @@ class LoginValid extends StatelessWidget {
           ),
           SizedBox(height: 20),
           ElavateBtn(
-            width: 200,
-            title: 'Đăng nhập',
-            onPressedElavateBtn: () =>
-                runApp(MaterialApp(home: Login(currentIndex: currentIndex))),
-          ),
+              width: 200,
+              title: 'Đăng nhập',
+              onPressedElavateBtn: () => helper.pushInto(
+                  context, Login(currentIndex: currentIndex), true)
+              // runApp(MaterialApp(home: Login(currentIndex: currentIndex))),
+              ),
         ],
       ),
     );

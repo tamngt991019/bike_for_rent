@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
-import 'package:bike_for_rent/pages/rent_bike_list.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
@@ -16,7 +16,9 @@ import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class BikeGetMap extends StatefulWidget {
   final UserModel userModel;
-  const BikeGetMap({Key key, this.userModel}) : super(key: key);
+  final BookingModel bookingModel;
+  const BikeGetMap({Key key, this.userModel, this.bookingModel})
+      : super(key: key);
 
   @override
   _BikeGetMapState createState() => _BikeGetMapState();
@@ -25,7 +27,8 @@ class BikeGetMap extends StatefulWidget {
 class _BikeGetMapState extends State<BikeGetMap> {
   String _currentAddress = "";
   String _bikeGetAddress = "";
-  bool isShowConfirmBtn = false;
+  bool _isShowConfirmBtn = false;
+  BookingModel _bookingModel;
 
   LatLng _currentLatLing;
 
@@ -68,7 +71,7 @@ class _BikeGetMapState extends State<BikeGetMap> {
         });
       });
       if (_inLatLing != null) {
-        isShowConfirmBtn = true;
+        _isShowConfirmBtn = true;
         _markers.add(
           Marker(
             markerId: MarkerId("ID-2"),
@@ -110,6 +113,13 @@ class _BikeGetMapState extends State<BikeGetMap> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this._bookingModel = widget.bookingModel;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
@@ -122,10 +132,9 @@ class _BikeGetMapState extends State<BikeGetMap> {
             appBar: Appbar(
               height: 50,
               titles: "Thuê xe",
-              isShowBackBtn: true,
-              bottomAppBar: null,
-              onPressedBackBtn: () => helper.pushInto(
-                  context, RentBikeFilter(userModel: widget.userModel), false),
+              isShowBackBtn: false,
+              // onPressedBackBtn: () => helper.pushInto(
+              // context, RentBikeFilter(userModel: widget.userModel), false),
             ),
             // Body app
             body: Container(
@@ -249,7 +258,7 @@ class _BikeGetMapState extends State<BikeGetMap> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  if (isShowConfirmBtn)
+                  if (_isShowConfirmBtn)
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -260,13 +269,25 @@ class _BikeGetMapState extends State<BikeGetMap> {
                             Container(
                               margin: EdgeInsets.only(bottom: 20),
                               child: ElavateBtn(
-                                title: "Xác nhận vị trí",
-                                width: 200,
-                                onPressedElavateBtn: () => helper.pushInto(
-                                    context,
-                                    RentBikeList(userModel: widget.userModel),
-                                    true),
-                              ),
+                                  title: "Xác nhận vị trí",
+                                  width: 200,
+                                  onPressedElavateBtn: () {
+                                    if (_bookingModel == null) {
+                                      _bookingModel = new BookingModel();
+                                    } else {
+                                      _bookingModel.userName =
+                                          widget.userModel.username;
+                                      // _bookingModel.locationGetBike =
+                                    }
+
+                                    helper.pushInto(
+                                        context,
+                                        RentBikeFilter(
+                                          userModel: widget.userModel,
+                                          bookingModel: _bookingModel,
+                                        ),
+                                        true);
+                                  }),
                             ),
                           ],
                         ),
@@ -303,9 +324,10 @@ class _BikeGetMapState extends State<BikeGetMap> {
               ),
             ),
             // Bottom bar app
-            // bottomNavigationBar: BottomBar(
-            //   bottomBarIndex: 1,
-            // ),
+            bottomNavigationBar: BottomBar(
+              bottomBarIndex: 1,
+              userModel: widget.userModel,
+            ),
           ),
         ],
       ),

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bike_for_rent/helper/helper.dart';
+import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/history.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
@@ -66,18 +66,18 @@ class _HistoryDetailState extends State<HistoryDetail> {
       home: Scaffold(
         // Header app
         appBar: Appbar(
-            height: 50,
-            titles: "Chi tiết lịch sử thuê",
-            isShowBackBtn: true,
-            bottomAppBar: null,
-            onPressedBackBtn: () {
-              Navigator.of(context).push(route(
-                  History(
-                    isCustomerHistory: true,
-                    isCustomerHistoryDetail: false,
-                  ),
-                  false));
-            }),
+          height: 50,
+          titles: "Chi tiết lịch sử thuê",
+          isShowBackBtn: true,
+          bottomAppBar: null,
+          onPressedBackBtn: () => helper.pushInto(
+              context,
+              History(
+                isCustomerHistory: true,
+                isCustomerHistoryDetail: false,
+              ),
+              false),
+        ),
         // Body app
         body: SingleChildScrollView(
           child: Column(

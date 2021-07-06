@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/pages/rent_bike_list.dart';
 import 'package:bike_for_rent/pages/tracking_booking.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_detail.dart';
+import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +68,8 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
           isShowBackBtn: true,
           bottomAppBar: null,
           // onPressedBackBtn: () => runApp(MaterialApp(home: RentBikeList())),
-          onPressedBackBtn: () => Navigator.pop(context),
+          onPressedBackBtn: () => helper.pushInto(
+              context, RentBikeFilter(userModel: widget.userModel), false),
         ),
         // Body app
         body: SingleChildScrollView(
@@ -388,9 +391,10 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
           ),
         ),
         // Bottom bar app
-        // bottomNavigationBar: BottomBar(
-        //   bottomBarIndex: 1,
-        // ),
+        bottomNavigationBar: BottomBar(
+          bottomBarIndex: 1,
+          userModel: widget.userModel,
+        ),
       ),
     );
   }
