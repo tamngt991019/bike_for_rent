@@ -134,17 +134,19 @@ class _BikeGetMapState extends State<BikeGetMap> {
 
   LocationService locService = new LocationService();
   List<LocationModel> locList;
-  Future loadListLocations() {
+  Future loadListLocationsWithLatLngAndDistacne(
+      double currentlati, double currentLong, double radius) {
     if (locList == null) {
       locList = [];
     }
-    Future<List<LocationModel>> futureCases = locService.getLocationModels();
+    Future<List<LocationModel>> futureCases = locService
+        .getLocationsWithLatLngAndDistacne(currentlati, currentLong, radius);
     futureCases.then((list) {
       if (this.mounted) {
         setState(() {
-          List<LocationModel> tempList = list;
-          this.locList =
-              helper.getLocationsByRadius(_currentLatLing, tempList, 1);
+          // List<LocationModel> tempList = list;
+          this.locList = list;
+          // helper.getLocationsByRadius(_currentLatLing, tempList, 1);
           // print(userList.length);
         });
       }
@@ -396,7 +398,11 @@ class _BikeGetMapState extends State<BikeGetMap> {
                 SizedBox(height: 5),
                 // loop cái card thôi
                 FutureBuilder(
-                  future: loadListLocations(),
+                  future: loadListLocationsWithLatLngAndDistacne(
+                    _currentLatLing.latitude,
+                    _currentLatLing.longitude,
+                    1,
+                  ),
                   builder: (context, snapshot) {
                     return ListView.builder(
                       shrinkWrap: true,
