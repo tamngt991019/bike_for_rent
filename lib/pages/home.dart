@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/models/bike_type_model.dart';
+import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/bike_get_map.dart';
 import 'package:bike_for_rent/pages/history.dart';
@@ -239,7 +241,10 @@ class _HomeState extends State<Home> {
                           iconSize: 50,
                           onPressed: () => helper.pushInto(
                             context,
-                            BikeGetMap(userModel: widget.userModel),
+                            BikeGetMap(
+                              userModel: widget.userModel,
+                              bikeTypeModel: BikeTypeModel(id: "XS"),
+                            ),
                             true,
                           ),
                         ),
@@ -267,7 +272,10 @@ class _HomeState extends State<Home> {
                           iconSize: 50,
                           onPressed: () => helper.pushInto(
                             context,
-                            BikeGetMap(userModel: widget.userModel),
+                            BikeGetMap(
+                              userModel: widget.userModel,
+                              bikeTypeModel: BikeTypeModel(id: "XTG"),
+                            ),
                             true,
                           ),
                         ),

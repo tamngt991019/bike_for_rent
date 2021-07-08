@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/models/bike_type_model.dart';
+import 'package:bike_for_rent/models/location_model.dart';
+import 'package:bike_for_rent/models/pay_package_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/pages/rent_bike_list.dart';
@@ -18,7 +21,16 @@ import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class RentBikeDetail extends StatefulWidget {
   final UserModel userModel;
-  const RentBikeDetail({Key key, this.userModel}) : super(key: key);
+  final BikeTypeModel bikeTypeModel;
+  final LocationModel locationModel;
+  final PayPackageModel payPackageModel;
+  const RentBikeDetail({
+    Key key,
+    this.userModel,
+    this.bikeTypeModel,
+    this.locationModel,
+    this.payPackageModel,
+  }) : super(key: key);
 
   @override
   _RentBikeDetailState createState() => _RentBikeDetailState();

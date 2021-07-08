@@ -1,8 +1,12 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/models/bike_type_model.dart';
 import 'package:bike_for_rent/models/booking_model.dart';
+import 'package:bike_for_rent/models/location_model.dart';
+import 'package:bike_for_rent/models/pay_package_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
+import 'package:bike_for_rent/services/location_service.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
@@ -16,24 +20,32 @@ import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class BikeGetMap extends StatefulWidget {
   final UserModel userModel;
-  final BookingModel bookingModel;
-  const BikeGetMap({Key key, this.userModel, this.bookingModel})
-      : super(key: key);
+  final BikeTypeModel bikeTypeModel;
+  final PayPackageModel payPackageModel;
+  const BikeGetMap({
+    Key key,
+    this.userModel,
+    this.bikeTypeModel,
+    this.payPackageModel,
+  }) : super(key: key);
 
   @override
   _BikeGetMapState createState() => _BikeGetMapState();
 }
 
 class _BikeGetMapState extends State<BikeGetMap> {
+  static double cameraZoom = 15;
   String _currentAddress = "";
   String _bikeGetAddress = "";
   bool _isShowConfirmBtn = false;
-  BookingModel _bookingModel;
-
   LatLng _currentLatLing;
-
+  String selectedLocationId;
+  LocationModel _locationModel;
+  //==================================================================
   CameraPosition _initialCameraPosition = CameraPosition(
-      target: LatLng(10.82414068863801, 106.63065063707423), zoom: 15);
+    target: LatLng(10.82414068863801, 106.63065063707423),
+    zoom: cameraZoom,
+  );
 
   Completer<GoogleMapController> _ggMapController = Completer();
   Set<Marker> _markers = {};
@@ -86,7 +98,8 @@ class _BikeGetMapState extends State<BikeGetMap> {
             this._bikeGetAddress = add2;
           });
         });
-        _initialCameraPosition = CameraPosition(target: _inLatLing, zoom: 12);
+        _initialCameraPosition =
+            CameraPosition(target: _inLatLing, zoom: cameraZoom);
       }
 
       moveCamera();
@@ -101,7 +114,8 @@ class _BikeGetMapState extends State<BikeGetMap> {
       _currentLatLing = LatLng(position.latitude, position.longitude);
     });
     getLocation(null);
-    _initialCameraPosition = CameraPosition(target: _currentLatLing, zoom: 12);
+    _initialCameraPosition =
+        CameraPosition(target: _currentLatLing, zoom: cameraZoom);
   }
 
   void _onMapCreated(GoogleMapController _controller) {
@@ -116,7 +130,26 @@ class _BikeGetMapState extends State<BikeGetMap> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    this._bookingModel = widget.bookingModel;
+  }
+
+  LocationService locService = new LocationService();
+  List<LocationModel> locList;
+  Future loadListLocations() {
+    if (locList == null) {
+      locList = [];
+    }
+    Future<List<LocationModel>> futureCases = locService.getLocationModels();
+    futureCases.then((list) {
+      if (this.mounted) {
+        setState(() {
+          List<LocationModel> tempList = list;
+          this.locList =
+              helper.getLocationsByRadius(_currentLatLing, tempList, 1);
+          // print(userList.length);
+        });
+      }
+    });
+    return futureCases;
   }
 
   @override
@@ -269,25 +302,21 @@ class _BikeGetMapState extends State<BikeGetMap> {
                             Container(
                               margin: EdgeInsets.only(bottom: 20),
                               child: ElavateBtn(
-                                  title: "Xác nhận vị trí",
-                                  width: 200,
-                                  onPressedElavateBtn: () {
-                                    if (_bookingModel == null) {
-                                      _bookingModel = new BookingModel();
-                                    } else {
-                                      _bookingModel.userName =
-                                          widget.userModel.username;
-                                      // _bookingModel.locationGetBike =
-                                    }
-
-                                    helper.pushInto(
-                                        context,
-                                        RentBikeFilter(
-                                          userModel: widget.userModel,
-                                          bookingModel: _bookingModel,
-                                        ),
-                                        true);
-                                  }),
+                                title: "Xác nhận vị trí",
+                                width: 200,
+                                onPressedElavateBtn: () {
+                                  helper.pushInto(
+                                    context,
+                                    RentBikeFilter(
+                                      userModel: widget.userModel,
+                                      bikeTypeModel: widget.bikeTypeModel,
+                                      payPackageModel: widget.payPackageModel,
+                                      locationModel: _locationModel,
+                                    ),
+                                    true,
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -340,91 +369,79 @@ class _BikeGetMapState extends State<BikeGetMap> {
       builder: (BuildContext bc) {
         return Scaffold(
           appBar: AppBar(
-            toolbarHeight: 40,
-            title: Center(
-              child: Text(
-                "Danh sách địa điểm nhận xe gần bạn",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: my_colors.primary,
+            title: Row(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      "Những điểm nhận xe gần bạn khoảng 1km",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: my_colors.primary,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
             backgroundColor: Colors.white,
             foregroundColor: Colors.green,
             automaticallyImplyLeading: false,
           ),
           body: SingleChildScrollView(
+            physics: ScrollPhysics(),
             child: Column(
               children: [
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 // loop cái card thôi
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  elevation: 5,
-                  margin:
-                      EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                  child: InkWell(
-                    onTap: () {
-                      getLocation(LatLng(10.841493, 106.810038));
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      margin: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            'lib/assets/images/location.png',
-                            scale: 10,
+                FutureBuilder(
+                  future: loadListLocations(),
+                  builder: (context, snapshot) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: locList == null ? 0 : locList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        LocationModel item = locList[index];
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          SizedBox(width: 20),
-                          Expanded(
-                            child: Text(
-                              "Đại học FPT Hồ Chí Mính",
-                              style: TextStyle(fontSize: 15),
+                          elevation: 5,
+                          margin: EdgeInsets.only(
+                              left: 20, right: 20, top: 5, bottom: 5),
+                          child: InkWell(
+                            onTap: () {
+                              _locationModel = item;
+                              double lati = double.parse(item.latitude);
+                              double long = double.parse(item.longitude);
+                              getLocation(LatLng(lati, long));
+                              Navigator.of(context).pop();
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'lib/assets/images/location.png',
+                                    scale: 10,
+                                  ),
+                                  SizedBox(width: 20),
+                                  Expanded(
+                                    child: Text(
+                                      item.name,
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  elevation: 5,
-                  margin:
-                      EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                  child: InkWell(
-                    onTap: () {
-                      getLocation(
-                          LatLng(10.867108878090859, 106.8030191050504));
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      margin: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            'lib/assets/images/location.png',
-                            scale: 10,
-                          ),
-                          SizedBox(width: 20),
-                          Expanded(
-                            child: Text(
-                              "Khu du lịch văn hóa Suối Tiên",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),

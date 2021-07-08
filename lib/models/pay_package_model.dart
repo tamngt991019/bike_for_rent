@@ -2,7 +2,7 @@ class PayPackageModel {
   String id;
   String name;
   String description;
-  String price;
+  dynamic price;
   String bikeTypeId;
 
   PayPackageModel({
@@ -18,7 +18,7 @@ class PayPackageModel {
         id: json['id'] as String,
         name: json['name'] as String,
         description: json['description'] as String,
-        price: json['price'] as String,
+        price: json['price'] as dynamic,
         bikeTypeId: json['bikeTypeId'] as String,
       );
 

@@ -1,3 +1,6 @@
+import 'package:bike_for_rent/models/bike_type_model.dart';
+import 'package:bike_for_rent/models/location_model.dart';
+import 'package:bike_for_rent/models/pay_package_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/bike_get_map.dart';
 import 'package:bike_for_rent/pages/rent_bike_detail.dart';
@@ -9,19 +12,49 @@ import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:bike_for_rent/helper/helper.dart' as helper;
+import 'package:geocoder/geocoder.dart';
+import 'package:http/http.dart';
 
 class RentBikeList extends StatefulWidget {
   final UserModel userModel;
-  final double inLatitude;
-  final double inLongitude;
-  RentBikeList({Key key, this.userModel, this.inLatitude, this.inLongitude})
-      : super(key: key);
+  final BikeTypeModel bikeTypeModel;
+  final LocationModel locationModel;
+  final PayPackageModel payPackageModel;
+  RentBikeList({
+    Key key,
+    this.userModel,
+    this.bikeTypeModel,
+    this.locationModel,
+    this.payPackageModel,
+  }) : super(key: key);
 
   @override
   _RentBikeListState createState() => _RentBikeListState();
 }
 
 class _RentBikeListState extends State<RentBikeList> {
+  String addressStr = "";
+  Future<String> getAddress(double _inLatitude, double _inLongitude) async {
+    final coordinates = new Coordinates(_inLatitude, _inLongitude);
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    return first.addressLine;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    double lati = double.parse(widget.locationModel.latitude);
+    double long = double.parse(widget.locationModel.longitude);
+    getAddress(lati, long).then((value) {
+      setState(() {
+        addressStr = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -36,7 +69,14 @@ class _RentBikeListState extends State<RentBikeList> {
           isShowBackBtn: true,
           bottomAppBar: null,
           onPressedBackBtn: () => helper.pushInto(
-              context, RentBikeFilter(userModel: widget.userModel), false),
+              context,
+              RentBikeFilter(
+                userModel: widget.userModel,
+                bikeTypeModel: widget.bikeTypeModel,
+                locationModel: widget.locationModel,
+                payPackageModel: widget.payPackageModel,
+              ),
+              false),
         ),
         // Body app
         body: SingleChildScrollView(
@@ -54,7 +94,7 @@ class _RentBikeListState extends State<RentBikeList> {
                   ),
                   Expanded(
                     child: Text(
-                      "Xe tay ga",
+                      widget.bikeTypeModel.name,
                       style: TextStyle(fontSize: 15),
                     ),
                   ),
@@ -70,42 +110,10 @@ class _RentBikeListState extends State<RentBikeList> {
                   ),
                   Expanded(
                     child: Text(
-                      "100000 vnd / ngày",
+                      widget.payPackageModel.name,
                       style: TextStyle(fontSize: 15),
                     ),
                   ),
-                  // SizedBox(width: 10),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.end,
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     Container(
-                  //       width: 40,
-                  //       height: 40,
-                  //       child: Card(
-                  //         color: my_colors.primary,
-                  //         shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(15),
-                  //         ),
-                  //         elevation: 5,
-                  //         margin: EdgeInsets.all(0),
-                  //         child: Center(
-                  //           child: IconButton(
-                  //             icon: Icon(
-                  //               Icons.edit,
-                  //               color: Colors.white,
-                  //             ),
-                  //             iconSize: 20,
-                  //             onPressed: () => helper.pushInto(
-                  //                 context,
-                  //                 RentBikeFilter(userModel: widget.userModel),
-                  //                 false),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                 ],
               ),
               SizedBox(height: 15),
@@ -116,7 +124,7 @@ class _RentBikeListState extends State<RentBikeList> {
                 children: [
                   FrameText(
                     title: "Địa chỉ hiện tại",
-                    content: "Đây là nội dung địa chỉ",
+                    content: addressStr,
                   )
                 ],
               ),
@@ -145,14 +153,6 @@ class _RentBikeListState extends State<RentBikeList> {
                   isCustomerHistory: false,
                   isCustomerHistoryDetail: false,
                 ),
-              ),
-              BookingCard(
-                isCustomerHistory: false,
-                isCustomerHistoryDetail: false,
-              ),
-              BookingCard(
-                isCustomerHistory: false,
-                isCustomerHistoryDetail: false,
               ),
             ],
           ),

@@ -1,6 +1,8 @@
-// animation chuyen trang
+import 'package:bike_for_rent/models/location_model.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/status.dart' as stt;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:math' as math;
 // Route route(Widget wg, bool isRightToLeft) {
 //   return PageRouteBuilder(
 //     pageBuilder: (context, animation, secondaryAnimation) => wg,
@@ -24,6 +26,33 @@ import 'package:bike_for_rent/constants/status.dart' as stt;
 //   );
 // }
 
+//Tinh khoang cach
+double calculatekDistance(
+    LatLng _currentLatLing, double checkLati, double checkLong) {
+  var y = 40000 / 360;
+  var x = math.cos(math.pi * _currentLatLing.latitude / 180.0) * y;
+  var dx = ((_currentLatLing.longitude - checkLong) * x).abs(); //dimension x
+  var dy = ((_currentLatLing.latitude - checkLati) * y).abs(); //dimension y
+  double result = math.sqrt(dx * dx + dy * dy);
+  return result;
+}
+
+// lay cac toa do trong ban kinh 5k
+List<LocationModel> getLocationsByRadius(
+    LatLng _currentLatLing, List<LocationModel> listLoc, double radius) {
+  List<LocationModel> result = [];
+  for (var loc in listLoc) {
+    double checkLati = double.parse(loc.latitude);
+    double checkLong = double.parse(loc.longitude);
+    double distance = calculatekDistance(_currentLatLing, checkLati, checkLong);
+    if (distance <= radius) {
+      result.add(loc);
+    }
+  }
+  return result;
+}
+
+// convert status code
 String getStatus(String statusStr) {
   String result = "";
   if (statusStr == "FINISHED") {
@@ -34,18 +63,7 @@ String getStatus(String statusStr) {
   return result;
 }
 
-Text getBookingStatus(String statusStr) {
-  String resultStr = getStatus(statusStr);
-  Color txtColor;
-  return Text(
-    resultStr,
-    style: TextStyle(
-      fontSize: 15,
-      color: txtColor,
-    ),
-  );
-}
-
+// chuyen huong man hinh
 void pushInto(BuildContext context, Widget wg, bool isRightToLeft) {
   Navigator.of(context).pushAndRemoveUntil(
       PageRouteBuilder(
