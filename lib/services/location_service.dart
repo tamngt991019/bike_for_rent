@@ -24,6 +24,26 @@ class LocationService {
   }
 
   //get trả về response code 200
+  Future<List<LocationModel>> getLocationsWithLatLngAndDistacne(
+      double currentlati, double currentLong, double radius) async {
+    Response response;
+    List<LocationModel> result;
+    try {
+      response = response = await get(Uri.parse(
+          '${apiUrl.location}/lat/lng/radius?currentLati=$currentlati&currentLong=$currentLong&radius=$radius'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        result =
+            body.map((dynamic item) => LocationModel.fromJson(item)).toList();
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
+  //get trả về response code 200
   Future<LocationModel> getLocationById(String id) async {
     Response response;
     LocationModel result;

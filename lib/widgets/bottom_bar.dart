@@ -1,19 +1,30 @@
-// import 'package:bike_for_rent/pages/test.dart';
+import 'package:bike_for_rent/helper/helper.dart' as helper;
+import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/bike_get_map.dart';
 import 'package:bike_for_rent/pages/history.dart';
 import 'package:bike_for_rent/pages/home.dart';
-import 'package:bike_for_rent/test_api/test.dart';
+import 'package:bike_for_rent/pages/personal.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
   final int bottomBarIndex;
-  final History history;
-  BottomBar({Key key, this.bottomBarIndex, this.history}) : super(key: key);
+  final UserModel userModel;
+  BottomBar({Key key, this.bottomBarIndex, this.userModel}) : super(key: key);
 
   @override
   _BottomBarState createState() => _BottomBarState();
 }
 
 class _BottomBarState extends State<BottomBar> {
+  // UserModel userModel = new UserModel();
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   setState(() {
+  //     // userModel = widget.userModel;
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
@@ -44,16 +55,44 @@ class _BottomBarState extends State<BottomBar> {
       ],
       // press for switch tab
       onTap: (index) {
-        if (index == 0) {
-          runApp(MaterialApp(
-            home: Home(),
-          ));
-        } else if (index == 1) {
-          // runApp(Test());
-        } else if (index == 2) {
-          runApp(widget.history);
-        } else if (index == 3) {
-          runApp(Test());
+        if (index != widget.bottomBarIndex) {
+          bool isRightToLeft = false;
+          if (index > widget.bottomBarIndex) {
+            isRightToLeft = true;
+          }
+          if (index == 0) {
+            helper.pushInto(
+              context,
+              Home(userModel: widget.userModel),
+              isRightToLeft,
+            );
+            // Navigator.of(context).push(
+            //   helper.route(Home(userModel: widget.userModel), isRightToLeft),
+            // );
+            // runApp(MaterialApp(home: Home(userModel: widget.userModel)));
+          } else if (index == 1) {
+            helper.pushInto(
+              context,
+              BikeGetMap(userModel: widget.userModel),
+              isRightToLeft,
+            );
+          } else if (index == 2) {
+            helper.pushInto(
+              context,
+              History(
+                userModel: widget.userModel,
+                isCustomerHistory: true,
+                isCustomerHistoryDetail: false,
+              ),
+              isRightToLeft,
+            );
+          } else if (index == 3) {
+            helper.pushInto(
+              context,
+              Personal(userModel: widget.userModel),
+              isRightToLeft,
+            );
+          }
         }
       },
     );

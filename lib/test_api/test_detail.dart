@@ -49,7 +49,7 @@ class _UserDetailState extends State<UserDetail> {
                         CircleAvatar(
                             radius: 30,
                             backgroundImage: (widget.usermodel.avatar != null)
-                                ? NetworkImage(widget.usermodel.avatar)
+                                ? NetworkImage("https://media.publit.io/file/BikeForRent/test_avatar.jpg")
                                 : AssetImage("lib/assets/images/default.png")),
                         SizedBox(width: 20),
                         // tên người dùng và sđt

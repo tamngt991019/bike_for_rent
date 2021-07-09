@@ -28,10 +28,6 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
                 color: Colors.white,
               ),
             ),
-          // IconButton(
-          //   icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
-          //   onPressed: onPressedBackBtn,
-          // ),
           Center(
             child: Text(
               titles.toUpperCase(),
@@ -42,18 +38,5 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
       ),
       bottom: bottomAppBar,
     );
-    // AppBar(
-    //   title: Padding(
-    //     padding: EdgeInsets.only(left: 10),
-    //     child: Text(titles),
-    //   ),
-    //   leading: isShowBackBtn
-    //       ? IconButton(
-    //           icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
-    //           onPressed: onPressedBackBtn,
-    //         )
-    //       : null,
-    //   bottom: bottomAppBar,
-    // );
   }
 }

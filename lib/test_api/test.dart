@@ -51,14 +51,16 @@ class _TestState extends State<Test> {
             bottomAppBar: null,
             onPressedBackBtn: () {}),
         // Body app
-        body: Column(
-          children: [
-            Expanded(
-              child: FutureBuilder(
+        body: SingleChildScrollView(
+          physics: ScrollPhysics(),
+          child: Column(
+            children: [
+              FutureBuilder(
                 future: loadList(),
-                // initialData: [],
                 builder: (context, snapshot) {
                   return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: userList == null ? 0 : userList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
@@ -79,7 +81,8 @@ class _TestState extends State<Test> {
                                     radius: 30,
                                     backgroundImage: (userList[index].avatar !=
                                             null)
-                                        ? NetworkImage(userList[index].avatar)
+                                        ? NetworkImage(
+                                            "https://media.publit.io/file/BikeForRent/test_avatar.jpg")
                                         : AssetImage(
                                             "lib/assets/images/default.png")),
                                 SizedBox(width: 20),
@@ -102,22 +105,18 @@ class _TestState extends State<Test> {
                   );
                 },
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                runApp(Add());
-              },
-              child: Text("Add"),
-            )
-          ],
+              ElevatedButton(
+                onPressed: () {
+                  runApp(MaterialApp(home: Add()));
+                },
+                child: Text("Test CRUD"),
+              )
+            ],
+          ),
         ),
         // Bottom bar app
         // bottomNavigationBar: BottomBar(
         //   bottomBarIndex: 3,
-        //   history: History(
-        //     isCustomerHistory: true,
-        //     isCustomerHistoryDetail: false,
-        //   ),
         // ),
       ),
     );

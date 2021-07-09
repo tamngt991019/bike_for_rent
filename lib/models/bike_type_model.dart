@@ -1,4 +1,4 @@
-class BikeTypeModel{
+class BikeTypeModel {
   String id;
   String name;
 
@@ -8,12 +8,12 @@ class BikeTypeModel{
   });
 
   factory BikeTypeModel.fromJson(Map<String, dynamic> json) => BikeTypeModel(
-    id: json['id'] as String,
-    name: json['name'] as String,
-  );
+        id: json['id'] as String,
+        name: json['name'] as String,
+      );
 
   Map<String, dynamic> toJson() => {
-    "id" : id,
-    "name" : name,
-  };
+        "id": id,
+        "name": name,
+      };
 }

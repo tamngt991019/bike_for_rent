@@ -1,8 +1,17 @@
+import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/history.dart';
+import 'package:bike_for_rent/pages/login.dart';
+import 'package:bike_for_rent/pages/login_valid.dart';
+import 'package:bike_for_rent/pages/rent_bike_filter.dart';
+import 'package:bike_for_rent/pages/rent_bike_manager.dart';
+import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
+import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class Personal extends StatelessWidget {
-  Personal({Key key}) : super(key: key);
+  final UserModel userModel;
+  Personal({Key key, this.userModel}) : super(key: key);
 
   final double _marginBottom = 5;
 
@@ -21,7 +30,7 @@ class Personal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double btnWWidth = MediaQuery.of(context).size.width * 90 / 100;
+    // final double btnWWidth = MediaQuery.of(context).size.width * 90 / 100;
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: my_colors.materialPimary,
@@ -33,7 +42,14 @@ class Personal extends StatelessWidget {
           //   title:
         ),
         // Body app
-        body: SingleChildScrollView(
+        body:
+            // (userModel == null)
+            //     ? LoginValid(
+            //         currentIndex: 3,
+            //         content: "Vui lòng đăng nhập để xem thông tin!",
+            //       )
+            //     :
+            SingleChildScrollView(
           padding: EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -46,8 +62,13 @@ class Personal extends StatelessWidget {
                     // avatar
                     CircleAvatar(
                       radius: 40,
-                      backgroundImage: NetworkImage(
-                          "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
+                      backgroundImage: (userModel != null)
+                          ? NetworkImage(userModel.avatar)
+                          : AssetImage(
+                              "lib/assets/images/avatar_logo.png",
+                            ),
+                      // NetworkImage(
+                      //     "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
                     ),
                     SizedBox(width: 20),
                     // tên người dùng và sđt
@@ -102,6 +123,8 @@ class Personal extends StatelessWidget {
                         ),
                       ),
                     ),
+                    // Đăng ký cho thuê
+                    // if (!userModel.ownerVerified)
                     Container(
                       margin: EdgeInsets.only(bottom: _marginBottom),
                       child: InkWell(
@@ -135,139 +158,155 @@ class Personal extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: _marginBottom),
-                      child: InkWell(
-                        highlightColor: my_colors.primary,
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Card(
-                          shape: RoundedRectangleBorder(
+                    // if (userModel.ownerVerified)
+                    Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(bottom: _marginBottom),
+                          child: InkWell(
+                            highlightColor: my_colors.primary,
                             borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15, bottom: 15, left: 45, right: 45),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Mở / tắt cho thuê xe",
-                                    style: TextStyle(
-                                        fontSize: 25, color: my_colors.primary),
-                                  ),
+                            onTap: () {},
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              elevation: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 15, bottom: 15, left: 45, right: 45),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        "Mở / tắt cho thuê xe",
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            color: my_colors.primary),
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: my_colors.primary,
+                                    )
+                                  ],
                                 ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: my_colors.primary,
-                                )
-                              ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: _marginBottom),
-                      child: InkWell(
-                        highlightColor: my_colors.primary,
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Card(
-                          shape: RoundedRectangleBorder(
+                        Container(
+                          margin: EdgeInsets.only(bottom: _marginBottom),
+                          child: InkWell(
+                            highlightColor: my_colors.primary,
                             borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15, bottom: 15, left: 45, right: 45),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Quản ý cho thuê",
-                                    style: TextStyle(
-                                        fontSize: 25, color: my_colors.primary),
+                            onTap: () {
+                              helper.pushInto(
+                                  context,
+                                  RentBikeManager(
+                                    userModel: userModel,
+                                    tabIndex: 0,
                                   ),
+                                  true);
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              elevation: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 15, bottom: 15, left: 45, right: 45),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        "Quản ý cho thuê",
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            color: my_colors.primary),
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: my_colors.primary,
+                                    )
+                                  ],
                                 ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: my_colors.primary,
-                                )
-                              ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: _marginBottom),
-                      child: InkWell(
-                        highlightColor: my_colors.primary,
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Card(
-                          shape: RoundedRectangleBorder(
+                        Container(
+                          margin: EdgeInsets.only(bottom: _marginBottom),
+                          child: InkWell(
+                            highlightColor: my_colors.primary,
                             borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15, bottom: 15, left: 45, right: 45),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Xe của tôi",
-                                    style: TextStyle(
-                                        fontSize: 25, color: my_colors.primary),
-                                  ),
+                            onTap: () {},
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              elevation: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 15, bottom: 15, left: 45, right: 45),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        "Xe của tôi",
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            color: my_colors.primary),
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: my_colors.primary,
+                                    )
+                                  ],
                                 ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: my_colors.primary,
-                                )
-                              ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: _marginBottom),
-                      child: InkWell(
-                        highlightColor: my_colors.primary,
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Card(
-                          shape: RoundedRectangleBorder(
+                        Container(
+                          margin: EdgeInsets.only(bottom: _marginBottom),
+                          child: InkWell(
+                            highlightColor: my_colors.primary,
                             borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15, bottom: 15, left: 45, right: 45),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Địa điểm giao xe của tôi",
-                                    style: TextStyle(
-                                        fontSize: 25, color: my_colors.primary),
-                                  ),
+                            onTap: () {},
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              elevation: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 15, bottom: 15, left: 45, right: 45),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        "Địa điểm giao xe của tôi",
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            color: my_colors.primary),
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: my_colors.primary,
+                                    )
+                                  ],
                                 ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: my_colors.primary,
-                                )
-                              ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-
                     Container(
                       margin: EdgeInsets.only(bottom: _marginBottom),
                       child: InkWell(
@@ -308,9 +347,10 @@ class Personal extends StatelessWidget {
           ),
         ),
         // Bottom bar app
-        // bottomNavigationBar: BottomBar(
-        //   bottomBarIndex: 0,
-        // ),
+        bottomNavigationBar: BottomBar(
+          bottomBarIndex: 3,
+          userModel: userModel,
+        ),
       ),
     );
   }

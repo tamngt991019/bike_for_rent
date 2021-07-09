@@ -1,7 +1,15 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/models/bike_type_model.dart';
+import 'package:bike_for_rent/models/location_model.dart';
+import 'package:bike_for_rent/models/pay_package_model.dart';
+import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/rent_bike_filter.dart';
+import 'package:bike_for_rent/pages/rent_bike_list.dart';
+import 'package:bike_for_rent/pages/tracking_booking.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_detail.dart';
+import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +17,20 @@ import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class RentBikeDetail extends StatefulWidget {
-  const RentBikeDetail({Key key}) : super(key: key);
+  final UserModel userModel;
+  final BikeTypeModel bikeTypeModel;
+  final LocationModel locationModel;
+  final PayPackageModel payPackageModel;
+  const RentBikeDetail({
+    Key key,
+    this.userModel,
+    this.bikeTypeModel,
+    this.locationModel,
+    this.payPackageModel,
+  }) : super(key: key);
 
   @override
   _RentBikeDetailState createState() => _RentBikeDetailState();
@@ -56,15 +75,19 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
       home: Scaffold(
         // Header app
         appBar: Appbar(
-            height: 50,
-            titles: "Thuê xe",
-            isShowBackBtn: true,
-            bottomAppBar: null,
-            onPressedBackBtn: () {}),
+          height: 50,
+          titles: "Thuê xe",
+          isShowBackBtn: true,
+          bottomAppBar: null,
+          // onPressedBackBtn: () => runApp(MaterialApp(home: RentBikeList())),
+          onPressedBackBtn: () => helper.pushInto(
+              context, RentBikeFilter(userModel: widget.userModel), false),
+        ),
         // Body app
         body: SingleChildScrollView(
           child: Column(
             children: [
+              // danh sách ảnh của xe
               ImageSlideshow(
                 width: double.infinity,
                 height: 250,
@@ -199,10 +222,15 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                 ),
               ),
               ElavateBtn(
-                width: MediaQuery.of(context).size.width * 80 / 100,
-                title: "Thuê ngay",
-              ),
+                  width: MediaQuery.of(context).size.width * 80 / 100,
+                  title: "Thuê ngay",
+                  onPressedElavateBtn: () => helper.pushInto(
+                      context, TrackingBooking(isCustomer: true), true)
+                  // runApp(
+                  //     MaterialApp(home: TrackingBooking(isCustomer: true))),
+                  ),
               SizedBox(height: 5),
+              // đánh giá
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
@@ -375,9 +403,10 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
           ),
         ),
         // Bottom bar app
-        // bottomNavigationBar: BottomBar(
-        //   bottomBarIndex: 1,
-        // ),
+        bottomNavigationBar: BottomBar(
+          bottomBarIndex: 1,
+          userModel: widget.userModel,
+        ),
       ),
     );
   }

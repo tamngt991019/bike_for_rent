@@ -1,9 +1,17 @@
+import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:flutter/material.dart';
+import 'package:bike_for_rent/helper/helper.dart' as helper;
+import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
 class Bookingdetail extends StatelessWidget {
+  final BookingModel bookingModel;
   final bool isCustomerHistory;
   final bool isCustomerHistoryDetail;
-  Bookingdetail({Key key, this.isCustomerHistory, this.isCustomerHistoryDetail})
+  Bookingdetail(
+      {Key key,
+      this.bookingModel,
+      this.isCustomerHistory,
+      this.isCustomerHistoryDetail})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -124,17 +132,71 @@ class Bookingdetail extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+            ],
+          ),
+        if (isCustomerHistory)
+          Column(
+            children: [
+              SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Thời gian thuê: ",
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  if (isCustomerHistoryDetail)
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Thời gian thuê: ",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold)),
+                              Expanded(
+                                child: Text("1 ngày 10 tiếng",
+                                    style: TextStyle(fontSize: 15)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (isCustomerHistoryDetail) SizedBox(width: 10),
                   Expanded(
-                    child:
-                        Text("1 ngày 10 tiếng", style: TextStyle(fontSize: 15)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text("Trạng thái: ",
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                            Expanded(
+                              child: Text(
+                                  // helper.getStatus(
+                                  //     bookingModel.status.toUpperCase()),
+                                  helper.getStatus("FINISHED"),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    // color: (bookingModel.status == "CANCELED")
+                                    //     ? my_colors.danger
+                                    //     : my_colors.primary,
+                                    color: ("FINISHED" == "CANCELED")
+                                        ? my_colors.danger
+                                        : my_colors.primary,
+                                  )),
+                              // Text("Hoàn thành / Huỷ",
+                              // style: TextStyle(fontSize: 15)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
