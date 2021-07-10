@@ -38,6 +38,22 @@ class UserService {
     return result;
   }
 
+  //get trả về response code 200
+  Future<UserModel> login(String id, String pass) async {
+    Response response;
+    UserModel result;
+    try {
+      response = await get(Uri.parse('${apiUrl.user}/login?id=$id&pass=$pass'));
+
+      if (response.statusCode == 200) {
+        result = UserModel.fromJson(json.decode(response.body));
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
   //post trả về response code 201
   Future<UserModel> createUser(UserModel userModel) async {
     Response response;

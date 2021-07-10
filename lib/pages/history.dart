@@ -15,12 +15,12 @@ class History extends StatelessWidget {
   final UserModel userModel;
   final bool isCustomerHistory;
   final bool isCustomerHistoryDetail;
-  History(
-      {Key key,
-      this.userModel,
-      this.isCustomerHistory,
-      this.isCustomerHistoryDetail})
-      : super(key: key);
+  History({
+    Key key,
+    this.userModel,
+    this.isCustomerHistory,
+    this.isCustomerHistoryDetail,
+  }) : super(key: key);
 
   BookingModel _bookingModel;
   @override
@@ -34,34 +34,33 @@ class History extends StatelessWidget {
         appBar:
             Appbar(height: 50, titles: "lịch sử thuê", isShowBackBtn: false),
         // Body app
-        body:
-            // (userModel == null)
-            //     ? LoginValid(
-            //         currentIndex: 2,
-            //         content: "Vui lòng đăng nhập để xem lịch sử thuê xe!",
-            //       )
-            //     :
-            SingleChildScrollView(
-          padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-          child: Column(
-            children: [
-              InkWell(
-                onTap: () => helper.pushInto(
-                    context,
-                    HistoryDetail(
-                      userModel: userModel,
-                      bookingModel: _bookingModel,
-                      isCustomer: true,
+        body: (userModel == null)
+            ? LoginValid(
+                currentIndex: 2,
+                content: "Vui lòng đăng nhập để xem lịch sử thuê xe!",
+              )
+            : SingleChildScrollView(
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () => helper.pushInto(
+                          context,
+                          HistoryDetail(
+                            userModel: userModel,
+                            bookingModel: _bookingModel,
+                            isCustomer: true,
+                          ),
+                          true),
+                      child: BookingCard(
+                        isCustomerHistory: isCustomerHistory,
+                        isCustomerHistoryDetail: isCustomerHistoryDetail,
+                      ),
                     ),
-                    true),
-                child: BookingCard(
-                  isCustomerHistory: isCustomerHistory,
-                  isCustomerHistoryDetail: isCustomerHistoryDetail,
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
         // Bottom bar app
         bottomNavigationBar: BottomBar(
           bottomBarIndex: 2,
