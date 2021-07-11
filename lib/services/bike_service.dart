@@ -10,7 +10,31 @@ class BikeService {
     Response response;
     List<BikeModel> result;
     try {
-      response = response = await get(Uri.parse(apiUrl.bike));
+      response = await get(Uri.parse(apiUrl.bike));
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        result = body.map((dynamic item) => BikeModel.fromJson(item)).toList();
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
+  //get trả về response code 200
+  Future<List<BikeModel>> getBikesWithLocationDistance(
+    String username,
+    String bikeTypeId,
+    double currentlati,
+    double currentLong,
+    double radius,
+  ) async {
+    Response response;
+    List<BikeModel> result;
+    try {
+      response = await get(Uri.parse(
+          '${apiUrl.bike}/lat/lng/radius?username=$username&bikeTypeId=$bikeTypeId&currentLati=$currentlati&currentLong=$currentLong&radius=$radius'));
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);

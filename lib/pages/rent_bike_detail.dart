@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/models/bike_model.dart';
 import 'package:bike_for_rent/models/bike_type_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
 import 'package:bike_for_rent/models/pay_package_model.dart';
@@ -7,6 +8,8 @@ import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/pages/rent_bike_list.dart';
 import 'package:bike_for_rent/pages/tracking_booking.dart';
+import 'package:bike_for_rent/services/location_service.dart';
+import 'package:bike_for_rent/services/user_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_detail.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
@@ -21,12 +24,14 @@ import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class RentBikeDetail extends StatefulWidget {
   final UserModel userModel;
+  final BikeModel bikeModel;
   final BikeTypeModel bikeTypeModel;
   final LocationModel locationModel;
   final PayPackageModel payPackageModel;
   const RentBikeDetail({
     Key key,
     this.userModel,
+    this.bikeModel,
     this.bikeTypeModel,
     this.locationModel,
     this.payPackageModel,
@@ -49,6 +54,42 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
   }
 
   String _bikeGetAddress = "";
+  // Location lati, long ---------------------------------
+  double locLati = 10.841493;
+  double locLong = 106.810038;
+  // Map ---------------------------------
+  LatLng _latLng; //= LatLng(locLati, locLong);
+
+  // Future<String> getAddress(double _inLatitude, double _inLongitude) async {
+  //   final coordinates = new Coordinates(_inLatitude, _inLongitude);
+  //   var addresses =
+  //       await Geocoder.local.findAddressesFromCoordinates(coordinates);
+  //   var first = addresses.first;
+  //   return first.addressLine;
+  // }
+
+  // void onMapCreated(GoogleMapController controller) {
+  //   getAddress(10.867108878090859, 106.8030191050504).then((add1) {
+  //     setState(() {
+  //       this._bikeGetAddress = add1;
+  //     });
+  //   });
+  // }
+
+  static double cameraZoom = 15;
+  CameraPosition _initialCameraPosition = CameraPosition(
+    target: LatLng(10.82414068863801, 106.63065063707423),
+    zoom: cameraZoom,
+  );
+  Completer<GoogleMapController> _ggMapController = Completer();
+  Set<Marker> _markers = {};
+
+  void moveCamera() async {
+    final GoogleMapController controller = await _ggMapController.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      _initialCameraPosition,
+    ));
+  }
 
   Future<String> getAddress(double _inLatitude, double _inLongitude) async {
     final coordinates = new Coordinates(_inLatitude, _inLongitude);
@@ -58,12 +99,78 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
     return first.addressLine;
   }
 
-  void onMapCreated(GoogleMapController controller) {
-    getAddress(10.867108878090859, 106.8030191050504).then((add1) {
-      setState(() {
-        this._bikeGetAddress = add1;
+  void getLocation(LatLng _inLatLing) {
+    setState(() {
+      // _markers.
+      _markers.clear();
+
+      _markers.add(
+        Marker(
+          markerId: MarkerId("ID-1"),
+          position: _inLatLing,
+        ),
+      );
+      getAddress(_inLatLing.latitude, _inLatLing.longitude).then((add1) {
+        setState(() {
+          this._bikeGetAddress = add1;
+        });
       });
+      _initialCameraPosition =
+          CameraPosition(target: _inLatLing, zoom: cameraZoom);
+      moveCamera();
     });
+  }
+
+  void _onMapCreated(GoogleMapController _controller) {
+    _ggMapController.complete(_controller);
+
+    setState(() {
+      getLocation(LatLng(10.82414068863801, 106.63065063707423));
+    });
+  }
+
+  LocationService locService = new LocationService();
+  LocationModel _locationModel;
+  void getLocationById(String id) {
+    if (_locationModel == null) {
+      this._locationModel = new LocationModel();
+    }
+    Future<LocationModel> futureCases = locService.getLocationById(id);
+    futureCases.then((model) {
+      if (this.mounted) {
+        setState(() {
+          _locationModel = model;
+          locLati = double.parse(_locationModel.latitude);
+          locLong = double.parse(_locationModel.longitude);
+          _latLng = LatLng(locLati, locLong);
+          getLocation(_latLng);
+        });
+      }
+    });
+  }
+
+  UserService userService = new UserService();
+  UserModel _userModel;
+  void getUserById(String id) {
+    if (_userModel == null) {
+      this._userModel = new UserModel();
+    }
+    Future<UserModel> futureCases = userService.getUserById(id);
+    futureCases.then((model) {
+      if (this.mounted) {
+        setState(() {
+          _userModel = model;
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLocationById(widget.locationModel.id);
+    getUserById(widget.bikeModel.userName);
   }
 
   @override
@@ -81,7 +188,15 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
           bottomAppBar: null,
           // onPressedBackBtn: () => runApp(MaterialApp(home: RentBikeList())),
           onPressedBackBtn: () => helper.pushInto(
-              context, RentBikeFilter(userModel: widget.userModel), false),
+            context,
+            RentBikeList(
+              userModel: widget.userModel,
+              bikeTypeModel: widget.bikeTypeModel,
+              payPackageModel: widget.payPackageModel,
+              locationModel: _locationModel,
+            ),
+            false,
+          ),
         ),
         // Body app
         body: SingleChildScrollView(
@@ -98,15 +213,14 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                     .map((img) =>
                         ClipRRect(child: Image.network(img, fit: BoxFit.cover)))
                     .toList(),
-                onPageChanged: (value) {
-                  print('Page changed: $value');
-                },
+                onPageChanged: (value) {},
                 autoPlayInterval: 60000,
               ),
               // thông tin yêu cầu thuê
               Padding(
-                padding: const EdgeInsets.all(10),
-                child: Bookingdetail(
+                padding: EdgeInsets.all(10),
+                child: new Bookingdetail(
+                  bikeModel: widget.bikeModel,
                   isCustomerHistory: false,
                   isCustomerHistoryDetail: false,
                 ),
@@ -132,17 +246,9 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                   scrollGesturesEnabled: false,
                   tiltGesturesEnabled: false,
                   zoomGesturesEnabled: false,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(10.867108878090859, 106.8030191050504),
-                    zoom: 13,
-                  ),
-                  markers: <Marker>{
-                    Marker(
-                      markerId: MarkerId("ID-1"),
-                      position: LatLng(10.867108878090859, 106.8030191050504),
-                    )
-                  },
-                  onMapCreated: onMapCreated,
+                  initialCameraPosition: _initialCameraPosition,
+                  markers: _markers,
+                  onMapCreated: _onMapCreated,
                 ),
               ),
               // THÔNG TIN CHỦ XE
@@ -162,8 +268,7 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                       // avatar
                       CircleAvatar(
                         radius: 20,
-                        backgroundImage: NetworkImage(
-                            "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
+                        backgroundImage: NetworkImage(widget.userModel.avatar),
                       ),
                       SizedBox(width: 10),
                       // tên người dùng và sđt
@@ -174,7 +279,7 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                           children: [
                             // tên người dùng
                             Text(
-                              "Tên chủ xe",
+                              _userModel.fullName,
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -182,7 +287,9 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                             ),
                             SizedBox(height: 5),
                             Text(
-                              "0987654321",
+                              (_userModel.phone == null)
+                                  ? ""
+                                  : _userModel.phone,
                               style: TextStyle(
                                 fontSize: 15,
                               ),
@@ -203,6 +310,7 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+                          // if(_userModel.)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,7 +340,7 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
               SizedBox(height: 5),
               // đánh giá
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -132,8 +132,8 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
   LocationService locService = new LocationService();
   LocationModel _locationModel;
   void getLocationById(String id) {
-    if (_bikeTypeModel == null) {
-      this._bikeTypeModel = new BikeTypeModel();
+    if (_locationModel == null) {
+      this._locationModel = new LocationModel();
     }
     Future<LocationModel> futureCases = locService.getLocationById(id);
     futureCases.then((model) {
@@ -444,6 +444,7 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
                           _bikeTypeStr = item.name;
                           _bikeTypeColor = Colors.black;
                           _bikeTypeModel = item;
+                          _ppkStr = "Chọn gói thuê:";
                         });
                         Navigator.pop(context);
                       },
