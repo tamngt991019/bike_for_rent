@@ -151,9 +151,7 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // widget.userModel = new UserModel();
 
     if (widget.bikeTypeModel != null) {
       _bikeTypeIdSelected = widget.bikeTypeModel.id;
