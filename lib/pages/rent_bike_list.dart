@@ -1,3 +1,4 @@
+import 'package:bike_for_rent/models/bike_model.dart';
 import 'package:bike_for_rent/models/bike_type_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
 import 'package:bike_for_rent/models/pay_package_model.dart';
@@ -5,6 +6,7 @@ import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/bike_get_map.dart';
 import 'package:bike_for_rent/pages/rent_bike_detail.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
+import 'package:bike_for_rent/services/bike_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_card.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
@@ -13,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:geocoder/geocoder.dart';
-import 'package:http/http.dart';
 
 class RentBikeList extends StatefulWidget {
   final UserModel userModel;
@@ -40,6 +41,36 @@ class _RentBikeListState extends State<RentBikeList> {
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
     return first.addressLine;
+  }
+
+  BikeService bikeService = new BikeService();
+  List<BikeModel> bikeList;
+  Future loadListBikesWithLocationDistance(
+    String username,
+    String bikeTypeId,
+    double currentlati,
+    double currentLong,
+    double radius,
+  ) {
+    if (bikeList == null) {
+      bikeList = [];
+    }
+    Future<List<BikeModel>> futureCases =
+        bikeService.getBikesWithLocationDistance(
+      username,
+      bikeTypeId,
+      currentlati,
+      currentLong,
+      radius,
+    );
+    futureCases.then((list) {
+      if (this.mounted) {
+        setState(() {
+          this.bikeList = list;
+        });
+      }
+    });
+    return futureCases;
   }
 
   @override
@@ -81,6 +112,7 @@ class _RentBikeListState extends State<RentBikeList> {
         // Body app
         body: SingleChildScrollView(
           padding: EdgeInsets.all(10),
+          physics: ScrollPhysics(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +155,7 @@ class _RentBikeListState extends State<RentBikeList> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FrameText(
-                    title: "Địa chỉ hiện tại",
+                    title: "Địa chỉ nhận xe:",
                     content: addressStr,
                   )
                 ],
@@ -144,15 +176,43 @@ class _RentBikeListState extends State<RentBikeList> {
                 ],
               ),
               SizedBox(height: 10),
-              InkWell(
-                // onTap: () => runApp(MaterialApp(home: RentBikeDetail())),
-                onTap: () {
-                  helper.pushInto(context, RentBikeDetail(), true);
-                },
-                child: BookingCard(
-                  isCustomerHistory: false,
-                  isCustomerHistoryDetail: false,
+              FutureBuilder(
+                future: loadListBikesWithLocationDistance(
+                  widget.userModel.username,
+                  widget.bikeTypeModel.id,
+                  double.parse(widget.locationModel.latitude),
+                  double.parse(widget.locationModel.longitude),
+                  3,
                 ),
+                builder: (context, snapshot) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: bikeList == null ? 0 : bikeList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      BikeModel item = bikeList[index];
+                      return InkWell(
+                        onTap: () {
+                          helper.pushInto(
+                              context,
+                              RentBikeDetail(
+                                userModel: widget.userModel,
+                                bikeModel: item,
+                                bikeTypeModel: widget.bikeTypeModel,
+                                locationModel: widget.locationModel,
+                                payPackageModel: widget.payPackageModel,
+                              ),
+                              true);
+                        },
+                        child: BookingCard(
+                          bikeModel: item,
+                          isCustomerHistory: false,
+                          isCustomerHistoryDetail: false,
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ],
           ),

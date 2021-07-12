@@ -1,4 +1,4 @@
-class BikeModel{
+class BikeModel {
   String id;
   String userName;
   String brandId;
@@ -6,6 +6,9 @@ class BikeModel{
   String color;
   String licensePlates;
   String typeId;
+  String locationId;
+  bool isBooking;
+  bool isRentingEnable;
   String status;
 
   BikeModel({
@@ -16,28 +19,37 @@ class BikeModel{
     this.color,
     this.licensePlates,
     this.typeId,
+    this.locationId,
+    this.isBooking,
+    this.isRentingEnable,
     this.status,
   });
 
   factory BikeModel.fromJson(Map<String, dynamic> json) => BikeModel(
-    id: json['id'] as String,
-    userName: json['userName'] as String,
-    brandId: json['brandId'] as String,
-    model: json['model'] as String,
-    color: json['color'] as String,
-    licensePlates: json['licensePlates'] as String,
-    typeId: json['typeId'] as String,
-    status: json['status'] as String,
-  );
+        id: json['id'] as String,
+        userName: json['username'] as String,
+        brandId: json['brandId'] as String,
+        model: json['model'] as String,
+        color: json['color'] as String,
+        licensePlates: json['licensePlates'] as String,
+        typeId: json['typeId'] as String,
+        locationId: json['locationId'] as String,
+        isBooking: json['isBooking'] as bool,
+        isRentingEnable: json['isRentingEnable'] as bool,
+        status: json['status'] as String,
+      );
 
   Map<String, dynamic> toJson() => {
-    "id" : id,
-    "userName" : userName,
-    "brandId" : brandId,
-    "model" : model,
-    "color" : color,
-    "licensePlates" : licensePlates,
-    "typeId" : typeId,
-    "status" : status,
-  };
+        "id": id,
+        "username": userName,
+        "brandId": brandId,
+        "model": model,
+        "color": color,
+        "licensePlates": licensePlates,
+        "typeId": typeId,
+        "locationId": locationId,
+        "isBooking": isBooking,
+        "isRentingEnable": isRentingEnable,
+        "status": status,
+      };
 }

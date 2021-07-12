@@ -5,6 +5,7 @@ import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
 import 'package:bike_for_rent/models/pay_package_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/login_valid.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/services/location_service.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
@@ -144,10 +145,7 @@ class _BikeGetMapState extends State<BikeGetMap> {
     futureCases.then((list) {
       if (this.mounted) {
         setState(() {
-          // List<LocationModel> tempList = list;
           this.locList = list;
-          // helper.getLocationsByRadius(_currentLatLing, tempList, 1);
-          // print(userList.length);
         });
       }
     });
@@ -172,188 +170,207 @@ class _BikeGetMapState extends State<BikeGetMap> {
               // context, RentBikeFilter(userModel: widget.userModel), false),
             ),
             // Body app
-            body: Container(
-              child: Stack(
-                children: [
-                  GoogleMap(
-                    myLocationEnabled: false,
-                    myLocationButtonEnabled: false,
-                    zoomControlsEnabled: false,
-                    mapToolbarEnabled: false,
-                    initialCameraPosition: _initialCameraPosition,
-                    markers: _markers,
-                    onMapCreated: _onMapCreated,
-                  ),
-                  // htong tin vi tri
-                  ExpandChild(
-                    arrowColor: my_colors.primary,
-                    arrowSize: 50,
-                    expandedHint: "Xem thêm",
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Column(
-                        children: [
+            body: (widget.userModel == null)
+                ? LoginValid(
+                    currentIndex: 1,
+                    content: "Vui lòng đăng nhập để thuê xe!",
+                  )
+                : Container(
+                    child: Stack(
+                      children: [
+                        GoogleMap(
+                          myLocationEnabled: false,
+                          myLocationButtonEnabled: false,
+                          zoomControlsEnabled: false,
+                          mapToolbarEnabled: false,
+                          initialCameraPosition: _initialCameraPosition,
+                          markers: _markers,
+                          onMapCreated: _onMapCreated,
+                        ),
+                        // htong tin vi tri
+                        ExpandChild(
+                          arrowColor: my_colors.primary,
+                          arrowSize: 50,
+                          expandedHint: "Xem thêm",
+                          child: Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Column(
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
+                                            elevation: 5,
+                                            child: Container(
+                                              padding: EdgeInsets.all(10),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Địa điểm của bạn: ",
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                        color:
+                                                            my_colors.primary),
+                                                  ),
+                                                  SizedBox(height: 5),
+                                                  Text(
+                                                    _currentAddress,
+                                                    style:
+                                                        TextStyle(fontSize: 15),
+                                                  ),
+                                                  Divider(
+                                                    height: 10,
+                                                    color: my_colors.primary,
+                                                    thickness: 1,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    if (_bikeGetAddress.isNotEmpty)
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Card(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                              ),
+                                              elevation: 5,
+                                              child: Container(
+                                                padding: EdgeInsets.all(10),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "Địa điểm nhận xe: ",
+                                                      style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .underline,
+                                                          color: my_colors
+                                                              .primary),
+                                                    ),
+                                                    SizedBox(height: 5),
+                                                    Text(
+                                                      _bikeGetAddress,
+                                                      style: TextStyle(
+                                                          fontSize: 15),
+                                                    ),
+                                                    Divider(
+                                                      height: 10,
+                                                      color: my_colors.primary,
+                                                      thickness: 1,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        if (_isShowConfirmBtn)
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      elevation: 5,
-                                      child: Container(
-                                        padding: EdgeInsets.all(10),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Địa điểm của bạn: ",
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                  color: my_colors.primary),
-                                            ),
-                                            SizedBox(height: 5),
-                                            Text(
-                                              _currentAddress,
-                                              style: TextStyle(fontSize: 15),
-                                            ),
-                                            Divider(
-                                              height: 10,
-                                              color: my_colors.primary,
-                                              thickness: 1,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 20),
+                                    child: ElavateBtn(
+                                      title: "Xác nhận vị trí",
+                                      width: 200,
+                                      onPressedElavateBtn: () {
+                                        helper.pushInto(
+                                          context,
+                                          RentBikeFilter(
+                                            userModel: widget.userModel,
+                                            bikeTypeModel: widget.bikeTypeModel,
+                                            payPackageModel:
+                                                widget.payPackageModel,
+                                            locationModel: _locationModel,
+                                          ),
+                                          true,
+                                        );
+                                      },
                                     ),
                                   ),
                                 ],
                               ),
-                              if (_bikeGetAddress.isNotEmpty)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                        elevation: 5,
-                                        child: Container(
-                                          padding: EdgeInsets.all(10),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Địa điểm nhận xe: ",
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    color: my_colors.primary),
-                                              ),
-                                              SizedBox(height: 5),
-                                              Text(
-                                                _bikeGetAddress,
-                                                style: TextStyle(fontSize: 15),
-                                              ),
-                                              Divider(
-                                                height: 10,
-                                                color: my_colors.primary,
-                                                thickness: 1,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  if (_isShowConfirmBtn)
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Container(
-                              margin: EdgeInsets.only(bottom: 20),
-                              child: ElavateBtn(
-                                title: "Xác nhận vị trí",
-                                width: 200,
-                                onPressedElavateBtn: () {
-                                  helper.pushInto(
-                                    context,
-                                    RentBikeFilter(
-                                      userModel: widget.userModel,
-                                      bikeTypeModel: widget.bikeTypeModel,
-                                      payPackageModel: widget.payPackageModel,
-                                      locationModel: _locationModel,
-                                    ),
-                                    true,
-                                  );
-                                },
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  elevation: 5,
+                                  margin: EdgeInsets.only(
+                                      left: 10, right: 20, bottom: 20),
+                                  child: IconButton(
+                                    icon: Icon(Icons.more_horiz),
+                                    color: my_colors.primary,
+                                    iconSize: 25,
+                                    onPressed: () {
+                                      _listLocationBottomSheet(context);
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ],
                     ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            elevation: 5,
-                            margin: EdgeInsets.only(
-                                left: 10, right: 20, bottom: 20),
-                            child: IconButton(
-                              icon: Icon(Icons.more_horiz),
-                              color: my_colors.primary,
-                              iconSize: 25,
-                              onPressed: () {
-                                _listLocationBottomSheet(context);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
                   ),
-                ],
-              ),
-            ),
             // Bottom bar app
             bottomNavigationBar: BottomBar(
               bottomBarIndex: 1,
@@ -449,6 +466,7 @@ class _BikeGetMapState extends State<BikeGetMap> {
                     );
                   },
                 ),
+                SizedBox(height: 15),
               ],
             ),
           ),

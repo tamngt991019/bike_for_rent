@@ -24,7 +24,6 @@ class _AddState extends State<Add> {
     setState(() {
       userModel = new UserModel(
         username: "zzz",
-        password: null,
         fullName: "Cuời cl nha",
         email: null,
         phone: null,

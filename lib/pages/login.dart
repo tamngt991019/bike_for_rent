@@ -1,9 +1,11 @@
 import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/bike_get_map.dart';
 import 'package:bike_for_rent/pages/history.dart';
 import 'package:bike_for_rent/pages/home.dart';
 import 'package:bike_for_rent/pages/personal.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
+import 'package:bike_for_rent/services/user_service.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:flutter/material.dart';
 
@@ -23,20 +25,23 @@ class _LoginState extends State<Login> {
   final txtUsername = TextEditingController();
   bool isEmptyPassword = false;
   final txtPassword = TextEditingController();
+  String loginFail;
 
-  Widget getScreen(int index, UserModel userModel) {
-    if (index == 0) {
-      return Home(userModel: userModel);
-    } else if (index == 1) {
-      return RentBikeFilter(userModel: userModel);
-    } else if (index == 2) {
+  UserModel _userModel;
+
+  Widget getScreen() {
+    if (widget.currentIndex == 0) {
+      return Home(userModel: _userModel);
+    } else if (widget.currentIndex == 1) {
+      return BikeGetMap(userModel: _userModel);
+    } else if (widget.currentIndex == 2) {
       return History(
-        userModel: userModel,
+        userModel: _userModel,
         isCustomerHistory: false,
         isCustomerHistoryDetail: false,
       );
-    } else if (index == 3) {
-      return Personal(userModel: userModel);
+    } else if (widget.currentIndex == 3) {
+      return Personal(userModel: _userModel);
     }
   }
 
@@ -80,8 +85,7 @@ class _LoginState extends State<Login> {
               children: [
                 InkWell(
                   onTap: () {
-                    helper.pushInto(
-                        context, getScreen(widget.currentIndex, null), false);
+                    helper.pushInto(context, getScreen(), false);
                   },
                   child: Container(
                     margin: EdgeInsets.only(top: 10, left: 10),
@@ -188,12 +192,41 @@ class _LoginState extends State<Login> {
                             onPressedElavateBtn: () {
                               setState(() {
                                 isEmptyUsername =
-                                    helper.checkEmptyText(txtUsername.text);
+                                    helper.isEmptyText(txtUsername.text);
                                 isEmptyPassword =
-                                    helper.checkEmptyText(txtPassword.text);
+                                    helper.isEmptyText(txtPassword.text);
+                                if (isEmptyPassword == false &&
+                                    isEmptyUsername == false) {
+                                  Future<UserModel> userModelFuture =
+                                      UserService().login(
+                                    txtUsername.text,
+                                    txtPassword.text,
+                                  );
+                                  userModelFuture.then((value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        _userModel = value;
+                                        helper.pushInto(
+                                            context, getScreen(), true);
+                                      } else {
+                                        loginFail =
+                                            "Tên đăng nhập hoặc mật khẩu không chính xác";
+                                      }
+                                    });
+                                  });
+                                }
                               });
                             },
-                          )
+                          ),
+                          if (loginFail != null) SizedBox(height: 10),
+                          if (loginFail != null)
+                            Text(
+                              loginFail,
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: my_colors.danger,
+                              ),
+                            )
                         ],
                       ),
                     ),
@@ -221,14 +254,6 @@ class _LoginState extends State<Login> {
                         width: 20,
                         color: Colors.white,
                       ),
-                      // Text(
-                      //   "Or",
-                      //   style: TextStyle(
-                      //     fontSize: 20,
-                      //     fontWeight: FontWeight.bold,
-                      //     color: Colors.white,
-                      //   ),
-                      // ),
                       Expanded(
                         child: Column(
                           children: [

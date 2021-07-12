@@ -25,28 +25,28 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  UserModel userModel = new UserModel(
-    // username: "testcustomer1",
-    // password: null,
-    // fullName: "Customer Number 1",
-    // dateCreated: "2021-06-22T09:33:42.937",
-    // email: null,
-    // phone: null,
-    username: "testcustomer1",
-    password: null,
-    fullName: "Customer Number 1",
-    email: null,
-    phone: null,
-    avatar: null,
-    dateCreated: "2021-06-22T09:33:42.937",
-    userVerified: null,
-    identityNo: null,
-    frontIdentityImage: null,
-    backIdentityImage: null,
-    ownerVerified: null,
-    isRenting: null,
-    status: "ACTIVE",
-  );
+  // UserModel userModel = new UserModel(
+  //   // username: "testcustomer1",
+  //   // password: null,
+  //   // fullName: "Customer Number 1",
+  //   // dateCreated: "2021-06-22T09:33:42.937",
+  //   // email: null,
+  //   // phone: null,
+  //   username: "testcustomer1",
+  //   password: null,
+  //   fullName: "Customer Number 1",
+  //   email: null,
+  //   phone: null,
+  //   avatar: null,
+  //   dateCreated: "2021-06-22T09:33:42.937",
+  //   userVerified: null,
+  //   identityNo: null,
+  //   frontIdentityImage: null,
+  //   backIdentityImage: null,
+  //   ownerVerified: null,
+  //   isRenting: null,
+  //   status: "ACTIVE",
+  // );
   static double _latitude = 10.841493;
   static double _longitude = 106.810038;
   String _currentAddress = "";
@@ -118,9 +118,6 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setState(() {
-      // this.userModel = widget.userModel;/
-    });
   }
 
   @override
@@ -166,7 +163,7 @@ class _HomeState extends State<Home> {
                       // tên người dùng
                       child: Text(
                         (widget.userModel != null)
-                            ? "Tên người dùng"
+                            ? widget.userModel.fullName
                             : "Xin chào,",
                         style: TextStyle(
                           fontSize: 20,
@@ -291,36 +288,6 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                   SizedBox(width: 20),
-                  // SizedBox(
-                  //   width: MediaQuery.of(context).size.width - 80 - 150,
-                  //   height: 30,
-                  //   child: ElevatedButton(
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.center,
-                  //       crossAxisAlignment: CrossAxisAlignment.center,
-                  //       children: [
-                  //         Text(
-                  //           "Vị trí khác",
-                  //           style: TextStyle(fontSize: 15),
-                  //         ),
-                  //         SizedBox(width: 10),
-                  //         Icon(
-                  //           Icons.arrow_forward_ios,
-                  //           size: 20,
-                  //         ),
-                  //       ],
-                  //     ),
-                  //     style: ButtonStyle(
-                  //         shape: MaterialStateProperty.all(
-                  //             RoundedRectangleBorder(
-                  //                 borderRadius: BorderRadius.circular(15))),
-                  //         foregroundColor:
-                  //             MaterialStateProperty.all<Color>(Colors.white),
-                  //         backgroundColor: MaterialStateProperty.all<Color>(
-                  //             my_colors.primary)),
-                  //     onPressed: () {},
-                  //   ),
-                  // ),
                 ],
               ),
               SizedBox(height: 20),

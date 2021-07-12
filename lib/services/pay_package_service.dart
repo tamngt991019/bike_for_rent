@@ -24,6 +24,26 @@ class PayPackageService {
   }
 
   //get trả về response code 200
+  Future<List<PayPackageModel>> getPayPackageModelsByBikeType(
+      String bikeTypeId) async {
+    Response response;
+    List<PayPackageModel> result;
+    try {
+      response = response = await get(
+          Uri.parse('${apiUrl.payPackage}/bikeTypeId?bikeTypeId=$bikeTypeId'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        result =
+            body.map((dynamic item) => PayPackageModel.fromJson(item)).toList();
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
+  //get trả về response code 200
   Future<PayPackageModel> getPayPackageById(String id) async {
     Response response;
     PayPackageModel result;

@@ -1,14 +1,30 @@
+import 'package:bike_for_rent/models/bike_image_model.dart';
+import 'package:bike_for_rent/models/bike_model.dart';
+import 'package:bike_for_rent/models/booking_model.dart';
+import 'package:bike_for_rent/services/bike_image_service.dart';
 import 'package:bike_for_rent/widgets/booking_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
-class BookingCard extends StatelessWidget {
+class BookingCard extends StatefulWidget {
+  final BikeModel bikeModel;
+  final BookingModel bookingModel;
   final bool isCustomerHistory;
   final bool isCustomerHistoryDetail;
-  BookingCard({Key key, this.isCustomerHistory, this.isCustomerHistoryDetail})
+  BookingCard(
+      {Key key,
+      this.bikeModel,
+      this.bookingModel,
+      this.isCustomerHistory,
+      this.isCustomerHistoryDetail})
       : super(key: key);
 
+  @override
+  _BookingCardState createState() => _BookingCardState();
+}
+
+class _BookingCardState extends State<BookingCard> {
   List<String> imageUrls() {
     List<String> imageUrls = [
       "https://media.publit.io/file/BikeForRent/banner/banner1.jpg",
@@ -20,45 +36,67 @@ class BookingCard extends StatelessWidget {
     return imageUrls;
   }
 
+  // BikeImageService bikeImageService = new BikeImageService();
+
+  // List<BikeImageModel> bikeImageList;
+
+  // Future loadListBikeImagesByBikeType(String bileId) {
+  //   if (bikeImageList == null) {
+  //     bikeImageList = [];
+  //   }
+  //   Future<List<BikeImageModel>> futureCases =
+  //       bikeImageService.getBikeImageModels();
+  //   futureCases.then((list) {
+  //     this.bikeImageList = list;
+  //   });
+  //   return futureCases;
+  // }
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      elevation: 5,
-      margin: EdgeInsets.only(top: 5, bottom: 5),
-      child: Column(
-        children: [
-          // Hình ảnh xe
-          ImageSlideshow(
-            width: double.infinity,
-            height: 200,
-            initialPage: 0,
-            indicatorColor: my_colors.primary,
-            indicatorBackgroundColor: Colors.white,
-            children: imageUrls()
-                .map((img) => ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15)),
-                    child: Image.network(img, fit: BoxFit.cover)))
-                .toList(),
-            onPageChanged: (value) {
-              print('Page changed: $value');
-            },
-            autoPlayInterval: 60000,
-          ),
-          // Thông tin chi tiết xe
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Bookingdetail(
-              isCustomerHistory: isCustomerHistory,
-              isCustomerHistoryDetail: isCustomerHistoryDetail,
+    if (widget.bikeModel == null) {
+      return Center(
+        child: Text("Không có xe nào phù hợp"),
+      );
+    } else {
+      return Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        elevation: 5,
+        margin: EdgeInsets.only(top: 5, bottom: 10),
+        child: Column(
+          children: [
+            // Hình ảnh xe
+            ImageSlideshow(
+              width: double.infinity,
+              height: 200,
+              initialPage: 0,
+              indicatorColor: my_colors.primary,
+              indicatorBackgroundColor: Colors.white,
+              children: imageUrls()
+                  .map((img) => ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15)),
+                      child: Image.network(img, fit: BoxFit.cover)))
+                  .toList(),
+              onPageChanged: (value) {},
+              autoPlayInterval: 60000,
             ),
-          ),
-        ],
-      ),
-    );
+            // Thông tin chi tiết xe
+            Padding(
+              padding: EdgeInsets.all(15),
+              child: Bookingdetail(
+                bikeModel: widget.bikeModel,
+                bookingModel: widget.bookingModel,
+                isCustomerHistory: widget.isCustomerHistory,
+                isCustomerHistoryDetail: widget.isCustomerHistoryDetail,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }

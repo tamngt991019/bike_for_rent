@@ -91,7 +91,7 @@ void pushInto(BuildContext context, Widget wg, bool isRightToLeft) {
 }
 
 // kiem tra fill trong
-bool checkEmptyText(String value) {
+bool isEmptyText(String value) {
   if (value.isEmpty) {
     return true;
   } else {

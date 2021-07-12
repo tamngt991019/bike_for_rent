@@ -18,6 +18,7 @@ import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:bike_for_rent/widgets/frame_text.dart';
+import 'package:bike_for_rent/widgets/notification_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:geocoder/geocoder.dart';
@@ -96,12 +97,12 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
 
   PayPackageService ppkService = new PayPackageService();
   List<PayPackageModel> ppkList;
-  Future loadListPayPackages() {
+  Future loadListPayPackagesByBikeType(String bileTypeId) {
     if (ppkList == null) {
       ppkList = [];
     }
     Future<List<PayPackageModel>> futureCases =
-        ppkService.getPayPackageModels();
+        ppkService.getPayPackageModelsByBikeType(bileTypeId);
     futureCases.then((list) {
       if (this.mounted) {
         setState(() {
@@ -131,8 +132,8 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
   LocationService locService = new LocationService();
   LocationModel _locationModel;
   void getLocationById(String id) {
-    if (_bikeTypeModel == null) {
-      this._bikeTypeModel = new BikeTypeModel();
+    if (_locationModel == null) {
+      this._locationModel = new LocationModel();
     }
     Future<LocationModel> futureCases = locService.getLocationById(id);
     futureCases.then((model) {
@@ -150,15 +151,12 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // widget.userModel = new UserModel();
 
     if (widget.bikeTypeModel != null) {
       _bikeTypeIdSelected = widget.bikeTypeModel.id;
       getBikeTypeById(_bikeTypeIdSelected);
     }
-    _ppkModel = widget.payPackageModel;
 
     if (widget.payPackageModel != null) {
       _ppkIdSelected = widget.payPackageModel.id;
@@ -242,14 +240,7 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
               false),
         ),
         // Body app
-        body:
-            // (widget.userModel == null)
-            //     ? LoginValid(
-            //         currentIndex: 1,
-            //         content: "Vui lòng đăng nhập để thuê xe!",
-            //       )
-            //     :
-            SingleChildScrollView(
+        body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,15 +287,6 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
                     InkWell(
                       onTap: () {
                         showDropdownBikeType(context);
-                        // showDropdown(
-                        //   context,
-                        //   "Chọn loại xe:",
-                        //   loadListBikeTypes(),
-                        //   widget.bikeTypeModel,
-                        //   bikeTypeList,
-                        //   _bikeTypeIdSelected,
-                        //   true,
-                        // );
                       },
                       child: Container(
                         padding: EdgeInsets.all(10),
@@ -341,16 +323,14 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
                     SizedBox(height: 10),
                     InkWell(
                       onTap: () {
-                        showDropdownPayPackage(context);
-                        // showDropdown(
-                        //   context,
-                        //   "Chọn gói thuê:",
-                        //   loadListPayPackages(),
-                        //   _ppkModel = new PayPackageModel(),
-                        //   ppkList,
-                        //   _ppkIdSelected,
-                        //   false,
-                        // );
+                        bool isBikeTypeChange = _bikeTypeStr != "Chọn loại xe:";
+                        if (isBikeTypeChange) {
+                          showDropdownPayPackage(context);
+                        } else {
+                          showWarningDialog(
+                            "Vui lòng chọn loại xe trước!",
+                          );
+                        }
                       },
                       child: Container(
                         padding: EdgeInsets.all(10),
@@ -379,15 +359,19 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
                   width: 380,
                   title: 'Tìm xe',
                   onPressedElavateBtn: () {
-                    if (_bikeTypeModel == null && _ppkModel == null) {
+                    bool isBikeTypeChange = _bikeTypeStr != "Chọn loại xe:";
+                    bool isPpkChande = _ppkStr != "Chọn gói thuê:";
+                    if (isBikeTypeChange == false && isPpkChande == false) {
                       showWarningDialog(
                         "Vui lòng chọn loại xe và gói thuê xe!",
                       );
-                    } else if (_bikeTypeModel == null && _ppkModel != null) {
+                    } else if (isBikeTypeChange == false &&
+                        isPpkChande == true) {
                       showWarningDialog(
                         "Vui lòng chọn loại xe!",
                       );
-                    } else if (_bikeTypeModel != null && _ppkModel == null) {
+                    } else if (isBikeTypeChange == true &&
+                        isPpkChande == false) {
                       showWarningDialog(
                         "Vui lòng chọn gói thuê xe!",
                       );
@@ -417,6 +401,7 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
     );
   }
 
+  //dropdown cac loai xe
   dynamic showDropdownBikeType(context) {
     return showDialog(
       context: context,
@@ -427,7 +412,7 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
             borderRadius: BorderRadius.circular(15),
           ),
           title: Text(
-            "Chọn loại xe",
+            "Chọn loại xe:",
             style: TextStyle(fontSize: 20),
           ),
           content: Container(
@@ -457,6 +442,7 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
                           _bikeTypeStr = item.name;
                           _bikeTypeColor = Colors.black;
                           _bikeTypeModel = item;
+                          _ppkStr = "Chọn gói thuê:";
                         });
                         Navigator.pop(context);
                       },
@@ -471,24 +457,26 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
     );
   }
 
+  //dropdown cac goi thue xe theo loai xe
   dynamic showDropdownPayPackage(context) {
     return showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
+        ppkList = [];
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
           title: Text(
-            "Chọn gói thuê",
+            "Chọn gói thuê - " + _bikeTypeModel.name,
             style: TextStyle(fontSize: 20),
           ),
           content: Container(
             width: 1, // Cho nay khai bao de khong bi loi - Ly do : chua biet
-            height: 100,
+            height: 120,
             child: FutureBuilder(
-              future: loadListPayPackages(),
+              future: loadListPayPackagesByBikeType(_bikeTypeModel.id),
               builder: (dialogContext, snapshot) {
                 return ListView.builder(
                   itemCount: ppkList == null ? 0 : ppkList.length,
@@ -525,106 +513,18 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
     );
   }
 
+  // hien thi canh bao
   dynamic showWarningDialog(String contentStr) {
     return showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text(
-            "Cảnh báo!",
-            style: TextStyle(
-              fontSize: 20,
-              color: my_colors.danger,
-            ),
-          ),
-          content: Text(
-            contentStr,
-            style: TextStyle(fontSize: 17),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          elevation: 5,
-          actions: [
-            TextButton(
-              child: Text(
-                "Đồng ý",
-                style: TextStyle(fontSize: 15),
-              ),
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
-            ),
-          ],
+        return NotificationDialog(
+          title: "Cảnh báo!",
+          titleColor: my_colors.danger,
+          content: contentStr,
         );
       },
     );
   }
-  // dynamic showDropdown(
-  //   BuildContext context,
-  //   String title,
-  //   Future<dynamic> future,
-  //   dynamic model,
-  //   List<dynamic> list,
-  //   String selectedItemId,
-  //   bool isBikeType,
-  // ) {
-  //   return showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(15),
-  //         ),
-  //         title: Text(
-  //           title,
-  //           style: TextStyle(fontSize: 20),
-  //         ),
-  //         content: Container(
-  //           width: 1, // Cho nay khai bao de khong bi loi - Ly do : chua biet
-  //           height: 100,
-  //           child: FutureBuilder(
-  //             future: future,
-  //             builder: (dialogContext, snapshot) {
-  //               return ListView.builder(
-  //                 itemCount: list == null ? 0 : list.length,
-  //                 itemBuilder: (BuildContext context, int index) {
-  //                   var item = list[index];
-  //                   return TextButton(
-  //                     child: Text(
-  //                       item.name,
-  //                       style: TextStyle(
-  //                         fontSize: 15,
-  //                         color: (model != null && item.id == selectedItemId)
-  //                             ? my_colors.primary
-  //                             : Colors.black,
-  //                       ),
-  //                     ),
-  //                     onPressed: () {
-  //                       setState(() {
-  //                         if (isBikeType) {
-  //                           _bikeTypeIdSelected = item.id;
-  //                           _bikeTypeStr = item.name;
-  //                           _bikeTypeColor = Colors.black;
-  //                         } else {
-  //                           _ppkIdSelected = item.id;
-  //                           _ppkStr = item.name;
-  //                           _ppkColor = Colors.black;
-  //                         }
-  //                       });
-  //                       Navigator.pop(context);
-  //                       // helper.pushInto(context, confirmWidget1, false);
-  //                     },
-  //                   );
-  //                 },
-  //               );
-  //             },
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 }

@@ -113,6 +113,7 @@ class _RentBikeManagerState extends State<RentBikeManager> {
             // Bottom bar app
             bottomNavigationBar: BottomBar(
               bottomBarIndex: 3,
+              userModel: widget.userModel,
             ),
           ),
         ));
