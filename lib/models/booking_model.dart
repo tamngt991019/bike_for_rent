@@ -8,9 +8,9 @@ class BookingModel{
   String locationReturnBike;
   String dateBegin;
   String dateEnd;
-  String customerRating;
+  int customerRating;
   String customerReport;
-  String ownerRating;
+  int ownerRating;
   String ownerReport;
   String status;
 
@@ -41,9 +41,9 @@ class BookingModel{
     locationReturnBike: json['locationReturnBike'] as String,
     dateBegin: json['dateBegin'] as String,
     dateEnd: json['dateEnd'] as String,
-    customerRating: json['customerRating'] as String,
+    customerRating: json['customerRating'] as int,
     customerReport: json['customerReport'] as String,
-    ownerRating: json['ownerRating'] as String,
+    ownerRating: json['ownerRating'] as int,
     ownerReport: json['ownerReport'] as String,
     status: json['status'] as String,
   );
