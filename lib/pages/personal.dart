@@ -1,27 +1,52 @@
+import 'dart:io';
+
+import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/history.dart';
+import 'package:bike_for_rent/pages/home.dart';
+import 'package:bike_for_rent/pages/login.dart';
+import 'package:bike_for_rent/pages/login_valid.dart';
+import 'package:bike_for_rent/pages/rent_bike_filter.dart';
+import 'package:bike_for_rent/pages/rent_bike_manager.dart';
+import 'package:bike_for_rent/services/user_service.dart';
+import 'package:bike_for_rent/widgets/bloc_btn.dart';
+import 'package:bike_for_rent/widgets/bottom_bar.dart';
+import 'package:bike_for_rent/widgets/notification_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
+import 'package:bike_for_rent/helper/helper.dart' as helper;
 
-class Personal extends StatelessWidget {
-  Personal({Key key}) : super(key: key);
+class Personal extends StatefulWidget {
+  final UserModel userModel;
+  Personal({Key key, this.userModel}) : super(key: key);
 
-  final double _marginBottom = 5;
+  @override
+  _PersonalState createState() => _PersonalState();
+}
 
-  final Color cardColor = Colors.white;
-  final Color textColor = my_colors.primary;
+class _PersonalState extends State<Personal> {
+  String errorStr;
 
-// class Personal extends StatefulWidget {
-//   const Personal({Key key}) : super(key: key);
+  Color cardColor = Colors.white;
+  Color textColor = my_colors.primary;
 
-//   @override
-//   _PersonalState createState() => _PersonalState();
-// }
+  UserModel _userModel;
+  UserService userService = new UserService();
+  bool _isRenting;
+  bool _isShowRentingControlBtn;
 
-// class _PersonalState extends State<Personal> {
-//   double _marginBottom = 10;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.userModel != null) {
+      _userModel = widget.userModel;
+      _isRenting = widget.userModel.isRenting;
+      _isShowRentingControlBtn = widget.userModel.isRenting;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final double btnWWidth = MediaQuery.of(context).size.width * 90 / 100;
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: my_colors.materialPimary,
@@ -33,285 +58,178 @@ class Personal extends StatelessWidget {
           //   title:
         ),
         // Body app
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 10, left: 10),
-                child: Row(
-                  children: [
-                    // avatar
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: NetworkImage(
-                          "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
-                    ),
-                    SizedBox(width: 20),
-                    // tên người dùng và sđt
-                    Expanded(
-                      // tên người dùng
-                      child: Text(
-                        "username",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 35),
-              Center(
+        body: (widget.userModel == null)
+            ? LoginValid(
+                currentIndex: 3,
+                content: "Vui lòng đăng nhập để xem thông tin!",
+              )
+            : SingleChildScrollView(
+                padding: EdgeInsets.all(10),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // thông tin cá nhân btn
                     Container(
-                      margin: EdgeInsets.only(bottom: _marginBottom),
-                      child: InkWell(
-                        highlightColor: my_colors.primary,
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15, bottom: 15, left: 45, right: 45),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Thông tin cá nhân",
-                                    style: TextStyle(
-                                        fontSize: 25, color: my_colors.primary),
+                      margin: EdgeInsets.only(top: 10, left: 10),
+                      child: Row(
+                        children: [
+                          // avatar
+                          CircleAvatar(
+                            radius: 40,
+                            backgroundImage: (_userModel != null)
+                                ? NetworkImage(_userModel.avatar)
+                                : AssetImage(
+                                    "lib/assets/images/avatar_logo.png",
                                   ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: my_colors.primary,
-                                )
-                              ],
+                          ),
+                          SizedBox(width: 20),
+                          // tên người dùng và sđt
+                          Expanded(
+                            // tên người dùng
+                            child: Text(
+                              _userModel.fullName,
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: _marginBottom),
-                      child: InkWell(
-                        highlightColor: my_colors.primary,
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
+                    SizedBox(height: 35),
+                    Center(
+                      child: Column(
+                        children: [
+                          // thông tin cá nhân btn
+                          BlocButton(
+                            title: "Thông tin cá nhân",
+                            iconData: Icons.arrow_forward_ios,
+                            color: my_colors.primary,
+                            onClicked: () {},
                           ),
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15, bottom: 15, left: 45, right: 45),
-                            child: Row(
+                          // Đăng ký cho thuê
+                          if (!_userModel.ownerVerified)
+                            BlocButton(
+                              title: "Đăng ký cho thuê",
+                              iconData: Icons.arrow_forward_ios,
+                              color: my_colors.primary,
+                              onClicked: () {
+                                setState(() {
+                                  _userModel.ownerVerified = true;
+                                  userService.updateUserModel(
+                                    _userModel.username,
+                                    _userModel,
+                                  );
+                                });
+                              },
+                            ),
+                          if (_userModel.ownerVerified)
+                            Column(
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    "Đăng ký cho thuê",
-                                    style: TextStyle(
-                                        fontSize: 25, color: my_colors.primary),
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
+                                BlocButton(
+                                  title: ((!_isRenting) ? "Mở" : "Tắt") +
+                                      " cho thuê xe",
+                                  iconData: Icons.arrow_forward_ios,
                                   color: my_colors.primary,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: _marginBottom),
-                      child: InkWell(
-                        highlightColor: my_colors.primary,
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15, bottom: 15, left: 45, right: 45),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Mở / tắt cho thuê xe",
-                                    style: TextStyle(
-                                        fontSize: 25, color: my_colors.primary),
-                                  ),
+                                  onClicked: showHideRentingControlBtn,
                                 ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: my_colors.primary,
-                                )
+                                if (_isShowRentingControlBtn)
+                                  if (_userModel.isRenting)
+                                    Column(
+                                      children: [
+                                        BlocButton(
+                                          title: "Quản lý cho thuê",
+                                          iconData: Icons.arrow_forward_ios,
+                                          color: my_colors.primary,
+                                          onClicked: () => helper.pushInto(
+                                            context,
+                                            RentBikeManager(
+                                              tabIndex: 0,
+                                              userModel: _userModel,
+                                            ),
+                                            true,
+                                          ),
+                                        ),
+                                        BlocButton(
+                                          title: "Xe của tôi",
+                                          iconData: Icons.arrow_forward_ios,
+                                          color: my_colors.primary,
+                                          onClicked: () {},
+                                        ),
+                                        BlocButton(
+                                          title: "Địa điểm giao xe của tôi",
+                                          iconData: Icons.arrow_forward_ios,
+                                          color: my_colors.primary,
+                                          onClicked: () {},
+                                        ),
+                                      ],
+                                    ),
                               ],
                             ),
+                          BlocButton(
+                            title: "Đăng xuất",
+                            iconData: Icons.logout,
+                            color: my_colors.danger,
+                            onClicked: () =>
+                                helper.pushInto(context, Home(), true),
                           ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: _marginBottom),
-                      child: InkWell(
-                        highlightColor: my_colors.primary,
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15, bottom: 15, left: 45, right: 45),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Quản ý cho thuê",
-                                    style: TextStyle(
-                                        fontSize: 25, color: my_colors.primary),
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: my_colors.primary,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: _marginBottom),
-                      child: InkWell(
-                        highlightColor: my_colors.primary,
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15, bottom: 15, left: 45, right: 45),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Xe của tôi",
-                                    style: TextStyle(
-                                        fontSize: 25, color: my_colors.primary),
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: my_colors.primary,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: _marginBottom),
-                      child: InkWell(
-                        highlightColor: my_colors.primary,
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15, bottom: 15, left: 45, right: 45),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Địa điểm giao xe của tôi",
-                                    style: TextStyle(
-                                        fontSize: 25, color: my_colors.primary),
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: my_colors.primary,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    Container(
-                      margin: EdgeInsets.only(bottom: _marginBottom),
-                      child: InkWell(
-                        highlightColor: my_colors.danger,
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15, bottom: 15, left: 45, right: 45),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Đăng xuất",
-                                    style: TextStyle(
-                                        fontSize: 25, color: my_colors.danger),
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.logout,
-                                  color: my_colors.danger,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
         // Bottom bar app
-        // bottomNavigationBar: BottomBar(
-        //   bottomBarIndex: 0,
-        // ),
+        bottomNavigationBar: BottomBar(
+          bottomBarIndex: 3,
+          userModel: _userModel,
+        ),
       ),
     );
+  }
+
+  dynamic showNotificationDialog(String contentStr) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return NotificationDialog(
+          title: "Thông báo",
+          titleColor: my_colors.primary,
+          content: contentStr,
+        );
+      },
+    );
+  }
+
+  void showHideRentingControlBtn() {
+    setState(() {
+      if (!_isRenting) {
+        _userModel.isRenting = true;
+      } else {
+        _userModel.isRenting = false;
+      }
+    });
+    Future<bool> checkUpdate = userService.updateUserModel(
+      _userModel.username,
+      _userModel,
+    );
+
+    checkUpdate.then((value) {
+      if (value) {
+        showNotificationDialog(
+          ((!_isRenting) ? "Mở" : "Tắt") + " chức năng cho thuê xe thành công",
+        );
+      } else {
+        showNotificationDialog(
+          ((!_isRenting) ? "Mở" : "Tắt") + " chức năng cho thuê xe thất bại",
+        );
+      }
+      setState(() {
+        _isRenting = _userModel.isRenting;
+        _isShowRentingControlBtn = _userModel.isRenting;
+      });
+    });
   }
 }

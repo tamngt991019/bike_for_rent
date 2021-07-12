@@ -1,7 +1,13 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/helper/helper.dart' as helper;
+import 'package:bike_for_rent/models/booking_model.dart';
+import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/history.dart';
+import 'package:bike_for_rent/pages/rent_bike_manager.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_detail.dart';
+import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
@@ -10,7 +16,15 @@ import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HistoryDetail extends StatefulWidget {
-  const HistoryDetail({Key key}) : super(key: key);
+  final UserModel userModel;
+  final BookingModel bookingModel;
+  final bool isCustomer;
+  const HistoryDetail({
+    Key key,
+    this.userModel,
+    this.bookingModel,
+    this.isCustomer,
+  }) : super(key: key);
 
   @override
   _HistoryDetailState createState() => _HistoryDetailState();
@@ -61,11 +75,20 @@ class _HistoryDetailState extends State<HistoryDetail> {
       home: Scaffold(
         // Header app
         appBar: Appbar(
-            height: 50,
-            titles: "Chi tiết lịch sử thuê",
-            isShowBackBtn: true,
-            bottomAppBar: null,
-            onPressedBackBtn: () {}),
+          height: 50,
+          titles: "Chi tiết lịch sử thuê",
+          isShowBackBtn: true,
+          bottomAppBar: null,
+          onPressedBackBtn: () => helper.pushInto(
+              context,
+              (widget.isCustomer)
+                  ? History(
+                      isCustomerHistory: true,
+                      isCustomerHistoryDetail: false,
+                    )
+                  : RentBikeManager(userModel: widget.userModel, tabIndex: 2),
+              false),
+        ),
         // Body app
         body: SingleChildScrollView(
           child: Column(
@@ -304,9 +327,10 @@ class _HistoryDetailState extends State<HistoryDetail> {
           ),
         ),
         // Bottom bar app
-        // bottomNavigationBar: BottomBar(
-        //   bottomBarIndex: 1,
-        // ),
+        bottomNavigationBar: BottomBar(
+          bottomBarIndex: (widget.isCustomer) ? 2 : 3,
+          userModel: widget.userModel,
+        ),
       ),
     );
   }

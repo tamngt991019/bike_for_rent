@@ -49,7 +49,7 @@ class _UserDetailState extends State<UserDetail> {
                         CircleAvatar(
                             radius: 30,
                             backgroundImage: (widget.usermodel.avatar != null)
-                                ? NetworkImage(widget.usermodel.avatar)
+                                ? NetworkImage("https://media.publit.io/file/BikeForRent/test_avatar.jpg")
                                 : AssetImage("lib/assets/images/default.png")),
                         SizedBox(width: 20),
                         // tên người dùng và sđt
@@ -74,7 +74,7 @@ class _UserDetailState extends State<UserDetail> {
                             )),
                         SizedBox(width: 20),
                         Expanded(
-                          child: Text(widget.usermodel.fullname,
+                          child: Text(widget.usermodel.fullName,
                               style: TextStyle(
                                 fontSize: 15,
                               )),
@@ -116,7 +116,7 @@ class _UserDetailState extends State<UserDetail> {
                   ]),
                 ))),
         // Bottom bar app
-        bottomNavigationBar: BottomBar(bottomBarIndex: 3),
+        // bottomNavigationBar: BottomBar(bottomBarIndex: 3),
       ),
     );
   }
