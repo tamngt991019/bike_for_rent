@@ -166,8 +166,6 @@ class _BikeGetMapState extends State<BikeGetMap> {
               height: 50,
               titles: "Thuê xe",
               isShowBackBtn: false,
-              // onPressedBackBtn: () => helper.pushInto(
-              // context, RentBikeFilter(userModel: widget.userModel), false),
             ),
             // Body app
             body: (widget.userModel == null)

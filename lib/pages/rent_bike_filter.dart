@@ -234,7 +234,7 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
               context,
               BikeGetMap(
                 userModel: widget.userModel,
-                bikeTypeModel: widget.bikeTypeModel,
+                bikeTypeModel: _bikeTypeModel,
                 payPackageModel: _ppkModel,
               ),
               false),

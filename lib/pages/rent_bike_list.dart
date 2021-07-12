@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bike_for_rent/models/bike_model.dart';
 import 'package:bike_for_rent/models/bike_type_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
@@ -190,14 +192,14 @@ class _RentBikeListState extends State<RentBikeList> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: bikeList == null ? 0 : bikeList.length,
                     itemBuilder: (BuildContext context, int index) {
-                      BikeModel item = bikeList[index];
+                      // BikeModel item = bikeList[index];
                       return InkWell(
                         onTap: () {
                           helper.pushInto(
                               context,
                               RentBikeDetail(
                                 userModel: widget.userModel,
-                                bikeModel: item,
+                                bikeModel: bikeList[index],
                                 bikeTypeModel: widget.bikeTypeModel,
                                 locationModel: widget.locationModel,
                                 payPackageModel: widget.payPackageModel,
@@ -205,7 +207,7 @@ class _RentBikeListState extends State<RentBikeList> {
                               true);
                         },
                         child: BookingCard(
-                          bikeModel: item,
+                          bikeModel: bikeList[index],
                           isCustomerHistory: false,
                           isCustomerHistoryDetail: false,
                         ),
