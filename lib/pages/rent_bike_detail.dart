@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bike_for_rent/models/bike_model.dart';
 import 'package:bike_for_rent/models/bike_type_model.dart';
@@ -62,19 +63,20 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
   LatLng _latLng; //= LatLng(locLati, locLong);
 
   UserService userService = new UserService();
-  UserModel _userModel;
-  void getUserById(String id) {
-    if (_userModel == null) {
-      this._userModel = new UserModel();
+  UserModel _ownerModel;
+  Future getOwnerById(String id) {
+    if (_ownerModel == null) {
+      this._ownerModel = new UserModel();
     }
     Future<UserModel> futureCases = userService.getUserById(id);
     futureCases.then((model) {
       if (this.mounted) {
         setState(() {
-          _userModel = model;
+          _ownerModel = model;
         });
       }
     });
+    return futureCases;
   }
 
   BikeService bikeService = new BikeService();
@@ -88,19 +90,20 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
       if (this.mounted) {
         setState(() {
           _bikeModel = model;
+          // getOwnerById(model.userName);
         });
       }
     });
+    // getOwnerById(_bikeModel.userName);
     return futureCases;
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     // getBikeById(widget.bikeModel.id);
 
-    getUserById(widget.bikeModel.userName);
+    // getOwnerById(widget.bikeModel.userName);
     // getLocationById(widget.locationModel.id);
   }
 
@@ -134,7 +137,6 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
 
   void _onMapCreated(GoogleMapController _controller) {
     _ggMapController.complete(_controller);
-
     setState(() {
       LatLng _inLatLing;
       Future<LocationModel> future =
@@ -223,9 +225,14 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                 margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 child: Row(
                   children: [
-                    FrameText(
-                      title: "Địa điểm giao / nhận xe",
-                      content: _bikeGetAddress,
+                    FutureBuilder(
+                      future: getLocationById(widget.locationModel.id),
+                      builder: (context, snapshot) {
+                        return FrameText(
+                          title: "Địa điểm giao / nhận xe",
+                          content: _bikeGetAddress,
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -244,82 +251,98 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                 ),
               ),
               // THÔNG TIN CHỦ XE
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                margin:
-                    EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 15),
-                elevation: 5,
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // avatar
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: NetworkImage(widget.userModel.avatar),
-                      ),
-                      SizedBox(width: 10),
-                      // tên người dùng và sđt
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // tên người dùng
-                            Text(
-                              _userModel.fullName,
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            if (_userModel.phone != null) SizedBox(height: 5),
-                            if (_userModel.phone != null)
-                              Text(
-                                _userModel.phone,
-                                style: TextStyle(
-                                  fontSize: 15,
+              if (_ownerModel != null)
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  margin: EdgeInsets.only(top: 15, left: 10, right: 10),
+                  elevation: 5,
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child:
+                        // (_bikeModel == null)
+                        //     ? Center(child: Text("Đang tải thông tin chủ xe"))
+                        //     : FutureBuilder(
+                        //         future: getOwnerById(_bikeModel.userName),
+                        //         builder: (context, snapshot) {
+                        //           return
+                        Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // avatar
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage: (_ownerModel.avatar != null)
+                              ? NetworkImage(_ownerModel.avatar)
+                              : AssetImage(
+                                  "lib/assets/images/avatar_logo.png",
                                 ),
-                              ),
-                          ],
                         ),
-                      ),
-                      SizedBox(width: 10),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          // tên người dùng
-                          Text(
-                            "Chủ xe",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          // if(_userModel.)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                        SizedBox(width: 10),
+                        // tên người dùng và sđt
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              for (var i = 0; i < 5; i++)
-                                Icon(
-                                  Icons.star,
-                                  color: Colors.yellow,
-                                  size: 20,
+                              // tên người dùng
+                              Text(
+                                _ownerModel.fullName,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              if (_ownerModel.phone != null)
+                                SizedBox(height: 5),
+                              if (_ownerModel.phone != null)
+                                Text(
+                                  _ownerModel.phone,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                  ),
                                 ),
                             ],
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        SizedBox(width: 10),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            // tên người dùng
+                            Text(
+                              "Chủ xe",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            // if(_ownerModel.)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                for (var i = 0; i < 5; i++)
+                                  Icon(
+                                    Icons.star,
+                                    color: Colors.yellow,
+                                    size: 20,
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                      //   );
+                      // },
+                    ),
                   ),
                 ),
-              ),
+
+              SizedBox(height: 15),
               ElavateBtn(
                   width: MediaQuery.of(context).size.width * 80 / 100,
                   title: "Thuê ngay",
@@ -330,174 +353,116 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                   ),
               SizedBox(height: 5),
               // đánh giá
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Đánh giá",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "5",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            Icon(
-                              Icons.star,
-                              size: 18,
-                              color: Colors.yellow,
-                            ),
-                            Text(
-                              " ∙ ",
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "10" + " nhận xét",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                          ],
-                        ),
-                        Divider(
-                          color: Colors.black,
-                          thickness: 1,
-                          height: 10,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // avatar
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundImage: NetworkImage(
-                                  "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
-                            ),
-                            SizedBox(width: 10),
-                            // tên người dùng và sđt
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // tên người dùng
-                                  Text(
-                                    "Tên người thuê xe",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      for (var i = 0; i < 5; i++)
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                          size: 22,
-                                        ),
-                                    ],
-                                  ),
-                                ],
+              if (1 == 2)
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Đánh giá",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "5",
+                                style: TextStyle(fontSize: 15),
                               ),
-                            ),
-                          ],
-                        ),
-                        // Nội dung đánh giá của bạn
-                        Row(
-                          children: [
-                            FrameText(
-                              title: "",
-                              content: "1 vài nội dung đánh giá ở đây",
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // avatar
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundImage: NetworkImage(
-                                  "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
-                            ),
-                            SizedBox(width: 10),
-                            // tên người dùng và sđt
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // tên người dùng
-                                  Text(
-                                    "Tên người thuê xe",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      for (var i = 0; i < 5; i++)
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                          size: 22,
-                                        ),
-                                    ],
-                                  ),
-                                ],
+                              Icon(
+                                Icons.star,
+                                size: 18,
+                                color: Colors.yellow,
                               ),
-                            ),
-                          ],
-                        ),
-                        // Nội dung đánh giá của bạn
-                        Row(
-                          children: [
-                            FrameText(
-                              title: "",
-                              content:
-                                  "1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây",
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
+                              Text(
+                                " ∙ ",
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "10" + " nhận xét",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            color: Colors.black,
+                            thickness: 1,
+                            height: 10,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // avatar
+                              CircleAvatar(
+                                radius: 20,
+                                backgroundImage: NetworkImage(
+                                    "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
+                              ),
+                              SizedBox(width: 10),
+                              // tên người dùng và sđt
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // tên người dùng
+                                    Text(
+                                      "Tên người thuê xe",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        for (var i = 0; i < 5; i++)
+                                          Icon(
+                                            Icons.star,
+                                            color: Colors.yellow,
+                                            size: 22,
+                                          ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          // Nội dung đánh giá của bạn
+                          Row(
+                            children: [
+                              FrameText(
+                                title: "",
+                                content:
+                                    "1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây",
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
             ],
           ),
           //   );
