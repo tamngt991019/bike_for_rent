@@ -84,172 +84,242 @@ class _BookingdetailState extends State<Bookingdetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Tên xe
-        Row(
-          children: [
-            Text("Tên xe: " + widget.bikeModel.model,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          ],
-        ),
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Loại xe: ",
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
-                      Expanded(
-                        child: FutureBuilder(
-                          future: loadBikeTypeById(widget.bikeModel.typeId),
-                          builder: (context, snapshot) {
-                            Future.delayed(
-                              Duration(milliseconds: 1),
-                              () => bikeTypeStr = bikeTypeModel.name,
-                            );
-                            return Text(
-                              bikeTypeStr,
-                              style: TextStyle(fontSize: 15),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Hãng: ",
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
-                      Expanded(
-                        child: FutureBuilder(
-                          future: loadBikeBrandById(widget.bikeModel.brandId),
-                          builder: (context, snapshot) {
-                            Future.delayed(
-                              Duration(milliseconds: 1),
-                              () => bikeBrandStr = bikeBrandModel.name,
-                            );
-                            return Text(
-                              bikeBrandStr,
-                              style: TextStyle(fontSize: 15),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Biển số xe: ",
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
-                      Expanded(
-                        child: Text(widget.bikeModel.licensePlates,
-                            style: TextStyle(fontSize: 15)),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Màu sắc: ",
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
-                      Expanded(
-                        child: Text(widget.bikeModel.color,
-                            style: TextStyle(fontSize: 15)),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        if (widget.isCustomerHistory && widget.isCustomerHistoryDetail)
-          Column(
+    if (widget.bikeModel == null)
+      return Center(child: Text("Không có lịch sử thuê"));
+    else
+      return Column(
+        children: [
+          // Tên xe
+          Row(
             children: [
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Ngày / giờ thuê xe: ",
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                  Expanded(
-                    child: Text(widget.bookingModel.dateBegin,
-                        style: TextStyle(fontSize: 15)),
-                  ),
-                ],
+              Text("Tên xe: " + widget.bikeModel.model,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Loại xe: ",
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                        Expanded(
+                          child: FutureBuilder(
+                            future: loadBikeTypeById(widget.bikeModel.typeId),
+                            builder: (context, snapshot) {
+                              Future.delayed(
+                                Duration(milliseconds: 1),
+                                () => bikeTypeStr = bikeTypeModel.name,
+                              );
+                              return Text(
+                                bikeTypeStr,
+                                style: TextStyle(fontSize: 15),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Hãng: ",
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                        Expanded(
+                          child: FutureBuilder(
+                            future: loadBikeBrandById(widget.bikeModel.brandId),
+                            builder: (context, snapshot) {
+                              Future.delayed(
+                                Duration(milliseconds: 1),
+                                () => bikeBrandStr = bikeBrandModel.name,
+                              );
+                              return Text(
+                                bikeBrandStr,
+                                style: TextStyle(fontSize: 15),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.bookingModel.dateEnd,
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                  Expanded(
-                    child: Text("31/12/2021 - 15:30",
-                        style: TextStyle(fontSize: 15)),
-                  ),
-                ],
+              SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Biển số xe: ",
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                        Expanded(
+                          child: Text(widget.bikeModel.licensePlates,
+                              style: TextStyle(fontSize: 15)),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Màu sắc: ",
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                        Expanded(
+                          child: Text(widget.bikeModel.color,
+                              style: TextStyle(fontSize: 15)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        if (widget.isCustomerHistory)
-          Column(
-            children: [
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (widget.isCustomerHistoryDetail)
+          if (widget.isCustomerHistory && widget.isCustomerHistoryDetail)
+            Column(
+              children: [
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Ngày / giờ thuê xe: ",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold)),
+                    Expanded(
+                      child: Text(widget.bookingModel.dateBegin,
+                          style: TextStyle(fontSize: 15)),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.bookingModel.dateEnd,
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold)),
+                    Expanded(
+                      child: Text("31/12/2021 - 15:30",
+                          style: TextStyle(fontSize: 15)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          if (widget.isCustomerHistory)
+            Column(
+              children: [
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (widget.isCustomerHistoryDetail)
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Thời gian thuê: ",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)),
+                                Expanded(
+                                  child: Text("1 ngày 10 tiếng",
+                                      style: TextStyle(fontSize: 15)),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    if (widget.isCustomerHistoryDetail) SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Thời gian thuê: ",
+                              Text("Trạng thái: ",
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold)),
                               Expanded(
-                                child: Text("1 ngày 10 tiếng",
+                                child: Text(
+                                    helper.getStatus(widget.bookingModel.status
+                                        .toUpperCase()),
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: (widget.bookingModel.status
+                                                  .toUpperCase() ==
+                                              "CANCELED")
+                                          ? my_colors.danger
+                                          : my_colors.primary,
+                                      // color: ("FINISHED" == "CANCELED")
+                                      //     ? my_colors.danger
+                                      //     : my_colors.primary,
+                                    )),
+                                // Text("Hoàn thành / Huỷ",
+                                // style: TextStyle(fontSize: 15)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          if (widget.isCustomerHistory)
+            Column(
+              children: [
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text("Thanh toán: ",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold)),
+                              Expanded(
+                                child: Text("Tiền mặt",
                                     style: TextStyle(fontSize: 15)),
                               ),
                             ],
@@ -257,97 +327,33 @@ class _BookingdetailState extends State<Bookingdetail> {
                         ],
                       ),
                     ),
-                  if (widget.isCustomerHistoryDetail) SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text("Trạng thái: ",
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold)),
-                            Expanded(
-                              child: Text(
-                                  helper.getStatus(
-                                      widget.bookingModel.status.toUpperCase()),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text("Tổng tiền: ",
                                   style: TextStyle(
-                                    fontSize: 15,
-                                    color: (widget.bookingModel.status
-                                                .toUpperCase() ==
-                                            "CANCELED")
-                                        ? my_colors.danger
-                                        : my_colors.primary,
-                                    // color: ("FINISHED" == "CANCELED")
-                                    //     ? my_colors.danger
-                                    //     : my_colors.primary,
-                                  )),
-                              // Text("Hoàn thành / Huỷ",
-                              // style: TextStyle(fontSize: 15)),
-                            ),
-                          ],
-                        ),
-                      ],
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold)),
+                              Expanded(
+                                child: Text("123456 vnd",
+                                    style: TextStyle(fontSize: 15)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        if (widget.isCustomerHistory)
-          Column(
-            children: [
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text("Thanh toán: ",
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold)),
-                            Expanded(
-                              child: Text("Tiền mặt",
-                                  style: TextStyle(fontSize: 15)),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text("Tổng tiền: ",
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold)),
-                            Expanded(
-                              child: Text("123456 vnd",
-                                  style: TextStyle(fontSize: 15)),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-      ],
-    );
+                  ],
+                ),
+              ],
+            ),
+        ],
+      );
   }
 }
 // }

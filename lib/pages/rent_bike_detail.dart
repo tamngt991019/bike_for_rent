@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'Dart:math' as math;
 import 'package:bike_for_rent/models/bike_model.dart';
 import 'package:bike_for_rent/models/bike_type_model.dart';
+import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
 import 'package:bike_for_rent/models/pay_package_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
@@ -10,6 +11,7 @@ import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/pages/rent_bike_list.dart';
 import 'package:bike_for_rent/pages/tracking_booking.dart';
 import 'package:bike_for_rent/services/bike_service.dart';
+import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:bike_for_rent/services/location_service.dart';
 import 'package:bike_for_rent/services/user_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
@@ -44,10 +46,8 @@ class RentBikeDetail extends StatefulWidget {
 }
 
 class _RentBikeDetailState extends State<RentBikeDetail> {
-  String _avatarStr;
-  String _ownerNameStr;
-  String _phoneStr;
   double _ratingNum = 0;
+
   List<String> imageUrls() {
     List<String> imageUrls = [
       "https://media.publit.io/file/BikeForRent/banner/banner1.jpg",
@@ -64,14 +64,16 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
   double locLati = 10.841493;
   double locLong = 106.810038;
   // Map ---------------------------------
-  LatLng _latLng; //= LatLng(locLati, locLong);
+  // LatLng _latLng; //= LatLng(locLati, locLong);
 
   UserService userService = new UserService();
   UserModel _ownerModel;
+  UserModel _customerModel;
   Future getOwnerById(String id) {
     if (_ownerModel == null) {
-      this._ownerModel = new UserModel();
+      _ownerModel = new UserModel();
     }
+
     Future<UserModel> futureCases = userService.getUserById(id);
     futureCases.then((model) {
       if (this.mounted) {
@@ -83,32 +85,68 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
     return futureCases;
   }
 
-  // BikeService bikeService = new BikeService();
-  // BikeModel _bikeModel;
-  // Future getBikeById(String id) {
-  //   if (_bikeModel == null) {
-  //     this._bikeModel = new BikeModel();
-  //   }
-  //   Future<BikeModel> futureCases = bikeService.getBikeById(id);
-  //   futureCases.then((model) {
-  //     if (this.mounted) {
-  //       setState(() {
-  //         _bikeModel = model;
-  //         // getOwnerById(model.userName);
-  //       });
-  //     }
-  //   });
-  //   // getOwnerById(_bikeModel.userName);
-  //   return futureCases;
-  // }
+  BookingService bookingService = new BookingService();
+  List<BookingModel> bookingList;
+  double avgRating = -1;
+  Future loadListBookingByBikeIdWithRating(String bikeId) {
+    if (bookingList == null) {
+      bookingList = [];
+    }
+    Future<List<BookingModel>> futureCases =
+        bookingService.getListBookingByBikeIdWithRating(bikeId);
+    futureCases.then((_bookingList) {
+      if (this.mounted) {
+        setState(() {
+          this.bookingList = _bookingList;
+        });
+      }
+    });
+    return futureCases;
+  }
+
+  Future getCustomerById(String id) {
+    if (_customerModel == null) {
+      _customerModel = new UserModel();
+    }
+
+    Future<UserModel> futureCases = userService.getUserById(id);
+    futureCases.then((model) {
+      if (this.mounted) {
+        setState(() {
+          _customerModel = model;
+        });
+      }
+    });
+    return futureCases;
+  }
+
+  double getAverage(List<BookingModel> list) {
+    double result = 0;
+    for (var item in list) {
+      result += item.customerRating;
+    }
+    result = double.parse((result / list.length).toStringAsFixed(1));
+    return result;
+  }
+
+  Widget getNumberOfStart(double number) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var i = 0; i < number; i++)
+          Icon(
+            Icons.star,
+            color: Colors.yellow,
+            size: 22,
+          ),
+      ],
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    // getBikeById(widget.bikeModel.id);
-    getOwnerById(widget.bikeModel.userName);
-    // getOwnerById(widget.bikeModel.userName);
-    // getLocationById(widget.locationModel.id);
   }
 
   LocationService locService = new LocationService();
@@ -250,7 +288,6 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                 ),
               ),
               // THÔNG TIN CHỦ XE
-              // if (_ownerModel != null)
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
@@ -268,24 +305,16 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                         child: FutureBuilder(
                           future: getOwnerById(widget.bikeModel.userName),
                           builder: (context, snapshot) {
-                            Future.delayed(
-                              Duration(milliseconds: 1),
-                              () {
-                                _avatarStr = _ownerModel.avatar;
-                                _ownerNameStr = _ownerModel.fullName;
-                                _phoneStr = _ownerModel.phone;
-                                // _ratingNum = _ownerModel.
-                              },
-                            );
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 CircleAvatar(
                                   radius: 20,
-                                  backgroundImage: (_avatarStr != null &&
-                                          _avatarStr.isEmpty == false)
-                                      ? NetworkImage(_avatarStr)
+                                  backgroundImage: (_ownerModel.avatar !=
+                                              null &&
+                                          _ownerModel.avatar.isEmpty == false)
+                                      ? NetworkImage(_ownerModel.avatar)
                                       : AssetImage(
                                           "lib/assets/images/avatar_logo.png",
                                         ),
@@ -299,20 +328,19 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       // tên người dùng
-                                      Text(
-                                        (_ownerNameStr != null)
-                                            ? _ownerNameStr
-                                            : "",
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      if (_phoneStr != null)
-                                        SizedBox(height: 5),
-                                      if (_phoneStr != null)
+                                      if (_ownerModel.fullName != null)
                                         Text(
-                                          _phoneStr,
+                                          _ownerModel.fullName,
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      if (_ownerModel.phone != null)
+                                        SizedBox(height: 5),
+                                      if (_ownerModel.phone != null)
+                                        Text(
+                                          _ownerModel.phone,
                                           style: TextStyle(
                                             fontSize: 15,
                                           ),
@@ -365,114 +393,140 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                       context, TrackingBooking(isCustomer: true), true)),
               SizedBox(height: 5),
               // đánh giá
+              // if (1 == 2)
               Padding(
                 padding: EdgeInsets.all(10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
+                child: FutureBuilder(
+                  future:
+                      loadListBookingByBikeIdWithRating(widget.bikeModel.id),
+                  builder: (context, snapshot) {
+                    return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Đánh giá",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "5",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            Icon(
-                              Icons.star,
-                              size: 18,
-                              color: Colors.yellow,
-                            ),
-                            Text(
-                              " ∙ ",
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "10" + " nhận xét",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                          ],
-                        ),
-                        Divider(
-                          color: Colors.black,
-                          thickness: 1,
-                          height: 10,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10),
-                        Row(
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // avatar
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundImage: NetworkImage(
-                                  "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
+                            Text(
+                              "Đánh giá",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(width: 10),
-                            // tên người dùng và sđt
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // tên người dùng
-                                  Text(
-                                    "Tên người thuê xe",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
+                            Row(
+                              children: [
+                                if (bookingList != null)
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
                                     children: [
-                                      for (var i = 0; i < 5; i++)
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                          size: 22,
-                                        ),
+                                      Text(
+                                        (getAverage(bookingList)).toString(),
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                      Icon(
+                                        Icons.star,
+                                        size: 18,
+                                        color: Colors.yellow,
+                                      ),
+                                      Text(
+                                        " ∙ ",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
+                                Text(
+                                  ((bookingList != null)
+                                              ? bookingList.length
+                                              : 0)
+                                          .toString() +
+                                      " nhận xét",
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              color: Colors.black,
+                              thickness: 1,
+                              height: 10,
                             ),
                           ],
                         ),
-                        // Nội dung đánh giá của bạn
-                        Row(
-                          children: [
-                            FrameText(
-                              title: "",
-                              content:
-                                  "1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây 1 vài nội dung đánh giá ở đây",
-                            ),
-                          ],
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount:
+                              bookingList == null ? 0 : bookingList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            UserModel _user = bookingList[index].userModel;
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // avatar
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage: (_user.avatar != null &&
+                                              _user.avatar.isEmpty == false)
+                                          ? NetworkImage(_user.avatar)
+                                          : AssetImage(
+                                              "lib/assets/images/avatar_logo.png",
+                                            ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    // tên người dùng và sđt
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          // tên người dùng
+                                          Text(
+                                            _user.fullName,
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          getNumberOfStart(
+                                            double.parse(
+                                              bookingList[index]
+                                                  .customerRating
+                                                  .toString(),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // Nội dung đánh giá của bạn
+                                Row(
+                                  children: [
+                                    FrameText(
+                                      title: "",
+                                      content:
+                                          bookingList[index].customerReport,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ],
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              )
+              ),
             ],
           ),
         ),

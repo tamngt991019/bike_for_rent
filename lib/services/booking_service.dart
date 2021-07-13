@@ -38,12 +38,34 @@ class BookingService {
     }
     return result;
   }
+
   //customer history
-Future<List<BookingModel>> getListCustomerBookingFinishedCanceled(String username) async {
+  Future<List<BookingModel>> getListCustomerBookingFinishedCanceled(
+      String username) async {
     Response response;
     List<BookingModel> result;
     try {
-      response = response = await get(Uri.parse('${apiUrl.booking}/customer/fc?username=$username'));
+      response = response = await get(
+          Uri.parse('${apiUrl.booking}/customer/fc?username=$username'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        result =
+            body.map((dynamic item) => BookingModel.fromJson(item)).toList();
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
+  Future<List<BookingModel>> getListBookingByBikeIdWithRating(
+      String bikeId) async {
+    Response response;
+    List<BookingModel> result;
+    try {
+      response = response =
+          await get(Uri.parse('${apiUrl.booking}/owner/rating?bikeId=$bikeId'));
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
