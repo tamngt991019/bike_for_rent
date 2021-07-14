@@ -18,10 +18,11 @@ class FrameText extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           SizedBox(height: 10),
-          Text(
-            content,
-            style: TextStyle(fontSize: 15),
-          ),
+          if (content.isNotEmpty)
+            Text(
+              content,
+              style: TextStyle(fontSize: 15),
+            ),
           Divider(
             height: 15,
             color: Colors.black,

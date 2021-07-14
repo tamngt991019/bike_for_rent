@@ -62,6 +62,39 @@ class BikeService {
     return result;
   }
 
+  //get trả về response code 200
+  Future<BikeModel> getBikeByIdWithTypeBrandImages(String id) async {
+    Response response;
+    BikeModel result;
+    try {
+      response =
+          await get(Uri.parse('${apiUrl.bike}/type/brand/iamges?id=$id'));
+
+      if (response.statusCode == 200) {
+        result = BikeModel.fromJson(json.decode(response.body));
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
+  Future<BikeModel> getBikeByIdWithTypeBrandImagesUser(String id) async {
+    Response response;
+    BikeModel result;
+    try {
+      response =
+          await get(Uri.parse('${apiUrl.bike}/type/brand/iamges/user?id=$id'));
+
+      if (response.statusCode == 200) {
+        result = BikeModel.fromJson(json.decode(response.body));
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
   //post trả về response code 201
   Future<BikeModel> createBike(BikeModel bikeModel) async {
     Response response;

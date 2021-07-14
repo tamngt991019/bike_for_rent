@@ -11,7 +11,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:bike_for_rent/helper/helper.dart' as helper;
-import 'package:cool_alert/cool_alert.dart';
 
 // import 'package:dropdown_plus/dropdown_plus.dart';
 

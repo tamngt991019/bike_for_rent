@@ -10,12 +10,14 @@ import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 class BookingCard extends StatefulWidget {
   final BikeModel bikeModel;
   final BookingModel bookingModel;
+  final List<String> listImage;
   final bool isCustomerHistory;
   final bool isCustomerHistoryDetail;
   BookingCard(
       {Key key,
       this.bikeModel,
       this.bookingModel,
+      this.listImage,
       this.isCustomerHistory,
       this.isCustomerHistoryDetail})
       : super(key: key);
