@@ -16,14 +16,16 @@ import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class TrackingBooking extends StatefulWidget {
   final UserModel userModel;
-  final BookingModel bookingModel;
+  // final BookingModel bookingModel;
   final bool isCustomer;
+  final bool isShowBackBtn;
   final int tabIndex;
   TrackingBooking({
     Key key,
     this.userModel,
-    this.bookingModel,
+    // this.bookingModel,
     this.isCustomer,
+    this.isShowBackBtn,
     this.tabIndex,
   }) : super(key: key);
 
@@ -51,15 +53,16 @@ class _TrackingBookingState extends State<TrackingBooking> {
         appBar: Appbar(
           height: 50,
           titles: "Thuê xe",
-          isShowBackBtn: (widget.isCustomer) ? false : true,
+          isShowBackBtn: (widget.isCustomer) ? false : widget.isShowBackBtn,
           bottomAppBar: null,
           onPressedBackBtn: () => helper.pushInto(
-              context,
-              RentBikeManager(
-                userModel: widget.userModel,
-                tabIndex: widget.tabIndex,
-              ),
-              false),
+            context,
+            RentBikeManager(
+              userModel: widget.userModel,
+              tabIndex: widget.tabIndex,
+            ),
+            false,
+          ),
         ),
         // Body app
         body: SingleChildScrollView(
@@ -67,103 +70,113 @@ class _TrackingBookingState extends State<TrackingBooking> {
           child: Column(
             children: [
               // Ten người dùng, sđt, avatar
+
               Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  elevation: 5,
-                  child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // avatar
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: NetworkImage(
+                            "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
+                      ),
+                      SizedBox(width: 20),
+                      // tên người dùng và sđt
+                      Expanded(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // avatar
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundImage: NetworkImage(
-                                  "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
+                            // tên người dùng
+                            Text(
+                              "Tên người thuê / cho thuê",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            SizedBox(width: 20),
-                            // tên người dùng và sđt
-                            Expanded(
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                  // tên người dùng
-                                  Text(
-                                    "Tên người thuê / cho thuê",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  // sđt
-                                  Text("Số điện thoại: " + "0987654321",
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                      ))
-                                ]))
-                          ]))),
+                            SizedBox(height: 10),
+                            // sđt
+                            Text(
+                              "Số điện thoại: " + "0987654321",
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               SizedBox(height: 5),
               // Thông tin xe máy
-              BookingCard(
-                isCustomerHistory: false,
-                isCustomerHistoryDetail: false,
-              ),
+              if (1 == 2)
+                BookingCard(
+                  isCustomerHistory: false,
+                  isCustomerHistoryDetail: false,
+                ),
 
               SizedBox(height: 10),
               // Thông tin địa điểm
               Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  elevation: 5,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                            child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Địa điểm nhận / giao xe:",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      SizedBox(height: 10),
-                                      Text(
-                                        "123 Trần Hưng Đạo, quận 1, thành phố Hồ Chí Mính",
-                                        style: TextStyle(fontSize: 15),
-                                        // textDirection: ,
-                                      ),
-                                      Divider(
-                                        height: 10,
-                                        color: Colors.black,
-                                      ),
-                                      // Địa điểm trả / lấy xe
-                                      SizedBox(height: 15),
-                                      Text("Địa điểm trả / lấy xe:",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold)),
-                                      SizedBox(height: 10),
-                                      Text(
-                                        "123 Trần Hưng Đạo, quận 1, thành phố Hồ Chí Mính",
-                                        style: TextStyle(fontSize: 15),
-                                        // textDirection: ,
-                                      ),
-                                      Divider(
-                                        height: 10,
-                                        color: Colors.black,
-                                      )
-                                    ])))
-                      ])),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 5,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Địa điểm nhận / giao xe:",
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                            SizedBox(height: 10),
+                            Text(
+                              "123 Trần Hưng Đạo, quận 1, thành phố Hồ Chí Mính",
+                              style: TextStyle(fontSize: 15),
+                              // textDirection: ,
+                            ),
+                            Divider(
+                              height: 10,
+                              color: Colors.black,
+                            ),
+                            // Địa điểm trả / lấy xe
+                            SizedBox(height: 15),
+                            Text("Địa điểm trả / lấy xe:",
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                            SizedBox(height: 10),
+                            Text(
+                              "123 Trần Hưng Đạo, quận 1, thành phố Hồ Chí Mính",
+                              style: TextStyle(fontSize: 15),
+                              // textDirection: ,
+                            ),
+                            Divider(
+                              height: 10,
+                              color: Colors.black,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(height: 10),
               // Gói thuê
               Card(
@@ -311,13 +324,16 @@ class _TrackingBookingState extends State<TrackingBooking> {
                         onPressedElavateBtn: () {},
                       )
                     ]),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      ElavateBtn(
-                        width: 380,
-                        title: 'Thanh toán',
-                        onPressedElavateBtn: () {},
-                      )
-                    ]),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElavateBtn(
+                          width: 380,
+                          title: 'Thanh toán',
+                          onPressedElavateBtn: () {},
+                        )
+                      ],
+                    ),
                   ],
                 ),
               // các nút của chủ xe
@@ -355,23 +371,29 @@ class _TrackingBookingState extends State<TrackingBooking> {
                             //   ),
                             // );
                           },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElavateBtn(
+                          width: 380,
+                          title: 'Đã lấy xe',
+                          onPressedElavateBtn: () {},
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElavateBtn(
+                          width: 380,
+                          title: 'Xác nhận đã thanh toán',
+                          onPressedElavateBtn: () {},
                         )
                       ],
                     ),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      ElavateBtn(
-                        width: 380,
-                        title: 'Đã nhận xe',
-                        onPressedElavateBtn: () {},
-                      )
-                    ]),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      ElavateBtn(
-                        width: 380,
-                        title: 'Xác nhận đã thanh toán',
-                        onPressedElavateBtn: () {},
-                      )
-                    ]),
                   ],
                 ),
 
@@ -382,6 +404,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
         // Bottom bar app
         bottomNavigationBar: BottomBar(
           bottomBarIndex: (widget.isCustomer) ? 1 : 3,
+          userModel: widget.userModel,
         ),
       ),
     );
