@@ -30,40 +30,40 @@ class Bookingdetail extends StatefulWidget {
 }
 
 class _BookingdetailState extends State<Bookingdetail> {
-  String bikeTypeStr = "";
-  String bikeBrandStr = "";
+  // String bikeTypeStr = "";
+  // String bikeBrandStr = "";
 
-  BikeService bikeService = new BikeService();
-  BikeModel loadBikeById(String bikeId) {
-    BikeModel result;
-    Future<BikeModel> futureCases = bikeService.getBikeById(bikeId);
-    futureCases.then((model) {
-      result = model;
-    });
-    return result;
-  }
+  // BikeService bikeService = new BikeService();
+  // BikeModel loadBikeById(String bikeId) {
+  //   BikeModel result;
+  //   Future<BikeModel> futureCases = bikeService.getBikeById(bikeId);
+  //   futureCases.then((model) {
+  //     result = model;
+  //   });
+  //   return result;
+  // }
 
-  BikeTypeService bikeTypeService = new BikeTypeService();
-  BikeTypeModel bikeTypeModel;
-  Future loadBikeTypeById(String bikeTypeId) {
-    Future<BikeTypeModel> futureCases =
-        bikeTypeService.getBikeTypeById(bikeTypeId);
-    futureCases.then((model) {
-      bikeTypeModel = model;
-    });
-    return futureCases;
-  }
+  // BikeTypeService bikeTypeService = new BikeTypeService();
+  // BikeTypeModel bikeTypeModel;
+  // Future loadBikeTypeById(String bikeTypeId) {
+  //   Future<BikeTypeModel> futureCases =
+  //       bikeTypeService.getBikeTypeById(bikeTypeId);
+  //   futureCases.then((model) {
+  //     bikeTypeModel = model;
+  //   });
+  //   return futureCases;
+  // }
 
-  BikeBrandService bikeBrandService = new BikeBrandService();
-  BikeBrandModel bikeBrandModel;
-  Future loadBikeBrandById(String bikeBrandId) {
-    Future<BikeBrandModel> futureCases =
-        bikeBrandService.getBikeBrandById(bikeBrandId);
-    futureCases.then((model) {
-      bikeBrandModel = model;
-    });
-    return futureCases;
-  }
+  // BikeBrandService bikeBrandService = new BikeBrandService();
+  // BikeBrandModel bikeBrandModel;
+  // Future loadBikeBrandById(String bikeBrandId) {
+  //   Future<BikeBrandModel> futureCases =
+  //       bikeBrandService.getBikeBrandById(bikeBrandId);
+  //   futureCases.then((model) {
+  //     bikeBrandModel = model;
+  //   });
+  //   return futureCases;
+  // }
 
   // PaymentTypeService paymentTypeService = new PaymentTypeService();
   // PaymentTypeModel paymentTypeModel;
@@ -77,10 +77,10 @@ class _BookingdetailState extends State<Bookingdetail> {
   //   return result;
   // }
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -114,18 +114,20 @@ class _BookingdetailState extends State<Bookingdetail> {
                             style: TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.bold)),
                         Expanded(
-                          child: FutureBuilder(
-                            future: loadBikeTypeById(widget.bikeModel.typeId),
-                            builder: (context, snapshot) {
-                              Future.delayed(
-                                Duration(milliseconds: 1),
-                                () => bikeTypeStr = bikeTypeModel.name,
-                              );
-                              return Text(
-                                bikeTypeStr,
-                                style: TextStyle(fontSize: 15),
-                              );
-                            },
+                          child:
+                              // FutureBuilder(
+                              //   future: loadBikeTypeById(widget.bikeModel.typeId),
+                              //   builder: (context, snapshot) {
+                              //     Future.delayed(
+                              //       Duration(milliseconds: 1),
+                              //       () => bikeTypeStr = bikeTypeModel.name,
+                              //     );
+                              //     return
+                              Text(
+                            widget.bikeModel.bikeTypeModel.name,
+                            style: TextStyle(fontSize: 15),
+                            //   );
+                            // },
                           ),
                         ),
                       ],
@@ -139,18 +141,20 @@ class _BookingdetailState extends State<Bookingdetail> {
                             style: TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.bold)),
                         Expanded(
-                          child: FutureBuilder(
-                            future: loadBikeBrandById(widget.bikeModel.brandId),
-                            builder: (context, snapshot) {
-                              Future.delayed(
-                                Duration(milliseconds: 1),
-                                () => bikeBrandStr = bikeBrandModel.name,
-                              );
-                              return Text(
-                                bikeBrandStr,
-                                style: TextStyle(fontSize: 15),
-                              );
-                            },
+                          child:
+                              // FutureBuilder(
+                              //   future: loadBikeBrandById(widget.bikeModel.brandId),
+                              //   builder: (context, snapshot) {
+                              //     Future.delayed(
+                              //       Duration(milliseconds: 1),
+                              //       () => bikeBrandStr = bikeBrandModel.name,
+                              //     );
+                              //     return
+                              Text(
+                            widget.bikeModel.bikeBrandModel.name,
+                            style: TextStyle(fontSize: 15),
+                            //   );
+                            // },
                           ),
                         ),
                       ],
@@ -274,21 +278,18 @@ class _BookingdetailState extends State<Bookingdetail> {
                                       fontWeight: FontWeight.bold)),
                               Expanded(
                                 child: Text(
-                                    helper.getStatus(widget.bookingModel.status
-                                        .toUpperCase()),
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: (widget.bookingModel.status
-                                                  .toUpperCase() ==
-                                              "CANCELED")
-                                          ? my_colors.danger
-                                          : my_colors.primary,
-                                      // color: ("FINISHED" == "CANCELED")
-                                      //     ? my_colors.danger
-                                      //     : my_colors.primary,
-                                    )),
-                                // Text("Hoàn thành / Huỷ",
-                                // style: TextStyle(fontSize: 15)),
+                                  helper.getStatus(widget
+                                      .bookingModel.eventTypeId
+                                      .toUpperCase()),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: (widget.bookingModel.eventTypeId
+                                                .toUpperCase() ==
+                                            "CANCELED")
+                                        ? my_colors.danger
+                                        : my_colors.primary,
+                                  ),
+                                ),
                               ),
                             ],
                           ),

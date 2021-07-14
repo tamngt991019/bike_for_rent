@@ -14,7 +14,7 @@ class BookingModel {
   String customerReport;
   int ownerRating;
   String ownerReport;
-  String status;
+  String eventTypeId;
   UserModel userModel;
 
   BookingModel({
@@ -31,7 +31,7 @@ class BookingModel {
     this.customerReport,
     this.ownerRating,
     this.ownerReport,
-    this.status,
+    this.eventTypeId,
     this.userModel,
   });
 
@@ -49,8 +49,10 @@ class BookingModel {
         customerReport: json['customerReport'] as String,
         ownerRating: json['ownerRating'] as int,
         ownerReport: json['ownerReport'] as String,
-        status: json['status'] as String,
-        userModel: UserModel.fromJson(json['usernameNavigation']),
+        eventTypeId: json['eventTypeId'] as String,
+        userModel: json['usernameNavigation'] == null
+            ? null
+            : UserModel.fromJson(json['usernameNavigation']),
       );
 
   Map<String, dynamic> toJson() => {
@@ -67,6 +69,6 @@ class BookingModel {
         "customerReport": customerReport,
         "ownerRating": ownerRating,
         "ownerReport": ownerReport,
-        "status": status,
+        "eventTypeId": eventTypeId,
       };
 }

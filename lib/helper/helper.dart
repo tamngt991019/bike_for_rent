@@ -1,6 +1,6 @@
 import 'package:bike_for_rent/models/location_model.dart';
 import 'package:flutter/material.dart';
-import 'package:bike_for_rent/constants/status.dart' as stt;
+import 'package:bike_for_rent/constants/event_type_id.dart' as stt;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:math' as math;
 // Route route(Widget wg, bool isRightToLeft) {

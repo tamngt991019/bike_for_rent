@@ -1,9 +1,12 @@
 import 'package:bike_for_rent/helper/helper.dart' as helper;
+import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/bike_get_map.dart';
 import 'package:bike_for_rent/pages/history.dart';
 import 'package:bike_for_rent/pages/home.dart';
 import 'package:bike_for_rent/pages/personal.dart';
+import 'package:bike_for_rent/pages/tracking_booking.dart';
+import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
@@ -16,15 +19,7 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
-  // UserModel userModel = new UserModel();
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   setState(() {
-  //     // userModel = widget.userModel;
-  //   });
-  // }
-
+  BookingService bookingService = new BookingService();
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
@@ -66,16 +61,27 @@ class _BottomBarState extends State<BottomBar> {
               Home(userModel: widget.userModel),
               isRightToLeft,
             );
-            // Navigator.of(context).push(
-            //   helper.route(Home(userModel: widget.userModel), isRightToLeft),
-            // );
-            // runApp(MaterialApp(home: Home(userModel: widget.userModel)));
           } else if (index == 1) {
-            helper.pushInto(
-              context,
-              BikeGetMap(userModel: widget.userModel),
-              isRightToLeft,
-            );
+            Future<List<BookingModel>> bookinkFuture = bookingService
+                .getCustomerWithBookingProcessing(widget.userModel.username);
+            bookinkFuture.then((list) {
+              if (list == null || list.length == 0) {
+                helper.pushInto(
+                  context,
+                  BikeGetMap(userModel: widget.userModel),
+                  isRightToLeft,
+                );
+              } else {
+                helper.pushInto(
+                  context,
+                  TrackingBooking(
+                    userModel: widget.userModel,
+                    isCustomer: true,
+                  ),
+                  isRightToLeft,
+                );
+              }
+            });
           } else if (index == 2) {
             helper.pushInto(
               context,

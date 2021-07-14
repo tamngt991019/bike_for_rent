@@ -36,6 +36,7 @@ class RentBikeList extends StatefulWidget {
 }
 
 class _RentBikeListState extends State<RentBikeList> {
+  bool _isLoadListBike = false;
   String addressStr = "";
   Future<String> getAddress(double _inLatitude, double _inLongitude) async {
     final coordinates = new Coordinates(_inLatitude, _inLongitude);
@@ -69,6 +70,7 @@ class _RentBikeListState extends State<RentBikeList> {
       if (this.mounted) {
         setState(() {
           this.bikeList = list;
+          _isLoadListBike = true;
         });
       }
     });
@@ -193,29 +195,42 @@ class _RentBikeListState extends State<RentBikeList> {
                     itemCount: bikeList == null ? 0 : bikeList.length,
                     itemBuilder: (BuildContext context, int index) {
                       // BikeModel item = bikeList[index];
-                      return InkWell(
-                        onTap: () {
-                          helper.pushInto(
-                              context,
-                              RentBikeDetail(
-                                userModel: widget.userModel,
+                      return Column(
+                        children: [
+                          if (_isLoadListBike)
+                            InkWell(
+                              onTap: () {
+                                helper.pushInto(
+                                    context,
+                                    RentBikeDetail(
+                                      userModel: widget.userModel,
+                                      bikeModel: bikeList[index],
+                                      bikeTypeModel: widget.bikeTypeModel,
+                                      locationModel: widget.locationModel,
+                                      payPackageModel: widget.payPackageModel,
+                                    ),
+                                    true);
+                              },
+                              child: BookingCard(
                                 bikeModel: bikeList[index],
-                                bikeTypeModel: widget.bikeTypeModel,
-                                locationModel: widget.locationModel,
-                                payPackageModel: widget.payPackageModel,
+                                isCustomerHistory: false,
+                                isCustomerHistoryDetail: false,
                               ),
-                              true);
-                        },
-                        child: BookingCard(
-                          bikeModel: bikeList[index],
-                          isCustomerHistory: false,
-                          isCustomerHistoryDetail: false,
-                        ),
+                            ),
+                        ],
                       );
                     },
                   );
                 },
               ),
+              if (!_isLoadListBike) SizedBox(height: 10),
+              if (!_isLoadListBike)
+                Center(
+                  child: Text(
+                    "Đang tải dữ liệu . . .",
+                    style: TextStyle(fontSize: 15, color: my_colors.primary),
+                  ),
+                ),
             ],
           ),
         ),

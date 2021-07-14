@@ -39,6 +39,26 @@ class BookingService {
     return result;
   }
 
+  //get trả về response code 200
+  Future<List<BookingModel>> getCustomerWithBookingProcessing(
+      String username) async {
+    Response response;
+    List<BookingModel> result;
+    try {
+      response = await get(Uri.parse(
+          '${apiUrl.booking}/customer/processing?username=$username'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        result =
+            body.map((dynamic item) => BookingModel.fromJson(item)).toList();
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
   //customer history
   Future<List<BookingModel>> getListCustomerBookingFinishedCanceled(
       String username) async {
@@ -65,7 +85,26 @@ class BookingService {
     List<BookingModel> result;
     try {
       response = response =
-          await get(Uri.parse('${apiUrl.booking}/owner/rating?bikeId=$bikeId'));
+          await get(Uri.parse('${apiUrl.booking}/bike/rating?bikeId=$bikeId'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        result =
+            body.map((dynamic item) => BookingModel.fromJson(item)).toList();
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
+  Future<List<BookingModel>> getListOwnerBookingWithRating(
+      String username) async {
+    Response response;
+    List<BookingModel> result;
+    try {
+      response = response = await get(
+          Uri.parse('${apiUrl.booking}/owner/rating?username=$username'));
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
