@@ -62,26 +62,14 @@ class _BottomBarState extends State<BottomBar> {
               isRightToLeft,
             );
           } else if (index == 1) {
-            Future<List<BookingModel>> bookinkFuture = bookingService
-                .getCustomerWithBookingProcessing(widget.userModel.username);
-            bookinkFuture.then((list) {
-              if (list == null || list.length == 0) {
-                helper.pushInto(
-                  context,
-                  BikeGetMap(userModel: widget.userModel),
-                  isRightToLeft,
-                );
-              } else {
-                helper.pushInto(
-                  context,
-                  TrackingBooking(
-                    userModel: widget.userModel,
-                    isCustomer: true,
-                  ),
-                  isRightToLeft,
-                );
-              }
-            });
+            //===================================================================================
+
+            helper.pushInto(
+              context,
+              BikeGetMap(userModel: widget.userModel),
+              isRightToLeft,
+            );
+            //===================================================================================
           } else if (index == 2) {
             helper.pushInto(
               context,

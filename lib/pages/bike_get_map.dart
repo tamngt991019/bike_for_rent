@@ -7,6 +7,8 @@ import 'package:bike_for_rent/models/pay_package_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/login_valid.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
+import 'package:bike_for_rent/pages/tracking_booking.dart';
+import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:bike_for_rent/services/location_service.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +41,7 @@ class _BikeGetMapState extends State<BikeGetMap> {
   String _currentAddress = "";
   String _bikeGetAddress = "";
   bool _isShowConfirmBtn = false;
+  bool _isLoadThisScreen = false;
   LatLng _currentLatLing;
   String selectedLocationId;
   LocationModel _locationModel;
@@ -129,8 +132,35 @@ class _BikeGetMapState extends State<BikeGetMap> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    if (widget.userModel != null) {
+      BookingService bookingService = new BookingService();
+      Future<List<BookingModel>> bookinkFuture = bookingService
+          .getCustomerWithBookingProcessing(widget.userModel.username);
+      bookinkFuture.then((list) {
+        if (list.length > 0) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (BuildContext context) => TrackingBooking(
+                userModel: widget.userModel,
+                isCustomer: true,
+              ),
+            ),
+            (route) => false,
+          );
+          // helper.pushInto(
+          //   context,
+          //   TrackingBooking(
+          //     userModel: widget.userModel,
+          //     isCustomer: true,
+          //   ),
+          //   true,
+          // );
+        } else {
+          _isLoadThisScreen = true;
+        }
+      });
+    }
   }
 
   LocationService locService = new LocationService();
@@ -158,20 +188,33 @@ class _BikeGetMapState extends State<BikeGetMap> {
       theme: ThemeData(
         primarySwatch: my_colors.materialPimary,
       ),
-      home: Stack(
-        children: [
-          Scaffold(
-            // Header app
-            appBar: Appbar(
-              height: 50,
-              titles: "Thuê xe",
-              isShowBackBtn: false,
-            ),
-            // Body app
-            body: (widget.userModel == null)
-                ? LoginValid(
-                    currentIndex: 1,
-                    content: "Vui lòng đăng nhập để thuê xe!",
+      home: Scaffold(
+        // Header app
+        appBar: Appbar(
+          height: 50,
+          titles: "Thuê xe",
+          isShowBackBtn: false,
+        ),
+        // Body app
+        body: (widget.userModel == null)
+            ? LoginValid(
+                currentIndex: 1,
+                content: "Vui lòng đăng nhập để thuê xe!",
+              )
+            : (!_isLoadThisScreen)
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Đang tải . . .",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: my_colors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 : Container(
                     child: Stack(
@@ -369,13 +412,11 @@ class _BikeGetMapState extends State<BikeGetMap> {
                       ],
                     ),
                   ),
-            // Bottom bar app
-            bottomNavigationBar: BottomBar(
-              bottomBarIndex: 1,
-              userModel: widget.userModel,
-            ),
-          ),
-        ],
+        // Bottom bar app
+        bottomNavigationBar: BottomBar(
+          bottomBarIndex: 1,
+          userModel: widget.userModel,
+        ),
       ),
     );
   }
