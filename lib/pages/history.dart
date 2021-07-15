@@ -9,6 +9,7 @@ import 'package:bike_for_rent/pages/personal.dart';
 import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/services/bike_service.dart';
 import 'package:bike_for_rent/services/booking_service.dart';
+import 'package:bike_for_rent/services/user_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_card.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
@@ -70,6 +71,24 @@ class _HistoryState extends State<History> {
     return futureCases;
   }
 
+  UserService userService = new UserService();
+  UserModel userModel;
+  Future getUserbyId(String id) {
+    if (userModel == null) {
+      userModel = null;
+      print("null usermodel ở history rồi nè");
+    }
+    Future<UserModel> futureCases = userService.getUserById(id);
+    futureCases.then((_userModel) {
+      if (this.mounted) {
+        setState(() {
+          this.userModel = _userModel;
+        });
+      }
+    });
+    return futureCases;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -102,10 +121,19 @@ class _HistoryState extends State<History> {
                           itemCount:
                               bookingList == null ? 0 : bookingList.length,
                           itemBuilder: (BuildContext context, int index) {
-                            Future.delayed(
-                              Duration(microseconds: 1500),
-                              () => getBikeById(bookingList[index].bikeId),
-                            );
+                            // Future.delayed(
+                            //   Duration(microseconds: 1500),
+                            // );
+                            if (bookingList[index]
+                                    .locationReturnBikeModel
+                                    .latitude ==
+                                null) {
+                              print("null rồi");
+                            } else {
+                              print(double.parse(bookingList[index]
+                                  .locationReturnBikeModel
+                                  .latitude));
+                            }
                             return InkWell(
                               onTap: () => helper.pushInto(
                                 context,
@@ -118,7 +146,7 @@ class _HistoryState extends State<History> {
                               ),
                               child: BookingCard(
                                 bookingModel: bookingList[index],
-                                bikeModel: bikeModel,
+                                bikeModel: bookingList[index].bikeModel,
                                 isCustomerHistory: widget.isCustomerHistory,
                                 isCustomerHistoryDetail:
                                     widget.isCustomerHistoryDetail,

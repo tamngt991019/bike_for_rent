@@ -86,7 +86,7 @@ class BookingService {
     List<BookingModel> result;
     try {
       response = response = await get(
-          Uri.parse('${apiUrl.booking}/customer/fc?username=$username'));
+          Uri.parse('${apiUrl.booking}/customer/bike/fc?username=$username'));
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
