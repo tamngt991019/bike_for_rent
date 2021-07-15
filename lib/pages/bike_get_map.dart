@@ -134,15 +134,11 @@ class _BikeGetMapState extends State<BikeGetMap> {
   void initState() {
     super.initState();
     if (widget.userModel != null) {
-      print("Khong null ne");
       BookingService bookingService = new BookingService();
       Future<bool> checkFuture = bookingService
           .isExistCustomerTrackingBooking(widget.userModel.username);
       checkFuture.then((check) {
-        print("gia tri bien check ne");
-        print(check);
         if (check) {
-          print("vo ngon lanh");
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (BuildContext context) => TrackingBooking(
@@ -161,7 +157,9 @@ class _BikeGetMapState extends State<BikeGetMap> {
           //   true,
           // );
         } else {
-          _isLoadThisScreen = true;
+          setState(() {
+            _isLoadThisScreen = true;
+          });
         }
       });
     }

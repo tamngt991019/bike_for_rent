@@ -55,8 +55,10 @@ class BikeModel {
         bikeBrandModel: json['brand'] == null
             ? null
             : BikeBrandModel.fromJson(json['brand']),
-        listBikeImage: List<BikeImageModel>.from(
-            json['bikeImages'].map((x) => BikeImageModel.fromJson(x))),
+        listBikeImage: json['bikeImages'] == null
+            ? null
+            : List<BikeImageModel>.from(
+                json['bikeImages'].map((x) => BikeImageModel.fromJson(x))),
         userModel: json['usernameNavigation'] == null
             ? null
             : UserModel.fromJson(json['usernameNavigation']),
