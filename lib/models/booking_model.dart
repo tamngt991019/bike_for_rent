@@ -1,3 +1,7 @@
+import 'package:bike_for_rent/models/bike_model.dart';
+import 'package:bike_for_rent/models/event_type_model.dart';
+import 'package:bike_for_rent/models/location_model.dart';
+import 'package:bike_for_rent/models/pay_package_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 
 class BookingModel {
@@ -16,6 +20,11 @@ class BookingModel {
   String ownerReport;
   String eventTypeId;
   UserModel userModel;
+  BikeModel bikeModel;
+  LocationModel locationGetBikeModel;
+  LocationModel locationReturnBikeModel;
+  EventTypeModel eventTypeModel;
+  PayPackageModel payPackageModel;
 
   BookingModel({
     this.id,
@@ -33,6 +42,11 @@ class BookingModel {
     this.ownerReport,
     this.eventTypeId,
     this.userModel,
+    this.bikeModel,
+    this.locationGetBikeModel,
+    this.locationReturnBikeModel,
+    this.eventTypeModel,
+    this.payPackageModel,
   });
 
   factory BookingModel.fromJson(Map<String, dynamic> json) => BookingModel(
@@ -53,6 +67,20 @@ class BookingModel {
         userModel: json['usernameNavigation'] == null
             ? null
             : UserModel.fromJson(json['usernameNavigation']),
+        bikeModel:
+            json['bike'] == null ? null : BikeModel.fromJson(json['bike']),
+        locationGetBikeModel: json['locationGetBikeNavigation'] == null
+            ? null
+            : LocationModel.fromJson(json['locationGetBikeNavigation']),
+        locationReturnBikeModel: json['locationReturnBikeNavigation'] == null
+            ? null
+            : LocationModel.fromJson(json['locationReturnBikeNavigation']),
+        eventTypeModel: json['eventType'] == null
+            ? null
+            : EventTypeModel.fromJson(json['eventType']),
+        payPackageModel: json['payPackage'] == null
+            ? null
+            : PayPackageModel.fromJson(json['payPackage']),
       );
 
   Map<String, dynamic> toJson() => {
