@@ -61,7 +61,7 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                         wg: TrackingBooking(
                           tabIndex: 0,
                           userModel: widget.userModel,
-                          bookingModel: _bookingModel,
+                          // bookingModel: _bookingModel,
                           isCustomer: false,
                         ),
                         isRequest: true,
@@ -80,7 +80,7 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                         wg: TrackingBooking(
                           tabIndex: 1,
                           userModel: widget.userModel,
-                          bookingModel: _bookingModel,
+                          // bookingModel: _bookingModel,
                           isCustomer: false,
                         ),
                         isRequest: false,

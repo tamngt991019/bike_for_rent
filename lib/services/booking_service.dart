@@ -59,6 +59,26 @@ class BookingService {
     return result;
   }
 
+  //get trả về response code 200
+  Future<List<BookingModel>> getCustomerBookingsTracking(
+      String username) async {
+    Response response;
+    List<BookingModel> result;
+    try {
+      response = await get(
+          Uri.parse('${apiUrl.booking}/customer/tracking?username=$username'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        result =
+            body.map((dynamic item) => BookingModel.fromJson(item)).toList();
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
   //customer history
   Future<List<BookingModel>> getListCustomerBookingFinishedCanceled(
       String username) async {
@@ -164,6 +184,22 @@ class BookingService {
     try {
       response = await delete(Uri.parse('${apiUrl.booking}/$id'));
       if (response.statusCode == 204) {
+        result = true;
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
+  // get trả về response code 200
+  Future<bool> isExistCustomerTrackingBooking(String username) async {
+    Response response;
+    bool result = false;
+    try {
+      response = await get(Uri.parse(
+          '${apiUrl.booking}/customer/check/tracking?username=$username'));
+      if (response.statusCode == 200) {
         result = true;
       }
     } catch (Exception) {

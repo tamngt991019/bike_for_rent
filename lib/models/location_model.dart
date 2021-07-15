@@ -6,16 +6,17 @@ class LocationModel {
   String locationTypeId;
   String latitude;
   String longitude;
+  bool isShipPoint;
 
-  LocationModel({
-    this.id,
-    this.name,
-    this.address,
-    this.areaId,
-    this.locationTypeId,
-    this.latitude,
-    this.longitude,
-  });
+  LocationModel(
+      {this.id,
+      this.name,
+      this.address,
+      this.areaId,
+      this.locationTypeId,
+      this.latitude,
+      this.longitude,
+      this.isShipPoint});
 
   factory LocationModel.fromJson(Map<String, dynamic> json) => LocationModel(
         id: json['id'] as String,
@@ -25,6 +26,7 @@ class LocationModel {
         locationTypeId: json['locationTypeId'] as String,
         latitude: json['latitude'] as String,
         longitude: json['longitude'] as String,
+        isShipPoint: json['isShipPoint'] as bool,
       );
 
   Map<String, dynamic> toJson() => {
@@ -35,5 +37,6 @@ class LocationModel {
         "locationTypeId": locationTypeId,
         "latitude": latitude,
         "longitude": longitude,
+        "isShipPoint": isShipPoint,
       };
 }

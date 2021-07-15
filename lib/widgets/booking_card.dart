@@ -56,49 +56,43 @@ class _BookingCardState extends State<BookingCard> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.bikeModel == null) {
-      return Center(
-        child: Text("Không có xe nào phù hợp"),
-      );
-    } else {
-      return Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        elevation: 5,
-        margin: EdgeInsets.only(top: 5, bottom: 10),
-        child: Column(
-          children: [
-            // Hình ảnh xe
-            ImageSlideshow(
-              width: double.infinity,
-              height: 200,
-              initialPage: 0,
-              indicatorColor: my_colors.primary,
-              indicatorBackgroundColor: Colors.white,
-              children: imageUrls()
-                  .map((img) => ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          topRight: Radius.circular(15)),
-                      child: Image.network(img, fit: BoxFit.cover)))
-                  .toList(),
-              onPageChanged: (value) {},
-              autoPlayInterval: 60000,
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      elevation: 5,
+      margin: EdgeInsets.only(top: 5, bottom: 10),
+      child: Column(
+        children: [
+          // Hình ảnh xe
+          ImageSlideshow(
+            width: double.infinity,
+            height: 200,
+            initialPage: 0,
+            indicatorColor: my_colors.primary,
+            indicatorBackgroundColor: Colors.white,
+            children: imageUrls()
+                .map((img) => ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15)),
+                    child: Image.network(img, fit: BoxFit.cover)))
+                .toList(),
+            onPageChanged: (value) {},
+            autoPlayInterval: 60000,
+          ),
+          // Thông tin chi tiết xe
+          Padding(
+            padding: EdgeInsets.all(15),
+            child: Bookingdetail(
+              bikeModel: widget.bikeModel,
+              bookingModel: widget.bookingModel,
+              isCustomerHistory: widget.isCustomerHistory,
+              isCustomerHistoryDetail: widget.isCustomerHistoryDetail,
             ),
-            // Thông tin chi tiết xe
-            Padding(
-              padding: EdgeInsets.all(15),
-              child: Bookingdetail(
-                bikeModel: widget.bikeModel,
-                bookingModel: widget.bookingModel,
-                isCustomerHistory: widget.isCustomerHistory,
-                isCustomerHistoryDetail: widget.isCustomerHistoryDetail,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+          ),
+        ],
+      ),
+    );
   }
 }
