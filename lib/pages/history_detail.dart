@@ -83,6 +83,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
               context,
               (widget.isCustomer)
                   ? History(
+                      userModel: widget.userModel,
                       isCustomerHistory: true,
                       isCustomerHistoryDetail: false,
                     )
@@ -112,6 +113,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: Bookingdetail(
+                  bookingModel: widget.bookingModel,
+                  bikeModel: widget.bookingModel.bikeModel,
                   isCustomerHistory: true,
                   isCustomerHistoryDetail: true,
                 ),
@@ -124,7 +127,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                   children: [
                     FrameText(
                       title: "Địa điểm nhận xe",
-                      content: _bikeGetAddress,
+                      content: widget.bookingModel.locationGetBikeModel.address,
                     ),
                   ],
                 ),
@@ -138,13 +141,21 @@ class _HistoryDetailState extends State<HistoryDetail> {
                   tiltGesturesEnabled: false,
                   zoomGesturesEnabled: false,
                   initialCameraPosition: CameraPosition(
-                    target: LatLng(10.867108878090859, 106.8030191050504),
+                    target: LatLng(
+                        double.parse(
+                            widget.bookingModel.locationGetBikeModel.latitude),
+                        double.parse(widget
+                            .bookingModel.locationGetBikeModel.longitude)),
                     zoom: 13,
                   ),
                   markers: <Marker>{
                     Marker(
                       markerId: MarkerId("ID-1"),
-                      position: LatLng(10.867108878090859, 106.8030191050504),
+                      position: LatLng(
+                          double.parse(widget
+                              .bookingModel.locationGetBikeModel.latitude),
+                          double.parse(widget
+                              .bookingModel.locationGetBikeModel.longitude)),
                     )
                   },
                   onMapCreated: onMapCreated,
@@ -158,7 +169,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                   children: [
                     FrameText(
                       title: "Địa điểm trả xe",
-                      content: _bikeReturnAddress,
+                      content:
+                          widget.bookingModel.locationReturnBikeModel.address,
                     ),
                   ],
                 ),
@@ -172,13 +184,21 @@ class _HistoryDetailState extends State<HistoryDetail> {
                   tiltGesturesEnabled: false,
                   zoomGesturesEnabled: false,
                   initialCameraPosition: CameraPosition(
-                    target: LatLng(10.841493, 106.810038),
+                    target: LatLng(
+                        double.parse(widget
+                            .bookingModel.locationReturnBikeModel.latitude),
+                        double.parse(widget
+                            .bookingModel.locationReturnBikeModel.longitude)),
                     zoom: 13,
                   ),
                   markers: <Marker>{
                     Marker(
                       markerId: MarkerId("ID-1"),
-                      position: LatLng(10.841493, 106.810038),
+                      position: LatLng(
+                          double.parse(widget
+                              .bookingModel.locationReturnBikeModel.latitude),
+                          double.parse(widget
+                              .bookingModel.locationReturnBikeModel.longitude)),
                     )
                   },
                   onMapCreated: onMapCreated,
@@ -219,7 +239,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                             children: [
                               // tên người dùng
                               Text(
-                                "Tên của bạn (Bạn)",
+                                widget.userModel.fullName,
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
@@ -247,7 +267,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       children: [
                         FrameText(
                           title: "",
-                          content: "1 vài đánh giá ở đây",
+                          content: widget.bookingModel.customerReport,
                         ),
                       ],
                     ),
@@ -287,7 +307,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                             children: [
                               // tên người dùng
                               Text(
-                                "Tên chủ xe (Chủ xe)",
+                                widget
+                                    .bookingModel.bikeModel.userModel.fullName,
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
@@ -316,7 +337,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       children: [
                         FrameText(
                           title: "",
-                          content: "1 vài nội dung đánh giá ở đây",
+                          content: widget.bookingModel.ownerReport,
                         ),
                       ],
                     ),

@@ -11,6 +11,8 @@ import 'package:bike_for_rent/services/payment_type_service.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
+import 'package:intl/intl.dart';
+import 'package:jiffy/jiffy.dart';
 
 class Bookingdetail extends StatefulWidget {
   final BookingModel bookingModel;
@@ -37,7 +39,7 @@ class _BookingdetailState extends State<Bookingdetail> {
         // Tên xe
         Row(
           children: [
-            Text("Tên xe: " + widget.bikeModel.model,
+            Text("Tên xe: " + widget.bookingModel.bikeModel.model,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ],
         ),
@@ -60,7 +62,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                               fontSize: 15, fontWeight: FontWeight.bold)),
                       Expanded(
                         child: Text(
-                          widget.bikeModel.bikeTypeModel.name,
+                          widget.bookingModel.bikeModel.bikeTypeModel.name,
                           style: TextStyle(fontSize: 15),
                           //   );
                           // },
@@ -78,7 +80,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                               fontSize: 15, fontWeight: FontWeight.bold)),
                       Expanded(
                         child: Text(
-                          widget.bikeModel.bikeBrandModel.name,
+                          widget.bookingModel.bikeModel.bikeBrandModel.name,
                           style: TextStyle(fontSize: 15),
                         ),
                       ),
@@ -101,7 +103,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
                       Expanded(
-                        child: Text(widget.bikeModel.licensePlates,
+                        child: Text(widget.bookingModel.bikeModel.licensePlates,
                             style: TextStyle(fontSize: 15)),
                       ),
                     ],
@@ -115,7 +117,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
                       Expanded(
-                        child: Text(widget.bikeModel.color,
+                        child: Text(widget.bookingModel.bikeModel.color,
                             style: TextStyle(fontSize: 15)),
                       ),
                     ],
@@ -137,7 +139,9 @@ class _BookingdetailState extends State<Bookingdetail> {
                       style:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                   Expanded(
-                    child: Text(widget.bookingModel.dateBegin,
+                    child: Text(
+                        DateFormat('yyyy-MM-dd – kk:mm').format(
+                            DateTime.parse(widget.bookingModel.dateBegin)),
                         style: TextStyle(fontSize: 15)),
                   ),
                 ],
@@ -147,11 +151,13 @@ class _BookingdetailState extends State<Bookingdetail> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(widget.bookingModel.dateEnd,
+                  Text("Ngày / giờ trả xe: ",
                       style:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                   Expanded(
-                    child: Text("31/12/2021 - 15:30",
+                    child: Text(
+                        DateFormat('yyyy-MM-dd – kk:mm').format(
+                            DateTime.parse(widget.bookingModel.dateEnd)),
                         style: TextStyle(fontSize: 15)),
                   ),
                 ],
@@ -181,7 +187,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold)),
                               Expanded(
-                                child: Text("1 ngày 10 tiếng",
+                                child: Text("2 ngày",
                                     style: TextStyle(fontSize: 15)),
                               ),
                             ],
@@ -278,4 +284,12 @@ class _BookingdetailState extends State<Bookingdetail> {
     );
   }
 }
+
 // }
+int daysElapsedSince(DateTime from, DateTime to) {
+// get the difference in term of days, and not just a 24h difference
+  from = DateTime(from.year, from.month, from.day);
+  to = DateTime(to.year, to.month, to.day);
+
+  return to.difference(from).inHours;
+}
