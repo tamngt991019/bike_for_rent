@@ -41,7 +41,7 @@ class _HistoryState extends State<History> {
       bookingList = [];
     }
     Future<List<BookingModel>> futureCases =
-        bookingService.getListCustomerBookingFinishedCanceled(username);
+        bookingService.getListCustomerBookingWithBikeFinishedCanceled(username);
     futureCases.then((_bookingList) {
       if (this.mounted) {
         setState(() {
