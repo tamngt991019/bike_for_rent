@@ -113,14 +113,15 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                     children: [
                       SizedBox(height: 10),
                       FutureBuilder(
-                        future: loadListOwnerBookingProcess(),
+                        future: loadOwnerBookingProcessingList(
+                            widget.userModel.username),
                         builder: (context, snapshot) {
                           return ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            itemCount: ownerBookingProcessList == null
+                            itemCount: bookingProcessingList == null
                                 ? 0
-                                : ownerBookingProcessList.length,
+                                : bookingProcessingList.length,
                             itemBuilder: (BuildContext context, int index) {
                               return RentingCard(
                                 wg: TrackingBooking(
