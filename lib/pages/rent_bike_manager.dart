@@ -23,18 +23,53 @@ class RentBikeManager extends StatefulWidget {
 class _RentBikeManagerState extends State<RentBikeManager> {
   BookingModel _bookingModel;
   BookingService bookingService = new BookingService();
-  List<BookingModel> bookingList;
+  List<BookingModel> bookingHistoryList;
   Future loadOwnerBookingHistoryList(String username) {
-    if (bookingList == null) {
-      bookingList = [];
+    if (bookingHistoryList == null) {
+      bookingHistoryList = [];
     }
     Future<List<BookingModel>> futureCases =
         bookingService.ownerBookingHistoryList(username);
-    futureCases.then((_bookingList) {
+    futureCases.then((_bookingHistoryList) {
       if (this.mounted) {
         setState(() {
-          this.bookingList = _bookingList;
-          // print(userList.length);
+          this.bookingHistoryList = _bookingHistoryList;
+        });
+      }
+    });
+    return futureCases;
+  }
+
+  //owner booking processing
+  List<BookingModel> bookingProcessingList;
+  Future loadOwnerBookingProcessingList(String username) {
+    if (bookingProcessingList == null) {
+      bookingProcessingList = [];
+    }
+    Future<List<BookingModel>> futureCases =
+        bookingService.ownerBookingProcessingList(username);
+    futureCases.then((_bookingProcessingList) {
+      if (this.mounted) {
+        setState(() {
+          this.bookingProcessingList = _bookingProcessingList;
+        });
+      }
+    });
+    return futureCases;
+  }
+
+  //owner booking are renting
+  List<BookingModel> bookingAreRentingList;
+  Future loadOwnerBookingAreRentingList(String username) {
+    if (bookingAreRentingList == null) {
+      bookingAreRentingList = [];
+    }
+    Future<List<BookingModel>> futureCases =
+        bookingService.ownerBookingAreRentingList(username);
+    futureCases.then((_bookingAreRentingList) {
+      if (this.mounted) {
+        setState(() {
+          this.bookingAreRentingList = _bookingAreRentingList;
         });
       }
     });
@@ -122,18 +157,18 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                             return ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: bookingList == null
+                                itemCount: bookingHistoryList == null
                                     ? 0
-                                    : bookingList.length,
+                                    : bookingHistoryList.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   // Future.delayed(
                                   //   Duration(microseconds: 1500),
                                   // );
-                                  if (bookingList[index] == null) {
+                                  if (bookingHistoryList[index] == null) {
                                     print("null rồi");
                                   } else {
                                     print(double.parse(
-                                        bookingList[index].userName));
+                                        bookingHistoryList[index].userName));
                                   }
                                   return RentingCard(
                                     wg: HistoryDetail(
