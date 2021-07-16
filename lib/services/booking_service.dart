@@ -80,13 +80,70 @@ class BookingService {
   }
 
   //customer history
-  Future<List<BookingModel>> getListCustomerBookingFinishedCanceled(
+  Future<List<BookingModel>> getListCustomerBookingWithBikeFinishedCanceled(
       String username) async {
     Response response;
     List<BookingModel> result;
     try {
       response = response = await get(
           Uri.parse('${apiUrl.booking}/customer/bike/fc?username=$username'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        result =
+            body.map((dynamic item) => BookingModel.fromJson(item)).toList();
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
+  //owner history
+  Future<List<BookingModel>> ownerBookingHistoryList(String username) async {
+    Response response;
+    List<BookingModel> result;
+    try {
+      response = response = await get(Uri.parse(
+          '${apiUrl.booking}/owner/manager/history?username=$username'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        result =
+            body.map((dynamic item) => BookingModel.fromJson(item)).toList();
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
+  //owner processing
+  Future<List<BookingModel>> ownerBookingProcessingList(String username) async {
+    Response response;
+    List<BookingModel> result;
+    try {
+      response = response = await get(Uri.parse(
+          '${apiUrl.booking}/owner/manager/processing?username=$username'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        result =
+            body.map((dynamic item) => BookingModel.fromJson(item)).toList();
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
+  //owner are renting
+  Future<List<BookingModel>> ownerBookingAreRentingList(String username) async {
+    Response response;
+    List<BookingModel> result;
+    try {
+      response = response = await get(Uri.parse(
+          '${apiUrl.booking}/owner/manager/arerenting?username=$username'));
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);

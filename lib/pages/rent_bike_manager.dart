@@ -21,19 +21,60 @@ class RentBikeManager extends StatefulWidget {
 }
 
 class _RentBikeManagerState extends State<RentBikeManager> {
-  int currentIndex = 0;
-
+  BookingModel _bookingModel;
   BookingService bookingService = new BookingService();
-  List<BookingModel> ownerBookingProcessList;
-  Future loadListOwnerBookingProcess() {
-    if (ownerBookingProcessList == null) {
-      ownerBookingProcessList = [];
+  List<BookingModel> bookingHistoryList;
+  Future loadOwnerBookingHistoryList(String username) {
+    if (bookingHistoryList == null) {
+      bookingHistoryList = [];
     }
-    Future<List<BookingModel>> futureCase =
-        bookingService.getListOwnerBookingProcessing(widget.userModel.username);
+    Future<List<BookingModel>> futureCases =
+        bookingService.ownerBookingHistoryList(username);
+    futureCases.then((_bookingHistoryList) {
+      if (this.mounted) {
+        setState(() {
+          this.bookingHistoryList = _bookingHistoryList;
+        });
+      }
+    });
+    return futureCases;
   }
 
-  BookingModel _bookingModelProcessing;
+  //owner booking processing
+  List<BookingModel> bookingProcessingList;
+  Future loadOwnerBookingProcessingList(String username) {
+    if (bookingProcessingList == null) {
+      bookingProcessingList = [];
+    }
+    Future<List<BookingModel>> futureCases =
+        bookingService.ownerBookingProcessingList(username);
+    futureCases.then((_bookingProcessingList) {
+      if (this.mounted) {
+        setState(() {
+          this.bookingProcessingList = _bookingProcessingList;
+        });
+      }
+    });
+    return futureCases;
+  }
+
+  //owner booking are renting
+  List<BookingModel> bookingAreRentingList;
+  Future loadOwnerBookingAreRentingList(String username) {
+    if (bookingAreRentingList == null) {
+      bookingAreRentingList = [];
+    }
+    Future<List<BookingModel>> futureCases =
+        bookingService.ownerBookingAreRentingList(username);
+    futureCases.then((_bookingAreRentingList) {
+      if (this.mounted) {
+        setState(() {
+          this.bookingAreRentingList = _bookingAreRentingList;
+        });
+      }
+    });
+    return futureCases;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,16 +172,38 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                   child: Column(
                     children: [
                       SizedBox(height: 10),
-                      RentingCard(
-                        wg: HistoryDetail(
-                          isCustomer: false,
-                          userModel: widget.userModel,
-                          // bookingModel: _bookingModel,
-                        ),
-                        isRequest: false,
-                        isRenting: false,
-                        isHistory: true,
-                      ),
+                      FutureBuilder(
+                          future: loadOwnerBookingHistoryList(
+                              widget.userModel.username),
+                          builder: (context, snapshot) {
+                            return ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: bookingHistoryList == null
+                                    ? 0
+                                    : bookingHistoryList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  // Future.delayed(
+                                  //   Duration(microseconds: 1500),
+                                  // );
+                                  if (bookingHistoryList[index] == null) {
+                                    print("null rồi");
+                                  } else {
+                                    print(double.parse(
+                                        bookingHistoryList[index].userName));
+                                  }
+                                  return RentingCard(
+                                    wg: HistoryDetail(
+                                      isCustomer: false,
+                                      userModel: widget.userModel,
+                                      bookingModel: _bookingModel,
+                                    ),
+                                    isRequest: false,
+                                    isRenting: false,
+                                    isHistory: true,
+                                  );
+                                });
+                          }),
                     ],
                   ),
                 ),
