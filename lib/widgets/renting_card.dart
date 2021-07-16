@@ -154,7 +154,7 @@ class RentingCard extends StatelessWidget {
                         children: [
                           SizedBox(height: 10),
                           // Địa điểm giao xe
-                          Row(
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -165,13 +165,18 @@ class RentingCard extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Expanded(
-                                child: Text(
-                                  "123 Trần Hưng Đạo, phường 14, huyện Bình Chánh, Tp. Hồ Chí Minh",
-                                  style: TextStyle(
-                                    fontSize: 15,
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "123 Trần Hưng Đạo, phường 14, huyện Bình Chánh, Tp. Hồ Chí Minh",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ],
                           ),

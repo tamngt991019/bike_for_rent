@@ -3,6 +3,7 @@ import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/history_detail.dart';
 import 'package:bike_for_rent/pages/personal.dart';
 import 'package:bike_for_rent/pages/tracking_booking.dart';
+import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/renting_card.dart';
@@ -20,8 +21,20 @@ class RentBikeManager extends StatefulWidget {
 }
 
 class _RentBikeManagerState extends State<RentBikeManager> {
-  BookingModel _bookingModel;
   int currentIndex = 0;
+
+  BookingService bookingService = new BookingService();
+  List<BookingModel> ownerBookingProcessList;
+  Future loadListOwnerBookingProcess() {
+    if (ownerBookingProcessList == null) {
+      ownerBookingProcessList = [];
+    }
+    Future<List<BookingModel>> futureCase =
+        bookingService.getListOwnerBookingProcessing(widget.userModel.username);
+  }
+
+  BookingModel _bookingModelProcessing;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -54,14 +67,38 @@ class _RentBikeManagerState extends State<RentBikeManager> {
               children: [
                 // Yêu cầu
                 SingleChildScrollView(
+                  // physics: ScrollPhysics(),
                   child: Column(
                     children: [
                       SizedBox(height: 10),
+                      // FutureBuilder(
+                      //   future: loadListOwnerBookingProcess(),
+                      //   builder: (context, snapshot) {
+                      //     return ListView.builder(
+                      //       shrinkWrap: true,
+                      //       physics: NeverScrollableScrollPhysics(),
+                      //       itemCount: ownerBookingProcessList == null
+                      //           ? 0
+                      //           : ownerBookingProcessList.length,
+                      //       itemBuilder: (BuildContext context, int index) {
+                      //         return RentingCard(
+                      //           wg: TrackingBooking(
+                      //             tabIndex: 0,
+                      //             userModel: widget.userModel,
+                      //             isCustomer: false,
+                      //           ),
+                      //           isRequest: true,
+                      //           isRenting: false,
+                      //           isHistory: false,
+                      //         );
+                      //       },
+                      //     );
+                      //   },
+                      // ),
                       RentingCard(
                         wg: TrackingBooking(
                           tabIndex: 0,
                           userModel: widget.userModel,
-                          // bookingModel: _bookingModel,
                           isCustomer: false,
                         ),
                         isRequest: true,
@@ -80,7 +117,6 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                         wg: TrackingBooking(
                           tabIndex: 1,
                           userModel: widget.userModel,
-                          // bookingModel: _bookingModel,
                           isCustomer: false,
                         ),
                         isRequest: false,
@@ -99,7 +135,7 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                         wg: HistoryDetail(
                           isCustomer: false,
                           userModel: widget.userModel,
-                          bookingModel: _bookingModel,
+                          // bookingModel: _bookingModel,
                         ),
                         isRequest: false,
                         isRenting: false,

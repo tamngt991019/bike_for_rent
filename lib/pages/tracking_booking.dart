@@ -4,6 +4,7 @@ import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
 import 'package:bike_for_rent/models/payment_type_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/home.dart';
 import 'package:bike_for_rent/pages/rent_bike_manager.dart';
 import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:bike_for_rent/services/location_service.dart';
@@ -97,25 +98,20 @@ class _TrackingBookingState extends State<TrackingBooking> {
     return futureCase;
   }
 
-  // LocationService locService = new LocationService();
-  // LocationModel _locationModel;
-  // void getLocationById(String id) {
-  //   if (_locationModel == null) {
-  //     this._locationModel = new LocationModel();
-  //   }
-  //   Future<LocationModel> futureCases = locService.getLocationById(id);
-  //   futureCases.then((model) {
-  //     if (this.mounted) {
-  //       setState(() {
-  //         _locationModel = model;
-  //         locLati = double.parse(_locationModel.latitude);
-  //         locLong = double.parse(_locationModel.longitude);
-  //         _latLng = LatLng(locLati, locLong);
-  //         getLocation(_latLng);
-  //       });
-  //     }
-  //   });
-  // }
+  void updateBookingEventType(String eventTypeId) {
+    mainBooking.eventTypeId = eventTypeId;
+    Future<bool> futureCase =
+        bookingService.updateBookingModel(mainBooking.id, mainBooking);
+    futureCase.then((isUpdateSuccess) {
+      if (!isUpdateSuccess) {
+        showNotificationDialog(
+          "Cảnh bảo!",
+          "Thao tác thất bại, vui lòng thử lại!",
+          my_colors.danger,
+        );
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -456,42 +452,45 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20),
+                            if (mainBooking.eventTypeId == "PAYING")
+                              SizedBox(height: 20),
                             // Tổng tiền
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Tổng tiền: ",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
+                            if (mainBooking.eventTypeId == "PAYING")
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Tổng tiền: ",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "123456 vnd",
-                                    style: TextStyle(fontSize: 15),
+                                  Expanded(
+                                    child: Text(
+                                      "123456 vnd",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
                             SizedBox(height: 10),
                             // Thanh toán
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Thanh toán: ",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
+                            if (mainBooking.eventTypeId == "PAYING")
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Thanh toán: ",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
                             SizedBox(height: 10),
                             InkWell(
                               onTap: () {
@@ -531,185 +530,177 @@ class _TrackingBookingState extends State<TrackingBooking> {
                       SizedBox(height: 15),
                       // Các nút cập nhật trạng thái của booking
                       // các nút của người thuê
-                      // if (widget.isCustomer)
-                      Column(
-                        children: [
-                          if (mainBooking.eventTypeId == "OWNSHIPPEDBIKE")
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElavateBtn(
-                                  width: 180,
-                                  title: 'Đã nhận xe',
-                                  onPressedElavateBtn: () {
-                                    setState(() {
-                                      mainBooking.eventTypeId = "ARERENTING";
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 20),
-                                OutlineBtn(
-                                  width: 180,
-                                  title: 'Hủy thuê xe',
-                                  onPressedOutlineBtn: () {
-                                    setState(() {
-                                      mainBooking.eventTypeId = "CANCELED";
-                                    });
-
-                                    // showConfirmDialog(
-                                    //   "Huỷ thuê xe",
-                                    //   "Bạn có muốn huỷ yêu cầu thuê xe này không?",
-                                    //   RentBikeManager(
-                                    //     userModel: widget.userModel,
-                                    //     tabIndex: 0,
-                                    //   ),
-                                    //   null,
-                                    // );
-                                  },
-                                )
-                              ],
-                            ),
-                          if (mainBooking.eventTypeId == "ARERENTING")
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElavateBtn(
-                                  width: 380,
-                                  title: 'Yêu cầu trả xe',
-                                  onPressedElavateBtn: () {
-                                    setState(() {
-                                      mainBooking.eventTypeId = "CUSRETURNBIKE";
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          if (mainBooking.eventTypeId == "OWNGOTBIKE")
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElavateBtn(
-                                  width: 380,
-                                  title: 'Thanh toán',
-                                  onPressedElavateBtn: () {
-                                    setState(() {
-                                      mainBooking.eventTypeId = "PAYING";
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                        ],
-                      ),
+                      if (widget.isCustomer)
+                        Column(
+                          children: [
+                            if (mainBooking.eventTypeId == "OWNSHIPPEDBIKE")
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElavateBtn(
+                                    width: 180,
+                                    title: 'Đã nhận xe',
+                                    onPressedElavateBtn: () {
+                                      setState(() {
+                                        // mainBooking.eventTypeId = "ARERENTING";
+                                        updateBookingEventType("ARERENTING");
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 20),
+                                  OutlineBtn(
+                                    width: 180,
+                                    title: 'Hủy thuê xe',
+                                    onPressedOutlineBtn: () {
+                                      setState(() {
+                                        // mainBooking.eventTypeId = "CANCELED";
+                                        updateBookingEventType("CANCELED");
+                                      });
+                                      showConfirmDialog(
+                                        "Huỷ thuê xe",
+                                        "Bạn có muốn huỷ yêu cầu thuê xe này không?",
+                                        RentBikeManager(
+                                          userModel: widget.userModel,
+                                          tabIndex: 0,
+                                        ),
+                                      );
+                                      showConfirmDialog(
+                                        "Tiếp tục thuê?",
+                                        "Bạn có muốn tiếp tục thuê không?",
+                                        Home(userModel: widget.userModel),
+                                      );
+                                    },
+                                  )
+                                ],
+                              ),
+                            if (mainBooking.eventTypeId == "ARERENTING")
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElavateBtn(
+                                    width: 380,
+                                    title: 'Yêu cầu trả xe',
+                                    onPressedElavateBtn: () {
+                                      setState(() {
+                                        // mainBooking.eventTypeId =
+                                        //     "CUSRETURNBIKE";
+                                        updateBookingEventType("CUSRETURNBIKE");
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
+                            if (mainBooking.eventTypeId == "OWNGOTBIKE")
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElavateBtn(
+                                    width: 380,
+                                    title: 'Thanh toán',
+                                    onPressedElavateBtn: () {
+                                      setState(() {
+                                        // mainBooking.eventTypeId = "PAYING";
+                                        updateBookingEventType("PAYING");
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
+                          ],
+                        ),
                       // các nút của chủ xe
-                      // if (!widget.isCustomer)
-                      Column(
-                        children: [
-                          if (mainBooking.eventTypeId == "PROCESSING")
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElavateBtn(
-                                  width: 180,
-                                  title: 'Đồng ý cho thuê',
-                                  onPressedElavateBtn: () {
-                                    setState(() {
-                                      mainBooking.eventTypeId =
-                                          "OWNSHIPPINGBIKE";
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 20),
-                                OutlineBtn(
-                                  width: 180,
-                                  title: 'Từ chối cho thuê',
-                                  onPressedOutlineBtn: () {
-                                    setState(() {
-                                      mainBooking.eventTypeId = "CANCELED";
-                                    });
-
-                                    // showConfirmDialog(
-                                    //   "Từ chối cho thuê",
-                                    //   "Bạn có muốn từ chối yêu cầu thuê này không?",
-                                    //   RentBikeManager(
-                                    //     userModel: widget.userModel,
-                                    //     tabIndex: 0,
-                                    //   ),
-                                    //   null,
-                                    // );
-                                    // showConfirmDialog(
-                                    //   "Huỷ thuê xe",
-                                    //   "Bạn có muốn huỷ yêu cầu thuê xe này không?",
-                                    //   RentBikeManager(
-                                    //     userModel: widget.userModel,
-                                    //     tabIndex: 0,
-                                    //   ),
-                                    // );
-                                  },
-                                ),
-                              ],
-                            ),
-                          if (mainBooking.eventTypeId == "OWNSHIPPINGBIKE")
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElavateBtn(
-                                  width: 380,
-                                  title: 'Đã giao xe',
-                                  onPressedElavateBtn: () {
-                                    setState(() {
-                                      mainBooking.eventTypeId =
-                                          "OWNSHIPPEDBIKE";
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          // if (mainBooking.eventTypeId == "OWNSHIPPINGBIKE")
-                          //   Row(
-                          //     mainAxisAlignment: MainAxisAlignment.center,
-                          //     children: [
-                          //       ElavateBtn(
-                          //         width: 380,
-                          //         title: 'Đã giao xe',
-                          //         onPressedElavateBtn: () {
-                          //           mainBooking.eventTypeId = "OWNSHIPPEDBIKE";
-                          //         },
-                          //       ),
-                          //     ],
-                          //   ),
-                          if (mainBooking.eventTypeId == "CUSRETURNBIKE")
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElavateBtn(
-                                  width: 380,
-                                  title: 'Đã lấy xe',
-                                  onPressedElavateBtn: () {
-                                    setState(() {
-                                      mainBooking.eventTypeId = "OWNGOTBIKE";
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          if (mainBooking.eventTypeId == "PAYING")
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElavateBtn(
-                                  width: 380,
-                                  title: 'Xác nhận thanh toán',
-                                  onPressedElavateBtn: () {
-                                    setState(() {
-                                      mainBooking.eventTypeId = "PROCESSING";
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                        ],
-                      ),
+                      if (!widget.isCustomer)
+                        Column(
+                          children: [
+                            if (mainBooking.eventTypeId == "PROCESSING")
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElavateBtn(
+                                    width: 180,
+                                    title: 'Đồng ý cho thuê',
+                                    onPressedElavateBtn: () {
+                                      setState(() {
+                                        // mainBooking.eventTypeId =
+                                        //     "OWNSHIPPINGBIKE";
+                                        updateBookingEventType(
+                                            "OWNSHIPPINGBIKE");
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 20),
+                                  OutlineBtn(
+                                    width: 180,
+                                    title: 'Từ chối cho thuê',
+                                    onPressedOutlineBtn: () {
+                                      setState(() {
+                                        // mainBooking.eventTypeId = "CANCELED";
+                                        updateBookingEventType("CANCELED");
+                                      });
+                                      showConfirmDialog(
+                                        "Từ chối cho thuê",
+                                        "Bạn có muốn từ chối yêu cầu thuê này không?",
+                                        RentBikeManager(
+                                          userModel: widget.userModel,
+                                          tabIndex: 0,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            if (mainBooking.eventTypeId == "OWNSHIPPINGBIKE")
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElavateBtn(
+                                    width: 380,
+                                    title: 'Đã giao xe',
+                                    onPressedElavateBtn: () {
+                                      setState(() {
+                                        // mainBooking.eventTypeId =
+                                        //     "OWNSHIPPEDBIKE";
+                                        updateBookingEventType(
+                                            "OWNSHIPPEDBIKE");
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            if (mainBooking.eventTypeId == "CUSRETURNBIKE")
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElavateBtn(
+                                    width: 380,
+                                    title: 'Đã lấy xe',
+                                    onPressedElavateBtn: () {
+                                      setState(() {
+                                        // mainBooking.eventTypeId = "OWNGOTBIKE";
+                                        updateBookingEventType("OWNGOTBIKE");
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            if (mainBooking.eventTypeId == "PAYING")
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElavateBtn(
+                                    width: 380,
+                                    title: 'Xác nhận thanh toán',
+                                    onPressedElavateBtn: () {
+                                      setState(() {
+                                        // mainBooking.eventTypeId = "FINISHED";
+                                        updateBookingEventType("FINISHED");
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
+                          ],
+                        ),
                       SizedBox(height: 15),
                       //===========================================
                     ],
@@ -728,50 +719,50 @@ class _TrackingBookingState extends State<TrackingBooking> {
     );
   }
 
-  // dynamic showConfirmDialog(String titleStr, String contentStr,
-  //     Widget confirmWidget1, Widget confirmWidget2) {
-  //   return showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext dialogContext) {
-  //       return AlertDialog(
-  //         title: Text(
-  //           titleStr,
-  //           style: TextStyle(fontSize: 20),
-  //         ),
-  //         content: Text(
-  //           contentStr,
-  //           style: TextStyle(fontSize: 17),
-  //         ),
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(15),
-  //         ),
-  //         elevation: 5,
-  //         actions: [
-  //           TextButton(
-  //             child: Text(
-  //               "Đồng ý",
-  //               style: TextStyle(fontSize: 15),
-  //             ),
-  //             onPressed: () {
-  //               Navigator.pop(dialogContext);
-  //               helper.pushInto(context, confirmWidget1, false);
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: Text(
-  //               "Huỷ",
-  //               style: TextStyle(fontSize: 15),
-  //             ),
-  //             onPressed: () {
-  //               Navigator.pop(dialogContext);
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+  dynamic showConfirmDialog(
+      String titleStr, String contentStr, Widget confirmWidget) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            titleStr,
+            style: TextStyle(fontSize: 20),
+          ),
+          content: Text(
+            contentStr,
+            style: TextStyle(fontSize: 17),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          elevation: 5,
+          actions: [
+            TextButton(
+              child: Text(
+                "Đồng ý",
+                style: TextStyle(fontSize: 15),
+              ),
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                helper.pushInto(context, confirmWidget, false);
+              },
+            ),
+            TextButton(
+              child: Text(
+                "Huỷ",
+                style: TextStyle(fontSize: 15),
+              ),
+              onPressed: () {
+                Navigator.pop(dialogContext);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   dynamic showDropdownPaymentType(context) {
     return showDialog(

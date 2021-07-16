@@ -32,6 +32,18 @@ class Bookingdetail extends StatefulWidget {
 }
 
 class _BookingdetailState extends State<Bookingdetail> {
+  BikeModel _bikeModel;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (!widget.isCustomerHistory && !widget.isCustomerHistoryDetail) {
+      _bikeModel = widget.bikeModel;
+    } else {
+      _bikeModel = widget.bookingModel.bikeModel;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -39,7 +51,7 @@ class _BookingdetailState extends State<Bookingdetail> {
         // Tên xe
         Row(
           children: [
-            Text("Tên xe: " + widget.bookingModel.bikeModel.model,
+            Text("Tên xe: " + _bikeModel.model,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ],
         ),
@@ -62,7 +74,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                               fontSize: 15, fontWeight: FontWeight.bold)),
                       Expanded(
                         child: Text(
-                          widget.bookingModel.bikeModel.bikeTypeModel.name,
+                          _bikeModel.bikeTypeModel.name,
                           style: TextStyle(fontSize: 15),
                           //   );
                           // },
@@ -80,7 +92,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                               fontSize: 15, fontWeight: FontWeight.bold)),
                       Expanded(
                         child: Text(
-                          widget.bookingModel.bikeModel.bikeBrandModel.name,
+                          _bikeModel.bikeBrandModel.name,
                           style: TextStyle(fontSize: 15),
                         ),
                       ),
@@ -103,7 +115,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
                       Expanded(
-                        child: Text(widget.bookingModel.bikeModel.licensePlates,
+                        child: Text(_bikeModel.licensePlates,
                             style: TextStyle(fontSize: 15)),
                       ),
                     ],
@@ -117,7 +129,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
                       Expanded(
-                        child: Text(widget.bookingModel.bikeModel.color,
+                        child: Text(_bikeModel.color,
                             style: TextStyle(fontSize: 15)),
                       ),
                     ],

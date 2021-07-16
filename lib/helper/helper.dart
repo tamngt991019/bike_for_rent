@@ -3,28 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/event_type_id.dart' as stt;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:math' as math;
-// Route route(Widget wg, bool isRightToLeft) {
-//   return PageRouteBuilder(
-//     pageBuilder: (context, animation, secondaryAnimation) => wg,
-//     transitionDuration: Duration(milliseconds: 750),
-//     transitionsBuilder: (BuildContext context, Animation<double> animation,
-//         Animation<double> secondaryAnimation, Widget child) {
-//       var begin = (isRightToLeft == true) ? Offset(200, 0) : Offset(-200, 0);
-//       var end = Offset.zero;
-//       var curve = Curves.easeInOut;
-//       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-//       return SlideTransition(
-//         position: animation.drive(tween),
-//         child: child,
-//       );
-//       // return FadeTransition(
-//       //   opacity: animation,
-//       //   child: child,
-//       // );
-//     },
-//   );
-// }
 
 //Tinh khoang cach
 double calculatekDistance(
