@@ -3,6 +3,7 @@ import 'package:bike_for_rent/models/bike_brand_model.dart';
 import 'package:bike_for_rent/models/bike_model.dart';
 import 'package:bike_for_rent/models/bike_type_model.dart';
 import 'package:bike_for_rent/models/booking_model.dart';
+import 'package:bike_for_rent/models/pay_package_model.dart';
 import 'package:bike_for_rent/models/payment_type_model.dart';
 import 'package:bike_for_rent/services/bike_brand_service.dart';
 import 'package:bike_for_rent/services/bike_service.dart';
@@ -187,7 +188,14 @@ class _BookingdetailState extends State<Bookingdetail> {
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold)),
                               Expanded(
-                                child: Text("2 ngày",
+                                child: Text(
+                                    daysElapsedSince(
+                                                DateTime.parse(widget
+                                                    .bookingModel.dateBegin),
+                                                DateTime.parse(widget
+                                                    .bookingModel.dateEnd))
+                                            .toString() +
+                                        " ngày",
                                     style: TextStyle(fontSize: 15)),
                               ),
                             ],
@@ -268,7 +276,17 @@ class _BookingdetailState extends State<Bookingdetail> {
                                 style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold)),
                             Expanded(
-                              child: Text("123456 vnd",
+                              child: Text(
+                                  priceTotal(
+                                              daysElapsedSince(
+                                                  DateTime.parse(widget
+                                                      .bookingModel.dateBegin),
+                                                  DateTime.parse(widget
+                                                      .bookingModel.dateEnd)),
+                                              widget
+                                                  .bookingModel.payPackageModel)
+                                          .toString() +
+                                      " VND",
                                   style: TextStyle(fontSize: 15)),
                             ),
                           ],
@@ -286,10 +304,50 @@ class _BookingdetailState extends State<Bookingdetail> {
 }
 
 // }
-int daysElapsedSince(DateTime from, DateTime to) {
+double daysElapsedSince(DateTime from, DateTime to) {
 // get the difference in term of days, and not just a 24h difference
-  from = DateTime(from.year, from.month, from.day);
-  to = DateTime(to.year, to.month, to.day);
+  from = DateTime(from.year, from.month, from.day, from.hour);
+  to = DateTime(to.year, to.month, to.day, from.hour);
 
-  return to.difference(from).inHours;
+  return to.difference(from).inHours / 24;
+}
+
+double priceTotal(double time, PayPackageModel payPackageModel) {
+  if (payPackageModel.id == 'PPKXS12') {
+    if (time * 24 < 12) {
+      return 55000;
+    } else
+      return time * 2 * payPackageModel.price;
+  }
+  if (payPackageModel.id == 'PPKXS24') {
+    if (time * 24 < 24) {
+      return 100000;
+    } else
+      return time * payPackageModel.price;
+  }
+  if (payPackageModel.id == 'PPKXS6') {
+    if (time * 24 < 6) {
+      return 30000;
+    } else
+      return time * 4 * payPackageModel.price;
+  }
+  if (payPackageModel.id == 'PPKXTG12') {
+    if (time * 24 < 12) {
+      return 60000;
+    } else
+      return time * 2 * payPackageModel.price;
+  }
+  if (payPackageModel.id == 'PPKXTG24') {
+    if (time * 24 < 24) {
+      return 105000;
+    } else
+      return time * payPackageModel.price;
+  }
+  if (payPackageModel.id == 'PPKXTG6') {
+    if (time * 24 < 6) {
+      return 35000;
+    } else
+      return time * 4 * payPackageModel.price;
+  }
+  return 0;
 }

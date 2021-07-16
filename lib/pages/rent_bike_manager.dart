@@ -3,6 +3,7 @@ import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/history_detail.dart';
 import 'package:bike_for_rent/pages/personal.dart';
 import 'package:bike_for_rent/pages/tracking_booking.dart';
+import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/renting_card.dart';
@@ -21,6 +22,25 @@ class RentBikeManager extends StatefulWidget {
 
 class _RentBikeManagerState extends State<RentBikeManager> {
   BookingModel _bookingModel;
+  BookingService bookingService = new BookingService();
+  List<BookingModel> bookingList;
+  Future loadOwnerBookingHistoryList(String username) {
+    if (bookingList == null) {
+      bookingList = [];
+    }
+    Future<List<BookingModel>> futureCases =
+        bookingService.ownerBookingHistoryList(username);
+    futureCases.then((_bookingList) {
+      if (this.mounted) {
+        setState(() {
+          this.bookingList = _bookingList;
+          // print(userList.length);
+        });
+      }
+    });
+    return futureCases;
+  }
+
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -95,16 +115,38 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                   child: Column(
                     children: [
                       SizedBox(height: 10),
-                      RentingCard(
-                        wg: HistoryDetail(
-                          isCustomer: false,
-                          userModel: widget.userModel,
-                          bookingModel: _bookingModel,
-                        ),
-                        isRequest: false,
-                        isRenting: false,
-                        isHistory: true,
-                      ),
+                      FutureBuilder(
+                          future: loadOwnerBookingHistoryList(
+                              widget.userModel.username),
+                          builder: (context, snapshot) {
+                            return ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: bookingList == null
+                                    ? 0
+                                    : bookingList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  // Future.delayed(
+                                  //   Duration(microseconds: 1500),
+                                  // );
+                                  if (bookingList[index] == null) {
+                                    print("null rồi");
+                                  } else {
+                                    print(double.parse(
+                                        bookingList[index].userName));
+                                  }
+                                  return RentingCard(
+                                    wg: HistoryDetail(
+                                      isCustomer: false,
+                                      userModel: widget.userModel,
+                                      bookingModel: _bookingModel,
+                                    ),
+                                    isRequest: false,
+                                    isRenting: false,
+                                    isHistory: true,
+                                  );
+                                });
+                          }),
                     ],
                   ),
                 ),
