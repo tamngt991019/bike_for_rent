@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:bike_for_rent/models/bike_type_model.dart';
-import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
 import 'package:bike_for_rent/models/pay_package_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
@@ -45,6 +43,7 @@ class _BikeGetMapState extends State<BikeGetMap> {
   LatLng _currentLatLing;
   String selectedLocationId;
   LocationModel _locationModel;
+  bool _isLoadListLocation = false;
   //==================================================================
   CameraPosition _initialCameraPosition = CameraPosition(
     target: LatLng(10.82414068863801, 106.63065063707423),
@@ -134,15 +133,11 @@ class _BikeGetMapState extends State<BikeGetMap> {
   void initState() {
     super.initState();
     if (widget.userModel != null) {
-      print("Khong null ne");
       BookingService bookingService = new BookingService();
       Future<bool> checkFuture = bookingService
           .isExistCustomerTrackingBooking(widget.userModel.username);
       checkFuture.then((check) {
-        print("gia tri bien check ne");
-        print(check);
         if (check) {
-          print("vo ngon lanh");
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (BuildContext context) => TrackingBooking(
@@ -152,16 +147,10 @@ class _BikeGetMapState extends State<BikeGetMap> {
             ),
             (route) => false,
           );
-          // helper.pushInto(
-          //   context,
-          //   TrackingBooking(
-          //     userModel: widget.userModel,
-          //     isCustomer: true,
-          //   ),
-          //   true,
-          // );
         } else {
-          _isLoadThisScreen = true;
+          setState(() {
+            _isLoadThisScreen = true;
+          });
         }
       });
     }
@@ -180,6 +169,7 @@ class _BikeGetMapState extends State<BikeGetMap> {
       if (this.mounted) {
         setState(() {
           this.locList = list;
+          _isLoadListLocation = true;
         });
       }
     });
@@ -470,41 +460,53 @@ class _BikeGetMapState extends State<BikeGetMap> {
                       itemCount: locList == null ? 0 : locList.length,
                       itemBuilder: (BuildContext context, int index) {
                         LocationModel item = locList[index];
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          margin: EdgeInsets.only(
-                              left: 20, right: 20, top: 5, bottom: 5),
-                          child: InkWell(
-                            onTap: () {
-                              _locationModel = item;
-                              double lati = double.parse(item.latitude);
-                              double long = double.parse(item.longitude);
-                              getLocation(LatLng(lati, long));
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.all(10),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'lib/assets/images/location.png',
-                                    scale: 10,
-                                  ),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                    child: Text(
-                                      item.name,
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                ],
+                        if (!_isLoadListLocation) {
+                          return Center(
+                            child: Text(
+                              "Đang tải . . .",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: my_colors.primary,
                               ),
                             ),
-                          ),
-                        );
+                          );
+                        } else {
+                          return Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            elevation: 5,
+                            margin: EdgeInsets.only(
+                                left: 20, right: 20, top: 5, bottom: 5),
+                            child: InkWell(
+                              onTap: () {
+                                _locationModel = item;
+                                double lati = double.parse(item.latitude);
+                                double long = double.parse(item.longitude);
+                                getLocation(LatLng(lati, long));
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      'lib/assets/images/location.png',
+                                      scale: 10,
+                                    ),
+                                    SizedBox(width: 20),
+                                    Expanded(
+                                      child: Text(
+                                        item.name,
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }
                       },
                     );
                   },

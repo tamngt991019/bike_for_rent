@@ -38,22 +38,6 @@ class _BookingCardState extends State<BookingCard> {
     return imageUrls;
   }
 
-  // BikeImageService bikeImageService = new BikeImageService();
-
-  // List<BikeImageModel> bikeImageList;
-
-  // Future loadListBikeImagesByBikeType(String bileId) {
-  //   if (bikeImageList == null) {
-  //     bikeImageList = [];
-  //   }
-  //   Future<List<BikeImageModel>> futureCases =
-  //       bikeImageService.getBikeImageModels();
-  //   futureCases.then((list) {
-  //     this.bikeImageList = list;
-  //   });
-  //   return futureCases;
-  // }
-
   @override
   Widget build(BuildContext context) {
     if (widget.bikeModel == null) {

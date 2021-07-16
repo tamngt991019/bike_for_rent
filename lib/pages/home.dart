@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
   static LatLng _myLatLing = LatLng(_latitude, _longitude);
 
   CameraPosition _initialCameraPosition =
-      CameraPosition(target: _myLatLing, zoom: 13);
+      CameraPosition(target: _myLatLing, zoom: 15);
 
   Completer<GoogleMapController> _ggMapController = Completer();
 
@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
       _latitude = _inLatitude;
       _longitude = _inLongitude;
       _myLatLing = LatLng(_latitude, _longitude);
-      _initialCameraPosition = CameraPosition(target: _myLatLing, zoom: 13);
+      _initialCameraPosition = CameraPosition(target: _myLatLing, zoom: 15);
 
       // _markers.
       _markers.clear();
@@ -110,7 +110,8 @@ class _HomeState extends State<Home> {
     _ggMapController.complete(_controller);
 
     setState(() {
-      getLocation(_latitude, _longitude);
+      getCurrentLocation();
+      // getLocation(_latitude, _longitude);
     });
   }
 
@@ -199,14 +200,12 @@ class _HomeState extends State<Home> {
                 ],
               ),
               // map
-
               Container(
                 height: 300,
                 child: GoogleMap(
-                  myLocationEnabled: false,
-                  myLocationButtonEnabled: false,
-                  zoomControlsEnabled: false,
-                  mapToolbarEnabled: false,
+                  rotateGesturesEnabled: false,
+                  scrollGesturesEnabled: false,
+                  tiltGesturesEnabled: false,
                   zoomGesturesEnabled: false,
                   onTap: (val) {
                     helper.pushInto(
