@@ -313,41 +313,8 @@ double daysElapsedSince(DateTime from, DateTime to) {
 }
 
 double priceTotal(double time, PayPackageModel payPackageModel) {
-  if (payPackageModel.id == 'PPKXS12') {
-    if (time * 24 < 12) {
-      return 55000;
-    } else
-      return time * 2 * payPackageModel.price;
+  if (time * 24 < payPackageModel.hours) {
+    return payPackageModel.price;
   }
-  if (payPackageModel.id == 'PPKXS24') {
-    if (time * 24 < 24) {
-      return 100000;
-    } else
-      return time * payPackageModel.price;
-  }
-  if (payPackageModel.id == 'PPKXS6') {
-    if (time * 24 < 6) {
-      return 30000;
-    } else
-      return time * 4 * payPackageModel.price;
-  }
-  if (payPackageModel.id == 'PPKXTG12') {
-    if (time * 24 < 12) {
-      return 60000;
-    } else
-      return time * 2 * payPackageModel.price;
-  }
-  if (payPackageModel.id == 'PPKXTG24') {
-    if (time * 24 < 24) {
-      return 105000;
-    } else
-      return time * payPackageModel.price;
-  }
-  if (payPackageModel.id == 'PPKXTG6') {
-    if (time * 24 < 6) {
-      return 35000;
-    } else
-      return time * 4 * payPackageModel.price;
-  }
-  return 0;
+  return (payPackageModel.price / payPackageModel.hours) * time * 24;
 }
