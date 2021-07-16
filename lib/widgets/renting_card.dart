@@ -1,16 +1,17 @@
 import 'package:bike_for_rent/models/booking_model.dart';
-import 'package:bike_for_rent/models/user_model.dart';
-import 'package:bike_for_rent/pages/tracking_booking.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/helper/helper.dart' as helper;
+import 'package:intl/intl.dart';
 
-class RentingCard extends StatelessWidget {
+class RentingCard extends StatefulWidget {
+  final BookingModel bookingModel;
   final Widget wg;
   final bool isRequest;
   final bool isRenting;
   final bool isHistory;
   const RentingCard({
     Key key,
+    this.bookingModel,
     this.wg,
     this.isRequest,
     this.isRenting,
@@ -18,10 +19,15 @@ class RentingCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _RentingCardState createState() => _RentingCardState();
+}
+
+class _RentingCardState extends State<RentingCard> {
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        helper.pushInto(context, wg, true);
+        helper.pushInto(context, widget.wg, true);
       },
       child: Card(
         margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
@@ -38,8 +44,11 @@ class RentingCard extends StatelessWidget {
               // avatar
               CircleAvatar(
                 radius: 35,
-                backgroundImage: NetworkImage(
-                    "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
+                backgroundImage: (widget.bookingModel.userModel.avatar != null)
+                    ? NetworkImage(widget.bookingModel.userModel.avatar)
+                    : AssetImage(
+                        "lib/assets/images/avatar_logo.png",
+                      ),
               ),
               SizedBox(width: 20),
               // tên người dùng và sđt
@@ -50,7 +59,7 @@ class RentingCard extends StatelessWidget {
                   children: [
                     // tên người dùng
                     Text(
-                      "Tên người thuê",
+                      widget.bookingModel.userModel.fullName,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -58,27 +67,28 @@ class RentingCard extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     // sđt
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Số điện thoại: ",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "0987654321",
+                    if (widget.bookingModel.userModel.phone != null)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Số điện thoại: ",
                             style: TextStyle(
                               fontSize: 15,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                          Expanded(
+                            child: Text(
+                              widget.bookingModel.userModel.phone,
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     SizedBox(height: 10),
                     // Loại xe
                     Row(
@@ -94,7 +104,7 @@ class RentingCard extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            "Xe số / tay ga",
+                            widget.bookingModel.bikeModel.bikeTypeModel.name,
                             style: TextStyle(
                               fontSize: 15,
                             ),
@@ -117,7 +127,7 @@ class RentingCard extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            "59X2-12345",
+                            widget.bookingModel.bikeModel.licensePlates,
                             style: TextStyle(
                               fontSize: 15,
                             ),
@@ -140,7 +150,7 @@ class RentingCard extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            "100000 vnd / ngày",
+                            widget.bookingModel.payPackageModel.name,
                             style: TextStyle(
                               fontSize: 15,
                             ),
@@ -149,12 +159,12 @@ class RentingCard extends StatelessWidget {
                       ],
                     ),
                     //isRequest
-                    if (isRequest)
+                    if (widget.isRequest)
                       Column(
                         children: [
                           SizedBox(height: 10),
                           // Địa điểm giao xe
-                          Row(
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -165,13 +175,18 @@ class RentingCard extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Expanded(
-                                child: Text(
-                                  "123 Trần Hưng Đạo, phường 14, huyện Bình Chánh, Tp. Hồ Chí Minh",
-                                  style: TextStyle(
-                                    fontSize: 15,
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "123 Trần Hưng Đạo, phường 14, huyện Bình Chánh, Tp. Hồ Chí Minh",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
@@ -179,7 +194,7 @@ class RentingCard extends StatelessWidget {
                       ),
 
                     //isRenting
-                    if (isRenting)
+                    if (widget.isRenting)
                       Column(
                         children: [
                           SizedBox(height: 10),
@@ -197,7 +212,9 @@ class RentingCard extends StatelessWidget {
                               ),
                               Expanded(
                                 child: Text(
-                                  "31/12/2020 - 15:30",
+                                  DateFormat('yyyy-MM-dd – kk:mm').format(
+                                      DateTime.parse(
+                                          widget.bookingModel.dateBegin)),
                                   style: TextStyle(
                                     fontSize: 15,
                                   ),
@@ -208,7 +225,7 @@ class RentingCard extends StatelessWidget {
                         ],
                       ),
                     // isHistory
-                    if (isHistory)
+                    if (widget.isHistory)
                       Column(
                         children: [
                           SizedBox(height: 10),

@@ -76,7 +76,6 @@ class _RentBikeManagerState extends State<RentBikeManager> {
     return futureCases;
   }
 
-  int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -109,14 +108,38 @@ class _RentBikeManagerState extends State<RentBikeManager> {
               children: [
                 // Yêu cầu
                 SingleChildScrollView(
+                  // physics: ScrollPhysics(),
                   child: Column(
                     children: [
                       SizedBox(height: 10),
+                      FutureBuilder(
+                        future: loadListOwnerBookingProcess(),
+                        builder: (context, snapshot) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: ownerBookingProcessList == null
+                                ? 0
+                                : ownerBookingProcessList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return RentingCard(
+                                wg: TrackingBooking(
+                                  tabIndex: 0,
+                                  userModel: widget.userModel,
+                                  isCustomer: false,
+                                ),
+                                isRequest: true,
+                                isRenting: false,
+                                isHistory: false,
+                              );
+                            },
+                          );
+                        },
+                      ),
                       RentingCard(
                         wg: TrackingBooking(
                           tabIndex: 0,
                           userModel: widget.userModel,
-                          // bookingModel: _bookingModel,
                           isCustomer: false,
                         ),
                         isRequest: true,
@@ -135,7 +158,6 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                         wg: TrackingBooking(
                           tabIndex: 1,
                           userModel: widget.userModel,
-                          // bookingModel: _bookingModel,
                           isCustomer: false,
                         ),
                         isRequest: false,
