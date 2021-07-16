@@ -298,10 +298,10 @@ class _BookingdetailState extends State<Bookingdetail> {
 }
 
 // }
-int daysElapsedSince(DateTime from, DateTime to) {
+String daysElapsedSince(DateTime from, DateTime to) {
 // get the difference in term of days, and not just a 24h difference
   from = DateTime(from.year, from.month, from.day);
   to = DateTime(to.year, to.month, to.day);
 
-  return to.difference(from).inHours;
+  return (to.difference(from).inHours).toString();
 }
