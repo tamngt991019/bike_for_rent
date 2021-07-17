@@ -87,7 +87,9 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       isCustomerHistory: true,
                       isCustomerHistoryDetail: false,
                     )
-                  : RentBikeManager(userModel: widget.userModel, tabIndex: 2),
+                  : RentBikeManager(
+                      userModel: widget.bookingModel.bikeModel.userModel,
+                      tabIndex: 2),
               false),
         ),
         // Body app
@@ -171,6 +173,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       title: "Địa điểm trả xe",
                       content:
                           widget.bookingModel.locationReturnBikeModel.address,
+                      //"địa chỉ bị null",
                     ),
                   ],
                 ),
@@ -213,7 +216,9 @@ class _HistoryDetailState extends State<HistoryDetail> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Đánh giá của bạn: ",
+                      widget.isCustomer
+                          ? "Đánh giá của bạn: "
+                          : "Đánh giá của khách hàng",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -281,7 +286,9 @@ class _HistoryDetailState extends State<HistoryDetail> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Đánh giá của chủ xe: ",
+                      widget.isCustomer
+                          ? "Đánh giá của chủ xe: "
+                          : "Đánh giá của bạn",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -350,7 +357,9 @@ class _HistoryDetailState extends State<HistoryDetail> {
         // Bottom bar app
         bottomNavigationBar: BottomBar(
           bottomBarIndex: (widget.isCustomer) ? 2 : 3,
-          userModel: widget.userModel,
+          userModel: (widget.isCustomer)
+              ? widget.userModel
+              : widget.bookingModel.bikeModel.userModel,
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:bike_for_rent/helper/helper.dart';
 import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/helper/helper.dart' as helper;
@@ -244,7 +245,13 @@ class _RentingCardState extends State<RentingCard> {
                               ),
                               Expanded(
                                 child: Text(
-                                  "1 ngày 10 tiếng",
+                                  daysElapsedSince(
+                                              DateTime.parse(widget
+                                                  .bookingModel.dateBegin),
+                                              DateTime.parse(
+                                                  widget.bookingModel.dateEnd))
+                                          .toString() +
+                                      " ngày",
                                   style: TextStyle(
                                     fontSize: 15,
                                   ),
@@ -267,7 +274,16 @@ class _RentingCardState extends State<RentingCard> {
                               ),
                               Expanded(
                                 child: Text(
-                                  "123456 vnd",
+                                  priceTotal(
+                                              daysElapsedSince(
+                                                  DateTime.parse(widget
+                                                      .bookingModel.dateBegin),
+                                                  DateTime.parse(widget
+                                                      .bookingModel.dateEnd)),
+                                              widget
+                                                  .bookingModel.payPackageModel)
+                                          .toString() +
+                                      " VND",
                                   style: TextStyle(
                                     fontSize: 15,
                                   ),

@@ -1,4 +1,5 @@
 import 'package:bike_for_rent/models/location_model.dart';
+import 'package:bike_for_rent/models/pay_package_model.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/event_type_id.dart' as stt;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -75,4 +76,42 @@ bool isEmptyText(String value) {
   } else {
     return false;
   }
+}
+
+//tinh gio tinh tien
+
+double daysElapsedSince(DateTime from, DateTime to) {
+// get the difference in term of days, and not just a 24h difference
+  from = DateTime(from.year, from.month, from.day, from.hour);
+  to = DateTime(to.year, to.month, to.day, from.hour);
+  return (to.difference(from).inMinutes / 1440).toDouble();
+}
+
+double priceTotal(double time, PayPackageModel payPackageModel) {
+  if (time * 24 < payPackageModel.hours) {
+    return payPackageModel.price.toDouble();
+  }
+  if (time * 24 > payPackageModel.hours) {
+    if (payPackageModel.id.toLowerCase().contains("xs")) {
+      if (((time * 1440) % 60) > 0) {
+        return (payPackageModel.price +
+                (time * 24 + 1 - payPackageModel.hours) * 5000)
+            .toDouble();
+      } else
+        return (payPackageModel.price +
+                (time * 24 - payPackageModel.hours) * 5000)
+            .toDouble();
+    }
+    if (payPackageModel.id.toLowerCase().contains("xtg")) {
+      if (((time * 1440) % 60) > 0) {
+        return (payPackageModel.price +
+                (time * 24 + 1 - payPackageModel.hours) * 6000)
+            .toDouble();
+      } else
+        return (payPackageModel.price +
+                (time * 24 - payPackageModel.hours) * 6000)
+            .toDouble();
+    }
+  }
+  return payPackageModel.price.toDouble();
 }
