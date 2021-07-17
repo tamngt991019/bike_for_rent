@@ -140,9 +140,24 @@ class _BookingdetailState extends State<Bookingdetail> {
             ),
           ],
         ),
+
         if (widget.isCustomerHistory && widget.isCustomerHistoryDetail)
           Column(
             children: [
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Gói thuê: ",
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  Expanded(
+                    child: Text(widget.bookingModel.payPackageModel.name,
+                        style: TextStyle(fontSize: 15)),
+                  ),
+                ],
+              ),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,

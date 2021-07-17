@@ -21,6 +21,9 @@ class RentBikeManager extends StatefulWidget {
 }
 
 class _RentBikeManagerState extends State<RentBikeManager> {
+  bool _isProcessListEmpty = true;
+  bool _isAreRentingListEmpty = true;
+  bool _isHistoryListEmpty = true;
   BookingModel _bookingModel;
   BookingService bookingService = new BookingService();
   List<BookingModel> bookingHistoryList;
@@ -34,6 +37,9 @@ class _RentBikeManagerState extends State<RentBikeManager> {
       if (this.mounted) {
         setState(() {
           this.bookingHistoryList = _bookingHistoryList;
+          if (_bookingHistoryList != null && _bookingHistoryList.length > 0) {
+            _isHistoryListEmpty = false;
+          }
         });
       }
     });
@@ -52,6 +58,10 @@ class _RentBikeManagerState extends State<RentBikeManager> {
       if (this.mounted) {
         setState(() {
           this.bookingProcessingList = _bookingProcessingList;
+          if (_bookingProcessingList != null &&
+              _bookingProcessingList.length > 0) {
+            _isProcessListEmpty = false;
+          }
         });
       }
     });
@@ -70,6 +80,10 @@ class _RentBikeManagerState extends State<RentBikeManager> {
       if (this.mounted) {
         setState(() {
           this.bookingAreRentingList = _bookingAreRentingList;
+          if (_bookingAreRentingList != null &&
+              _bookingAreRentingList.length > 0) {
+            _isAreRentingListEmpty = false;
+          }
         });
       }
     });
@@ -107,106 +121,119 @@ class _RentBikeManagerState extends State<RentBikeManager> {
             body: TabBarView(
               children: [
                 // Yêu cầu
-                SingleChildScrollView(
-                  // physics: ScrollPhysics(),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 10),
-                      FutureBuilder(
-                        future: loadOwnerBookingProcessingList(
-                            widget.userModel.username),
-                        builder: (context, snapshot) {
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: bookingProcessingList == null
-                                ? 0
-                                : bookingProcessingList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return RentingCard(
-                                wg: TrackingBooking(
-                                  tabIndex: 0,
-                                  userModel: widget.userModel,
-                                  isCustomer: false,
-                                ),
-                                isRequest: true,
-                                isRenting: false,
-                                isHistory: false,
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      RentingCard(
-                        wg: TrackingBooking(
-                          tabIndex: 0,
-                          userModel: widget.userModel,
-                          isCustomer: false,
+                FutureBuilder(
+                  future:
+                      loadOwnerBookingProcessingList(widget.userModel.username),
+                  builder: (context, snapshot) {
+                    if (_isProcessListEmpty) {
+                      return getEmptyScreen("Không có yêu cầu thuê xe");
+                    } else {
+                      return SingleChildScrollView(
+                        physics: ScrollPhysics(),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 10),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: bookingProcessingList == null
+                                  ? 0
+                                  : bookingProcessingList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return RentingCard(
+                                  bookingModel: bookingProcessingList[index],
+                                  wg: TrackingBooking(
+                                    tabIndex: 0,
+                                    userModel: widget.userModel,
+                                    isCustomer: false,
+                                  ),
+                                  isRequest: true,
+                                  isRenting: false,
+                                  isHistory: false,
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                        isRequest: true,
-                        isRenting: false,
-                        isHistory: false,
-                      ),
-                    ],
-                  ),
+                      );
+                    }
+                  },
                 ),
                 // Đang cho thuê
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 10),
-                      RentingCard(
-                        wg: TrackingBooking(
-                          tabIndex: 1,
-                          userModel: widget.userModel,
-                          isCustomer: false,
+                FutureBuilder(
+                  future:
+                      loadOwnerBookingAreRentingList(widget.userModel.username),
+                  builder: (context, snapshot) {
+                    if (_isAreRentingListEmpty) {
+                      return getEmptyScreen("Không có xe đang cho thuê");
+                    } else {
+                      return SingleChildScrollView(
+                        physics: ScrollPhysics(),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 10),
+                            ListView.builder(
+                              itemCount: bookingAreRentingList == null
+                                  ? 0
+                                  : bookingAreRentingList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return RentingCard(
+                                  bookingModel: bookingAreRentingList[index],
+                                  wg: TrackingBooking(
+                                    tabIndex: 1,
+                                    userModel: widget.userModel,
+                                    isCustomer: false,
+                                  ),
+                                  isRequest: false,
+                                  isRenting: true,
+                                  isHistory: false,
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                        isRequest: false,
-                        isRenting: true,
-                        isHistory: false,
-                      ),
-                    ],
-                  ),
+                      );
+                    }
+                  },
                 ),
                 // Lịch sử
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 10),
-                      FutureBuilder(
-                          future: loadOwnerBookingHistoryList(
-                              widget.userModel.username),
-                          builder: (context, snapshot) {
-                            return ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: bookingHistoryList == null
-                                    ? 0
-                                    : bookingHistoryList.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  // Future.delayed(
-                                  //   Duration(microseconds: 1500),
-                                  // );
-                                  if (bookingHistoryList[index] == null) {
-                                    print("null rồi");
-                                  } else {
-                                    print(double.parse(
-                                        bookingHistoryList[index].userName));
-                                  }
-                                  return RentingCard(
-                                    wg: HistoryDetail(
-                                      isCustomer: false,
-                                      userModel: widget.userModel,
-                                      bookingModel: _bookingModel,
-                                    ),
-                                    isRequest: false,
-                                    isRenting: false,
-                                    isHistory: true,
-                                  );
-                                });
-                          }),
-                    ],
-                  ),
+                FutureBuilder(
+                  future:
+                      loadOwnerBookingHistoryList(widget.userModel.username),
+                  builder: (context, snapshot) {
+                    if (_isHistoryListEmpty) {
+                      return getEmptyScreen("Không có lịch sử cho thuê xe");
+                    } else {
+                      return SingleChildScrollView(
+                        physics: ScrollPhysics(),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 10),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: bookingHistoryList == null
+                                  ? 0
+                                  : bookingHistoryList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return RentingCard(
+                                  bookingModel: bookingHistoryList[index],
+                                  wg: HistoryDetail(
+                                    isCustomer: false,
+                                    userModel: widget.userModel,
+                                    bookingModel: _bookingModel,
+                                  ),
+                                  isRequest: false,
+                                  isRenting: false,
+                                  isHistory: true,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),
@@ -217,5 +244,17 @@ class _RentBikeManagerState extends State<RentBikeManager> {
             ),
           ),
         ));
+  }
+
+  Widget getEmptyScreen(String content) {
+    return Center(
+      child: Text(
+        content,
+        style: TextStyle(
+          fontSize: 20,
+          color: my_colors.primary,
+        ),
+      ),
+    );
   }
 }
