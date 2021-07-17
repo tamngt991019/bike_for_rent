@@ -274,15 +274,13 @@ class _RentingCardState extends State<RentingCard> {
                               ),
                               Expanded(
                                 child: Text(
-                                  priceTotal(
-                                              daysElapsedSince(
-                                                  DateTime.parse(widget
-                                                      .bookingModel.dateBegin),
-                                                  DateTime.parse(widget
-                                                      .bookingModel.dateEnd)),
-                                              widget
-                                                  .bookingModel.payPackageModel)
-                                          .toString() +
+                                  helper.getPriceTotalStr(
+                                        widget.bookingModel.dateBegin,
+                                        widget.bookingModel.dateEnd,
+                                        widget.bookingModel.bikeModel
+                                            .bikeTypeModel.id,
+                                        widget.bookingModel.payPackageModel,
+                                      ) +
                                       " VND",
                                   style: TextStyle(
                                     fontSize: 15,
