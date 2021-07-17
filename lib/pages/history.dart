@@ -36,6 +36,7 @@ class _HistoryState extends State<History> {
   // BookingModel _bookingModel;
   BookingService bookingService = new BookingService();
   List<BookingModel> bookingList;
+  bool _isHistoryListEmpty = true;
   Future loadListCustomerBookingFinishedCanceled(String username) {
     if (bookingList == null) {
       bookingList = [];
@@ -46,7 +47,9 @@ class _HistoryState extends State<History> {
       if (this.mounted) {
         setState(() {
           this.bookingList = _bookingList;
-          // print(userList.length);
+          if (_bookingList != null && _bookingList.length > 0) {
+            _isHistoryListEmpty = false;
+          }
         });
       }
     });
@@ -115,6 +118,9 @@ class _HistoryState extends State<History> {
                       future: loadListCustomerBookingFinishedCanceled(
                           widget.userModel.username),
                       builder: (context, snapshot) {
+                        if (_isHistoryListEmpty) {
+                          return getEmptyScreen("Không có lịch sử cho thuê xe");
+                        }
                         return ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
@@ -167,4 +173,16 @@ class _HistoryState extends State<History> {
       ),
     );
   }
+}
+
+Widget getEmptyScreen(String content) {
+  return Center(
+    child: Text(
+      content,
+      style: TextStyle(
+        fontSize: 20,
+        color: my_colors.primary,
+      ),
+    ),
+  );
 }

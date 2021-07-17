@@ -1,4 +1,5 @@
 import 'package:bike_for_rent/constants/api_url.dart';
+import 'package:bike_for_rent/helper/helper.dart';
 import 'package:bike_for_rent/models/bike_brand_model.dart';
 import 'package:bike_for_rent/models/bike_model.dart';
 import 'package:bike_for_rent/models/bike_type_model.dart';
@@ -168,7 +169,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                   Expanded(
                     child: Text(
-                        DateFormat('yyyy-MM-dd – kk:mm').format(
+                        DateFormat('dd/MM/yyyy – kk:mm:ss').format(
                             DateTime.parse(widget.bookingModel.dateBegin)),
                         style: TextStyle(fontSize: 15)),
                   ),
@@ -184,7 +185,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                   Expanded(
                     child: Text(
-                        DateFormat('yyyy-MM-dd – kk:mm').format(
+                        DateFormat('dd/MM/yyyy – kk:mm:ss').format(
                             DateTime.parse(widget.bookingModel.dateEnd)),
                         style: TextStyle(fontSize: 15)),
                   ),
@@ -331,17 +332,4 @@ class _BookingdetailState extends State<Bookingdetail> {
 }
 
 // }
-double daysElapsedSince(DateTime from, DateTime to) {
-// get the difference in term of days, and not just a 24h difference
-  from = DateTime(from.year, from.month, from.day, from.hour);
-  to = DateTime(to.year, to.month, to.day, from.hour);
 
-  return to.difference(from).inHours / 24;
-}
-
-double priceTotal(double time, PayPackageModel payPackageModel) {
-  if (time * 24 < payPackageModel.hours) {
-    return payPackageModel.price;
-  }
-  return (payPackageModel.price / payPackageModel.hours) * time * 24;
-}
