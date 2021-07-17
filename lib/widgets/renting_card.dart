@@ -180,7 +180,8 @@ class _RentingCardState extends State<RentingCard> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      "123 Trần Hưng Đạo, phường 14, huyện Bình Chánh, Tp. Hồ Chí Minh",
+                                      widget.bookingModel.locationGetBikeModel
+                                          .address,
                                       style: TextStyle(
                                         fontSize: 15,
                                       ),
