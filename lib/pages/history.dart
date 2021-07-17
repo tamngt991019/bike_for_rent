@@ -127,19 +127,6 @@ class _HistoryState extends State<History> {
                           itemCount:
                               bookingList == null ? 0 : bookingList.length,
                           itemBuilder: (BuildContext context, int index) {
-                            // Future.delayed(
-                            //   Duration(microseconds: 1500),
-                            // );
-                            if (bookingList[index]
-                                    .locationReturnBikeModel
-                                    .latitude ==
-                                null) {
-                              print("null rồi");
-                            } else {
-                              print(double.parse(bookingList[index]
-                                  .locationReturnBikeModel
-                                  .latitude));
-                            }
                             return InkWell(
                               onTap: () => helper.pushInto(
                                 context,

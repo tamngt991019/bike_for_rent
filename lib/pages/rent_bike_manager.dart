@@ -220,8 +220,7 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                                   bookingModel: bookingHistoryList[index],
                                   wg: HistoryDetail(
                                     isCustomer: false,
-                                    userModel:
-                                        bookingHistoryList[index].userModel,
+                                    userModel: widget.userModel,
                                     bookingModel: bookingHistoryList[index],
                                   ),
                                   isRequest: false,
