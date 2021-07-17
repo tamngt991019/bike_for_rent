@@ -17,8 +17,9 @@ import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class BikeReturnMap extends StatefulWidget {
   final UserModel userModel;
-  final BookingModel bookingModel;
-  BikeReturnMap({Key key, this.userModel, this.bookingModel}) : super(key: key);
+  final LocationModel locationModel;
+  BikeReturnMap({Key key, this.userModel, this.locationModel})
+      : super(key: key);
 
   @override
   _BikeReturnMapState createState() => _BikeReturnMapState();
@@ -107,7 +108,13 @@ class _BikeReturnMapState extends State<BikeReturnMap> {
         longitude: position.longitude.toString(),
       );
     });
-    getLocation(null);
+    LatLng tmp;
+    if (widget.locationModel != null) {
+      double lati = double.parse(widget.locationModel.latitude);
+      double long = double.parse(widget.locationModel.longitude);
+      tmp = LatLng(lati, long);
+    }
+    getLocation(tmp);
     _initialCameraPosition =
         CameraPosition(target: _currentLatLing, zoom: cameraZoom);
   }
@@ -140,12 +147,11 @@ class _BikeReturnMapState extends State<BikeReturnMap> {
     return futureCases;
   }
 
-  BookingModel mainBooking;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    mainBooking = widget.bookingModel;
+    _bikeReturnLocationModel = widget.locationModel;
   }
 
   @override
@@ -168,6 +174,7 @@ class _BikeReturnMapState extends State<BikeReturnMap> {
                     context,
                     TrackingBooking(
                       userModel: widget.userModel,
+                      locationModel: widget.locationModel,
                       isCustomer: true,
                       tabIndex: 0,
                       isShowBackBtn: false,
@@ -304,9 +311,17 @@ class _BikeReturnMapState extends State<BikeReturnMap> {
                               title: "Xác nhận vị trí",
                               width: 200,
                               onPressedElavateBtn: () {
-                                // print(selectedLocationId);
-                                // mainBooking.locationReturnBike =
-                                //     selectedLocationId;
+                                helper.pushInto(
+                                  context,
+                                  TrackingBooking(
+                                    userModel: widget.userModel,
+                                    isCustomer: true,
+                                    tabIndex: 0,
+                                    isShowBackBtn: false,
+                                    locationModel: _bikeReturnLocationModel,
+                                  ),
+                                  true,
+                                );
                               },
                             ),
                           ),
