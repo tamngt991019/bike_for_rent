@@ -2,12 +2,16 @@ import 'dart:async';
 
 import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
+import 'package:bike_for_rent/models/payment_model.dart';
 import 'package:bike_for_rent/models/payment_type_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/bike_return_map.dart';
 import 'package:bike_for_rent/pages/home.dart';
 import 'package:bike_for_rent/pages/rent_bike_manager.dart';
+import 'package:bike_for_rent/services/bike_service.dart';
 import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:bike_for_rent/services/location_service.dart';
+import 'package:bike_for_rent/services/payment_service.dart';
 import 'package:bike_for_rent/services/payment_type_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_detail.dart';
@@ -66,12 +70,27 @@ class _TrackingBookingState extends State<TrackingBooking> {
 
   BookingService bookingService = new BookingService();
   BookingModel mainBooking;
-  Future loadListTrackingBooking() {
+  Future loadListCustomerTrackingBooking() {
     if (mainBooking == null) {
       mainBooking = new BookingModel();
     }
     Future<List<BookingModel>> futureCase =
         bookingService.getCustomerBookingsTracking(widget.userModel.username);
+    futureCase.then((list) {
+      setState(() {
+        mainBooking = list.first;
+        _isLoadThisScreen = true;
+      });
+    });
+    return futureCase;
+  }
+
+  Future loadListOwnerTrackingBooking() {
+    if (mainBooking == null) {
+      mainBooking = new BookingModel();
+    }
+    Future<List<BookingModel>> futureCase =
+        bookingService.getOwnerBookingsTracking(widget.userModel.username);
     futureCase.then((list) {
       setState(() {
         mainBooking = list.first;
@@ -111,6 +130,72 @@ class _TrackingBookingState extends State<TrackingBooking> {
         );
       }
     });
+  }
+
+  BikeService bikeService = new BikeService();
+  void updateBikeIsBooking(bool isBooking) {
+    mainBooking.bikeModel.isBooking = isBooking;
+    Future<bool> futureCase = bikeService.updateBikeModel(
+        mainBooking.bikeModel.id, mainBooking.bikeModel);
+    futureCase.then((isUpdateSuccess) {
+      if (!isUpdateSuccess) {
+        showNotificationDialog(
+          "Cảnh bảo!",
+          "Thao tác thất bại, vui lòng thử lại!",
+          my_colors.danger,
+        );
+      } else {
+        updateBookingEventType("ARERENTING");
+      }
+    });
+  }
+
+  double totalPrice = 0;
+  bool _isCreatePaymentSuccess = false;
+  PaymentService paymentService = new PaymentService();
+  void createPayment(String paymentTypeId, String bookingId) {
+    Future<PaymentModel> futureCase = paymentService.createPayment(
+      PaymentModel(
+        paymentTypeId: paymentTypeId,
+        bookingId: bookingId,
+        totalPrice: totalPrice,
+      ),
+    );
+    futureCase.then((model) {
+      if (model != null) {
+        _isCreatePaymentSuccess = true;
+      } else {
+        showNotificationDialog(
+          "Cảnh bảo!",
+          "Thao tác thất bại, vui lòng thử lại!",
+          my_colors.danger,
+        );
+      }
+    });
+  }
+
+  String getAvatarStr() {
+    if (widget.isCustomer) {
+      return mainBooking.bikeModel.userModel.avatar;
+    } else {
+      return mainBooking.userModel.avatar;
+    }
+  }
+
+  String getFullnameStr() {
+    if (widget.isCustomer) {
+      return mainBooking.bikeModel.userModel.fullName;
+    } else {
+      return mainBooking.userModel.fullName;
+    }
+  }
+
+  String getPhoneStr() {
+    if (widget.isCustomer) {
+      return mainBooking.bikeModel.userModel.phone;
+    } else {
+      return mainBooking.userModel.phone;
+    }
   }
 
   @override
@@ -229,7 +314,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
         // Header app
         appBar: Appbar(
           height: 50,
-          titles: "Thuê xe",
+          titles: ((widget.isCustomer) ? "" : "cho ") + "thuê xe",
           isShowBackBtn: (widget.isCustomer) ? false : widget.isShowBackBtn,
           bottomAppBar: null,
           onPressedBackBtn: () => helper.pushInto(
@@ -245,7 +330,9 @@ class _TrackingBookingState extends State<TrackingBooking> {
         body: Center(
           child: SingleChildScrollView(
             child: FutureBuilder(
-              future: loadListTrackingBooking(),
+              future: (widget.isCustomer)
+                  ? loadListCustomerTrackingBooking()
+                  : loadListOwnerTrackingBooking(),
               builder: (context, snapshot) {
                 if (!_isLoadThisScreen) {
                   return Column(
@@ -273,11 +360,9 @@ class _TrackingBookingState extends State<TrackingBooking> {
                             // avatar
                             CircleAvatar(
                               radius: 30,
-                              backgroundImage: (mainBooking
-                                          .bikeModel.userModel.fullName !=
-                                      null)
-                                  ? NetworkImage(
-                                      mainBooking.bikeModel.userModel.avatar)
+                              backgroundImage: (mainBooking.bikeModel != null &&
+                                      mainBooking.userModel != null)
+                                  ? NetworkImage(getAvatarStr())
                                   : AssetImage(
                                       "lib/assets/images/avatar_logo.png",
                                     ),
@@ -290,10 +375,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                 children: [
                                   // tên người dùng
                                   Text(
-                                    (!widget.isCustomer)
-                                        ? widget.userModel.fullName
-                                        : mainBooking
-                                            .bikeModel.userModel.fullName,
+                                    getFullnameStr(),
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -301,15 +383,15 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                   ),
                                   SizedBox(height: 10),
                                   // sđt
-                                  if (mainBooking.bikeModel.userModel.phone !=
-                                      null)
-                                    Text(
-                                      "Số điện thoại: " +
-                                          mainBooking.bikeModel.userModel.phone,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                      ),
+                                  // if (mainBooking.bikeModel.userModel.phone !=
+                                  //         null &&
+                                  //     mainBooking.userModel.phone != null)
+                                  Text(
+                                    "Số điện thoại: " + getPhoneStr(),
+                                    style: TextStyle(
+                                      fontSize: 15,
                                     ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -452,71 +534,75 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                 ),
                               ],
                             ),
-                            if (mainBooking.eventTypeId == "PAYING")
-                              SizedBox(height: 20),
-                            // Tổng tiền
-                            if (mainBooking.eventTypeId == "PAYING")
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Tổng tiền: ",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      "123456 vnd",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            SizedBox(height: 10),
+
                             // Thanh toán
-                            if (mainBooking.eventTypeId == "PAYING")
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            if (mainBooking.eventTypeId == "OWNGOTBIKE")
+                              Column(
                                 children: [
-                                  Text(
-                                    "Thanh toán: ",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            SizedBox(height: 10),
-                            InkWell(
-                              onTap: () {
-                                showDropdownPaymentType(context);
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        _paymentTypeStr,
+                                  SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Tổng tiền: ",
                                         style: TextStyle(
                                           fontSize: 15,
-                                          color: _paymentTypeColor,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                      Expanded(
+                                        child: Text(
+                                          "123456 vnd",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Thanh toán: ",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  InkWell(
+                                    onTap: () {
+                                      showDropdownPaymentType(context);
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              _paymentTypeStr,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color: _paymentTypeColor,
+                                              ),
+                                            ),
+                                          ),
+                                          Icon(Icons.arrow_drop_down),
+                                        ],
+                                      ),
                                     ),
-                                    Icon(Icons.arrow_drop_down),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -539,11 +625,12 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                 children: [
                                   ElavateBtn(
                                     width: 180,
-                                    title: 'Đã nhận xe',
+                                    title: 'Đồng ý thuê xe',
                                     onPressedElavateBtn: () {
                                       setState(() {
+                                        updateBikeIsBooking(true);
                                         // mainBooking.eventTypeId = "ARERENTING";
-                                        updateBookingEventType("ARERENTING");
+                                        // updateBookingEventType("ARERENTING");
                                       });
                                     },
                                   ),
@@ -584,7 +671,15 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                       setState(() {
                                         // mainBooking.eventTypeId =
                                         //     "CUSRETURNBIKE";
-                                        updateBookingEventType("CUSRETURNBIKE");
+                                        // updateBookingEventType("CUSRETURNBIKE");
+                                        helper.pushInto(
+                                          context,
+                                          BikeReturnMap(
+                                            userModel: widget.userModel,
+                                            bookingModel: mainBooking,
+                                          ),
+                                          true,
+                                        );
                                       });
                                     },
                                   )
@@ -598,10 +693,21 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     width: 380,
                                     title: 'Thanh toán',
                                     onPressedElavateBtn: () {
-                                      setState(() {
-                                        // mainBooking.eventTypeId = "PAYING";
-                                        updateBookingEventType("PAYING");
-                                      });
+                                      bool isPaymentTypeChange =
+                                          _paymentTypeStr ==
+                                              "Chọn hình thức thanh toán:";
+                                      if (isPaymentTypeChange) {
+                                        setState(() {
+                                          // mainBooking.eventTypeId = "PAYING";
+                                          updateBookingEventType("PAYING");
+                                        });
+                                      } else {
+                                        showNotificationDialog(
+                                          "Cảnh báo!",
+                                          "Vui lòng chọn hình thức thuê xe!",
+                                          my_colors.danger,
+                                        );
+                                      }
                                     },
                                   )
                                 ],
@@ -692,8 +798,15 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     title: 'Xác nhận thanh toán',
                                     onPressedElavateBtn: () {
                                       setState(() {
+                                        updateBikeIsBooking(false);
                                         // mainBooking.eventTypeId = "FINISHED";
-                                        updateBookingEventType("FINISHED");
+                                        createPayment(
+                                          _paymentTypeModel.id,
+                                          mainBooking.id,
+                                        );
+                                        if (_isCreatePaymentSuccess) {
+                                          updateBookingEventType("FINISHED");
+                                        }
                                       });
                                     },
                                   )

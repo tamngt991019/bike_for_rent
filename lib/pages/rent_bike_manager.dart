@@ -91,6 +91,32 @@ class _RentBikeManagerState extends State<RentBikeManager> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.userModel != null) {
+      BookingService bookingService = new BookingService();
+      Future<bool> checkFuture =
+          bookingService.isExistOwnerTrackingBooking(widget.userModel.username);
+      checkFuture.then((check) {
+        if (check) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (BuildContext context) => TrackingBooking(
+                userModel: widget.userModel,
+                isCustomer: false,
+                isShowBackBtn: false,
+                tabIndex: 0,
+              ),
+            ),
+            (route) => false,
+          );
+        }
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: ThemeData(
@@ -146,6 +172,7 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                                     tabIndex: 0,
                                     userModel: widget.userModel,
                                     isCustomer: false,
+                                    isShowBackBtn: true,
                                   ),
                                   isRequest: true,
                                   isRenting: false,
@@ -183,6 +210,7 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                                     tabIndex: 1,
                                     userModel: widget.userModel,
                                     isCustomer: false,
+                                    isShowBackBtn: true,
                                   ),
                                   isRequest: false,
                                   isRenting: true,

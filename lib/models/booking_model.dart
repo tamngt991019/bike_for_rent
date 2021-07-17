@@ -51,7 +51,7 @@ class BookingModel {
 
   factory BookingModel.fromJson(Map<String, dynamic> json) => BookingModel(
         id: json['id'] as String,
-        userName: json['userName'] as String,
+        userName: json['username'] as String,
         bikeId: json['bikeId'] as String,
         payPackageId: json['payPackageId'] as String,
         dateCreated: json['dateCreated'] as String,
@@ -85,7 +85,7 @@ class BookingModel {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "userName": userName,
+        "username": userName,
         "bikeId": bikeId,
         "payPackageId": payPackageId,
         "dateCreated": dateCreated,

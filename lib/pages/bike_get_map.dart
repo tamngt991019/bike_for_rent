@@ -186,7 +186,7 @@ class _BikeGetMapState extends State<BikeGetMap> {
         // Header app
         appBar: Appbar(
           height: 50,
-          titles: "Thuê xe",
+          titles: "Chọn vị trí thuê xe",
           isShowBackBtn: false,
         ),
         // Body app
