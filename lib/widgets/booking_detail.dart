@@ -217,13 +217,11 @@ class _BookingdetailState extends State<Bookingdetail> {
                                       fontWeight: FontWeight.bold)),
                               Expanded(
                                 child: Text(
-                                    daysElapsedSince(
-                                                DateTime.parse(widget
-                                                    .bookingModel.dateBegin),
-                                                DateTime.parse(widget
-                                                    .bookingModel.dateEnd))
-                                            .toString() +
-                                        " ngày",
+                                    dayElapsed(
+                                        DateTime.parse(
+                                            widget.bookingModel.dateBegin),
+                                        DateTime.parse(
+                                            widget.bookingModel.dateEnd)),
                                     style: TextStyle(fontSize: 15)),
                               ),
                             ],

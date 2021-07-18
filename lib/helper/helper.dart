@@ -82,9 +82,25 @@ bool isEmptyText(String value) {
 
 double daysElapsedSince(DateTime from, DateTime to) {
 // get the difference in term of days, and not just a 24h difference
-  from = DateTime(from.year, from.month, from.day, from.hour);
-  to = DateTime(to.year, to.month, to.day, from.hour);
+  from = DateTime(from.year, from.month, from.day, from.hour, from.minute);
+  to = DateTime(to.year, to.month, to.day, to.hour, to.minute);
   return (to.difference(from).inMinutes / 1440).toDouble();
+}
+
+String dayElapsed(DateTime from, DateTime to) {
+  from = DateTime(from.year, from.month, from.day, from.hour, from.minute);
+  to = DateTime(to.year, to.month, to.day, to.hour, to.minute);
+  int difference = to.difference(from).inMinutes;
+  if (difference % 1440 > 0) {
+    return (difference ~/ 1440).toString() +
+        " ngày " +
+        (((difference % 1440) ~/ 60) + 1).toString() +
+        " giờ ";
+  }
+  return (difference ~/ 1440).toString() +
+      " ngày " +
+      ((difference % 1440) ~/ 60).toString() +
+      " giờ ";
 }
 
 double priceTotal(double time, PayPackageModel payPackageModel) {

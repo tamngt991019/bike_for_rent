@@ -49,10 +49,6 @@ class _HistoryDetailState extends State<HistoryDetail> {
           }
         });
       }
-      if (widget.bookingModel == null) {
-        print("widget booking bị null nè");
-      } else
-        print(widget.bookingModel.userModel.fullName);
     });
     return futureCases;
   }
