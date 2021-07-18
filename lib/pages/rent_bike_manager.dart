@@ -6,6 +6,7 @@ import 'package:bike_for_rent/pages/tracking_booking.dart';
 import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
+import 'package:bike_for_rent/widgets/notification_dialog.dart';
 import 'package:bike_for_rent/widgets/renting_card.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
@@ -22,6 +23,7 @@ class RentBikeManager extends StatefulWidget {
 
 class _RentBikeManagerState extends State<RentBikeManager> {
   bool _isProcessListEmpty = true;
+  bool _isTrackingListEmpty = true;
   bool _isAreRentingListEmpty = true;
   bool _isHistoryListEmpty = true;
   BookingModel _bookingModel;
@@ -90,30 +92,51 @@ class _RentBikeManagerState extends State<RentBikeManager> {
     return futureCases;
   }
 
+  //owner booking tracking
+  List<BookingModel> bookingTrackingList;
+  Future loadOwnerBookingTrackingList(String username) {
+    if (bookingTrackingList == null) {
+      bookingTrackingList = [];
+    }
+    Future<List<BookingModel>> futureCases =
+        bookingService.getOwnerBookingsTracking(username);
+    futureCases.then((_bookingTrackingList) {
+      if (this.mounted) {
+        setState(() {
+          this.bookingTrackingList = _bookingTrackingList;
+          if (bookingTrackingList != null && bookingTrackingList.length > 0) {
+            _isTrackingListEmpty = false;
+          }
+        });
+      }
+    });
+    return futureCases;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.userModel != null) {
-      BookingService bookingService = new BookingService();
-      Future<bool> checkFuture =
-          bookingService.isExistOwnerTrackingBooking(widget.userModel.username);
-      checkFuture.then((check) {
-        if (check) {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (BuildContext context) => TrackingBooking(
-                userModel: widget.userModel,
-                isCustomer: false,
-                isShowBackBtn: false,
-                tabIndex: 0,
-              ),
-            ),
-            (route) => false,
-          );
-        }
-      });
-    }
+    // if (widget.userModel != null) {
+    //   BookingService bookingService = new BookingService();
+    //   Future<bool> checkFuture =
+    //       bookingService.isExistOwnerTrackingBooking(widget.userModel.username);
+    //   checkFuture.then((check) {
+    //     if (check) {
+    //       Navigator.of(context).pushAndRemoveUntil(
+    //         MaterialPageRoute(
+    //           builder: (BuildContext context) => TrackingBooking(
+    //             userModel: widget.userModel,
+    //             isCustomer: false,
+    //             isShowBackBtn: false,
+    //             tabIndex: 0,
+    //           ),
+    //         ),
+    //         (route) => false,
+    //       );
+    //     }
+    //   });
+    // }
   }
 
   @override
@@ -124,7 +147,7 @@ class _RentBikeManagerState extends State<RentBikeManager> {
         ),
         home: DefaultTabController(
           initialIndex: widget.tabIndex,
-          length: 3,
+          length: 4,
           child: Scaffold(
             // Header app
             appBar: Appbar(
@@ -134,7 +157,8 @@ class _RentBikeManagerState extends State<RentBikeManager> {
               bottomAppBar: TabBar(
                 tabs: [
                   Tab(text: "Yêu cầu"),
-                  Tab(text: "Đang cho thuê"),
+                  Tab(text: "Đang xử lý"),
+                  Tab(text: "Cho thuê"),
                   Tab(text: "Lịch sử"),
                 ],
               ),
@@ -186,6 +210,46 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                     }
                   },
                 ),
+                // Đang xử lý
+                FutureBuilder(
+                  future:
+                      loadOwnerBookingTrackingList(widget.userModel.username),
+                  builder: (context, snapshot) {
+                    if (_isTrackingListEmpty) {
+                      return getEmptyScreen("Không có yêu cầu đang xử lý");
+                    } else {
+                      return SingleChildScrollView(
+                        physics: ScrollPhysics(),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 10),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: bookingAreRentingList == null
+                                  ? 0
+                                  : bookingAreRentingList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return RentingCard(
+                                  bookingModel: bookingAreRentingList[index],
+                                  wg: TrackingBooking(
+                                    tabIndex: 1,
+                                    userModel: widget.userModel,
+                                    isCustomer: false,
+                                    isShowBackBtn: true,
+                                  ),
+                                  isRequest: false,
+                                  isRenting: true,
+                                  isHistory: false,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                ),
                 // Đang cho thuê
                 FutureBuilder(
                   future:
@@ -200,18 +264,26 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                           children: [
                             SizedBox(height: 10),
                             ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
                               itemCount: bookingAreRentingList == null
                                   ? 0
                                   : bookingAreRentingList.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return RentingCard(
                                   bookingModel: bookingAreRentingList[index],
-                                  wg: TrackingBooking(
-                                    tabIndex: 1,
-                                    userModel: widget.userModel,
-                                    isCustomer: false,
-                                    isShowBackBtn: true,
-                                  ),
+                                  wg: (_isTrackingListEmpty)
+                                      ? showNotificationDialog(
+                                          "Thông báo",
+                                          "Vui lòng hoàn thành hết các yêu cầu đang xử lý!",
+                                          my_colors.primary,
+                                        )
+                                      : TrackingBooking(
+                                          tabIndex: 1,
+                                          userModel: widget.userModel,
+                                          isCustomer: false,
+                                          isShowBackBtn: true,
+                                        ),
                                   isRequest: false,
                                   isRenting: true,
                                   isHistory: false,
@@ -284,6 +356,22 @@ class _RentBikeManagerState extends State<RentBikeManager> {
           color: my_colors.primary,
         ),
       ),
+    );
+  }
+
+  // hien thi thong bao
+  dynamic showNotificationDialog(
+      String titleStr, String contentStr, Color titleCColor) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return NotificationDialog(
+          title: titleStr,
+          titleColor: titleCColor,
+          content: contentStr,
+        );
+      },
     );
   }
 }
