@@ -1,15 +1,9 @@
 import 'dart:async';
-
 import 'package:bike_for_rent/models/bike_type_model.dart';
-import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
 import 'package:bike_for_rent/models/pay_package_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/bike_get_map.dart';
-import 'package:bike_for_rent/pages/history.dart';
-import 'package:bike_for_rent/pages/home.dart';
-import 'package:bike_for_rent/pages/login_valid.dart';
-import 'package:bike_for_rent/pages/personal.dart';
 import 'package:bike_for_rent/pages/rent_bike_list.dart';
 import 'package:bike_for_rent/services/bike_type_service.dart';
 import 'package:bike_for_rent/services/location_service.dart';
@@ -23,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class RentBikeFilter extends StatefulWidget {

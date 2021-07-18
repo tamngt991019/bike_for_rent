@@ -40,6 +40,22 @@ class BookingService {
   }
 
   //get trả về response code 200
+  Future<BookingModel> getTrackingBookingById(String id) async {
+    Response response;
+    BookingModel result;
+    try {
+      response = await get(Uri.parse('${apiUrl.booking}/tracking/detail/$id'));
+
+      if (response.statusCode == 200) {
+        result = BookingModel.fromJson(json.decode(response.body));
+      }
+    } catch (Exception) {
+      throw Exception;
+    }
+    return result;
+  }
+
+  //get trả về response code 200
   Future<List<BookingModel>> getCustomerWithBookingProcessing(
       String username) async {
     Response response;

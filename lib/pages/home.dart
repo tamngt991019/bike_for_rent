@@ -1,12 +1,7 @@
 import 'dart:async';
-
 import 'package:bike_for_rent/models/bike_type_model.dart';
-import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/bike_get_map.dart';
-import 'package:bike_for_rent/pages/history.dart';
-import 'package:bike_for_rent/pages/personal.dart';
-import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:flutter/material.dart';

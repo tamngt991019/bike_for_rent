@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
@@ -109,7 +108,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       isCustomerHistory: true,
                       isCustomerHistoryDetail: false,
                     )
-                  : RentBikeManager(userModel: widget.userModel, tabIndex: 2),
+                  : RentBikeManager(userModel: widget.userModel, tabIndex: 3),
               false),
         ),
         // Body app

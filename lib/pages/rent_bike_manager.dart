@@ -22,6 +22,7 @@ class RentBikeManager extends StatefulWidget {
 
 class _RentBikeManagerState extends State<RentBikeManager> {
   bool _isProcessListEmpty = true;
+  bool _isTrackingListEmpty = true;
   bool _isAreRentingListEmpty = true;
   bool _isHistoryListEmpty = true;
   BookingModel _bookingModel;
@@ -90,30 +91,51 @@ class _RentBikeManagerState extends State<RentBikeManager> {
     return futureCases;
   }
 
+  //owner booking tracking
+  List<BookingModel> bookingTrackingList;
+  Future loadOwnerBookingTrackingList(String username) {
+    if (bookingTrackingList == null) {
+      bookingTrackingList = [];
+    }
+    Future<List<BookingModel>> futureCases =
+        bookingService.getOwnerBookingsTracking(username);
+    futureCases.then((_bookingTrackingList) {
+      if (this.mounted) {
+        setState(() {
+          this.bookingTrackingList = _bookingTrackingList;
+          if (bookingTrackingList != null && bookingTrackingList.length > 0) {
+            _isTrackingListEmpty = false;
+          }
+        });
+      }
+    });
+    return futureCases;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.userModel != null) {
-      BookingService bookingService = new BookingService();
-      Future<bool> checkFuture =
-          bookingService.isExistOwnerTrackingBooking(widget.userModel.username);
-      checkFuture.then((check) {
-        if (check) {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (BuildContext context) => TrackingBooking(
-                userModel: widget.userModel,
-                isCustomer: false,
-                isShowBackBtn: false,
-                tabIndex: 0,
-              ),
-            ),
-            (route) => false,
-          );
-        }
-      });
-    }
+    // if (widget.userModel != null) {
+    //   BookingService bookingService = new BookingService();
+    //   Future<bool> checkFuture =
+    //       bookingService.isExistOwnerTrackingBooking(widget.userModel.username);
+    //   checkFuture.then((check) {
+    //     if (check) {
+    //       Navigator.of(context).pushAndRemoveUntil(
+    //         MaterialPageRoute(
+    //           builder: (BuildContext context) => TrackingBooking(
+    //             userModel: widget.userModel,
+    //             isCustomer: false,
+    //             isShowBackBtn: false,
+    //             tabIndex: 0,
+    //           ),
+    //         ),
+    //         (route) => false,
+    //       );
+    //     }
+    //   });
+    // }
   }
 
   @override
@@ -124,7 +146,7 @@ class _RentBikeManagerState extends State<RentBikeManager> {
         ),
         home: DefaultTabController(
           initialIndex: widget.tabIndex,
-          length: 3,
+          length: 4,
           child: Scaffold(
             // Header app
             appBar: Appbar(
@@ -134,7 +156,8 @@ class _RentBikeManagerState extends State<RentBikeManager> {
               bottomAppBar: TabBar(
                 tabs: [
                   Tab(text: "Yêu cầu"),
-                  Tab(text: "Đang cho thuê"),
+                  Tab(text: "Đang xử lý"),
+                  Tab(text: "Cho thuê"),
                   Tab(text: "Lịch sử"),
                 ],
               ),
@@ -173,10 +196,57 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                                     userModel: widget.userModel,
                                     isCustomer: false,
                                     isShowBackBtn: true,
+                                    bookingModel: bookingProcessingList[index],
                                   ),
                                   isRequest: true,
                                   isRenting: false,
                                   isHistory: false,
+                                  isTracking: false,
+                                  isShowNoti:
+                                      (!_isTrackingListEmpty) ? true : false,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                ),
+                // Đang xử lý
+                FutureBuilder(
+                  future:
+                      loadOwnerBookingTrackingList(widget.userModel.username),
+                  builder: (context, snapshot) {
+                    if (_isTrackingListEmpty) {
+                      return getEmptyScreen("Không có yêu cầu đang xử lý");
+                    } else {
+                      return SingleChildScrollView(
+                        physics: ScrollPhysics(),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 10),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: bookingTrackingList == null
+                                  ? 0
+                                  : bookingTrackingList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return RentingCard(
+                                  bookingModel: bookingTrackingList[index],
+                                  wg: TrackingBooking(
+                                    tabIndex: 1,
+                                    userModel: widget.userModel,
+                                    isCustomer: false,
+                                    isShowBackBtn: true,
+                                    bookingModel: bookingTrackingList[index],
+                                  ),
+                                  isRequest: false,
+                                  isRenting: false,
+                                  isHistory: false,
+                                  isTracking: true,
+                                  isShowNoti: false,
                                 );
                               },
                             ),
@@ -200,6 +270,8 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                           children: [
                             SizedBox(height: 10),
                             ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
                               itemCount: bookingAreRentingList == null
                                   ? 0
                                   : bookingAreRentingList.length,
@@ -207,14 +279,17 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                                 return RentingCard(
                                   bookingModel: bookingAreRentingList[index],
                                   wg: TrackingBooking(
-                                    tabIndex: 1,
+                                    tabIndex: 2,
                                     userModel: widget.userModel,
                                     isCustomer: false,
                                     isShowBackBtn: true,
+                                    bookingModel: bookingAreRentingList[index],
                                   ),
                                   isRequest: false,
                                   isRenting: true,
                                   isHistory: false,
+                                  isTracking: false,
+                                  isShowNoti: false,
                                 );
                               },
                             ),
@@ -254,6 +329,8 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                                   isRequest: false,
                                   isRenting: false,
                                   isHistory: true,
+                                  isTracking: false,
+                                  isShowNoti: false,
                                 );
                               },
                             ),

@@ -1,12 +1,8 @@
-import 'dart:io';
-
 import 'package:bike_for_rent/models/bike_model.dart';
 import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/history_detail.dart';
 import 'package:bike_for_rent/pages/login_valid.dart';
-import 'package:bike_for_rent/pages/personal.dart';
-import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/services/bike_service.dart';
 import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:bike_for_rent/services/user_service.dart';

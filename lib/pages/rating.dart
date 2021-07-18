@@ -1,5 +1,4 @@
 import 'package:bike_for_rent/widgets/app_bar.dart';
-import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:bike_for_rent/widgets/outline_btn.dart';
 import 'package:flutter/material.dart';

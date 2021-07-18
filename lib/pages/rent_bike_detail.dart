@@ -1,26 +1,21 @@
 import 'dart:async';
-import 'dart:io';
-import 'Dart:math' as math;
 import 'package:bike_for_rent/models/bike_model.dart';
 import 'package:bike_for_rent/models/bike_type_model.dart';
 import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
 import 'package:bike_for_rent/models/pay_package_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
-import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/pages/rent_bike_list.dart';
 import 'package:bike_for_rent/pages/tracking_booking.dart';
 import 'package:bike_for_rent/services/bike_service.dart';
 import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:bike_for_rent/services/location_service.dart';
-import 'package:bike_for_rent/services/user_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_detail.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:bike_for_rent/widgets/frame_text.dart';
 import 'package:bike_for_rent/widgets/notification_dialog.dart';
-import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
@@ -28,7 +23,6 @@ import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:bike_for_rent/constants/event_type_id.dart' as eventTypeId;
 
 class RentBikeDetail extends StatefulWidget {
   final UserModel userModel;
@@ -472,23 +466,21 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                           payPackageId: widget.payPackageModel.id,
                           eventTypeId: "PROCESSING",
                         );
-                        // print(newBooking.userName);
-                        // print(newBooking.bikeId);
-                        // print(newBooking.locationGetBike);
-                        // print(newBooking.payPackageId);
-                        // print(newBooking.eventTypeId);
                         Future<BookingModel> bookingDuture =
                             bookingService.createBooking(newBooking);
                         bookingDuture.then((value) {
                           if (value != null) {
                             print("Thuê thành công!");
-                            // NotificationDialog(
-                            //   title: "Thông báo!",
-                            //   titleColor: my_colors.danger,
-                            //   content: "Thuê thành công!",
-                            // );
-                            // helper.pushInto(context,
-                            //     TrackingBooking(isCustomer: true), true);
+                            helper.pushInto(
+                              context,
+                              TrackingBooking(
+                                isCustomer: true,
+                                isShowBackBtn: false,
+                                userModel: widget.userModel,
+                                tabIndex: 0,
+                              ),
+                              true,
+                            );
                           } else {
                             NotificationDialog(
                               title: "Cảnh báo!",
