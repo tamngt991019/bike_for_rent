@@ -472,23 +472,21 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                           payPackageId: widget.payPackageModel.id,
                           eventTypeId: "PROCESSING",
                         );
-                        // print(newBooking.userName);
-                        // print(newBooking.bikeId);
-                        // print(newBooking.locationGetBike);
-                        // print(newBooking.payPackageId);
-                        // print(newBooking.eventTypeId);
                         Future<BookingModel> bookingDuture =
                             bookingService.createBooking(newBooking);
                         bookingDuture.then((value) {
                           if (value != null) {
                             print("Thuê thành công!");
-                            // NotificationDialog(
-                            //   title: "Thông báo!",
-                            //   titleColor: my_colors.danger,
-                            //   content: "Thuê thành công!",
-                            // );
-                            // helper.pushInto(context,
-                            //     TrackingBooking(isCustomer: true), true);
+                            helper.pushInto(
+                              context,
+                              TrackingBooking(
+                                isCustomer: true,
+                                isShowBackBtn: false,
+                                userModel: widget.userModel,
+                                tabIndex: 0,
+                              ),
+                              true,
+                            );
                           } else {
                             NotificationDialog(
                               title: "Cảnh báo!",

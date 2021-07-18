@@ -34,6 +34,7 @@ import 'package:intl/intl.dart';
 
 class TrackingBooking extends StatefulWidget {
   final UserModel userModel;
+  final BookingModel bookingModel;
   final LocationModel locationModel;
   final bool isCustomer;
   final bool isShowBackBtn;
@@ -41,6 +42,7 @@ class TrackingBooking extends StatefulWidget {
   TrackingBooking({
     Key key,
     this.userModel,
+    this.bookingModel,
     this.locationModel,
     this.isCustomer,
     this.isShowBackBtn,
@@ -102,6 +104,21 @@ class _TrackingBookingState extends State<TrackingBooking> {
     return futureCase;
   }
 
+  Future getOwnerTrackingBookingById() {
+    if (mainBooking == null) {
+      mainBooking = new BookingModel();
+    }
+    Future<BookingModel> futureCase =
+        bookingService.getTrackingBookingById(widget.bookingModel.id);
+    futureCase.then((model) {
+      setState(() {
+        mainBooking = model;
+        _isLoadThisScreen = true;
+      });
+    });
+    return futureCase;
+  }
+
   PaymentTypeService paymentTypeService = new PaymentTypeService();
   PaymentTypeModel _paymentTypeModel;
   List<PaymentTypeModel> paymentTypeList;
@@ -119,10 +136,9 @@ class _TrackingBookingState extends State<TrackingBooking> {
     return futureCase;
   }
 
-  void updateBookingEventType(String eventTypeId) {
-    mainBooking.eventTypeId = eventTypeId;
+  void updateBookingEventType(BookingModel model) {
     Future<bool> futureCase =
-        bookingService.updateBookingModel(mainBooking.id, mainBooking);
+        bookingService.updateBookingModel(model.id, model);
     futureCase.then((isUpdateSuccess) {
       if (!isUpdateSuccess) {
         showNotificationDialog(
@@ -135,7 +151,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
   }
 
   BikeService bikeService = new BikeService();
-  void updateBikeIsBooking(bool isBooking) {
+  void updateBikeIsBooking(bool isBooking, BookingModel bookingModel) {
     mainBooking.bikeModel.isBooking = isBooking;
     Future<bool> futureCase = bikeService.updateBikeModel(
         mainBooking.bikeModel.id, mainBooking.bikeModel);
@@ -147,7 +163,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
           my_colors.danger,
         );
       } else {
-        updateBookingEventType("ARERENTING");
+        updateBookingEventType(bookingModel);
       }
     });
   }
@@ -200,10 +216,14 @@ class _TrackingBookingState extends State<TrackingBooking> {
     }
   }
 
+  LocationModel _bikeReturnLocationModel;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    // if(widget.bookingModel.locationReturnBikeModel != null){
+
+    // }
   }
 
   //========================================================================
@@ -335,7 +355,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
             child: FutureBuilder(
               future: (widget.isCustomer)
                   ? loadListCustomerTrackingBooking()
-                  : loadListOwnerTrackingBooking(),
+                  : getOwnerTrackingBookingById(),
               builder: (context, snapshot) {
                 if (!_isLoadThisScreen) {
                   return Column(
@@ -385,10 +405,6 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     ),
                                   ),
                                   SizedBox(height: 10),
-                                  // sđt
-                                  // if (mainBooking.bikeModel.userModel.phone !=
-                                  //         null &&
-                                  //     mainBooking.userModel.phone != null)
                                   Text(
                                     "Số điện thoại: " + getPhoneStr(),
                                     style: TextStyle(
@@ -448,7 +464,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
                       ),
                       SizedBox(height: 10),
                       // Bike Return Location
-                      if (widget.locationModel != null)
+                      if (_bikeReturnLocationModel != null)
                         InkWell(
                           onTap: () {
                             if (widget.userModel.username ==
@@ -512,73 +528,117 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 10),
                             // thời gian thuê
-                            Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Ngày giờ thuê: ",
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold)),
-                                    Expanded(
-                                      child: Text(
-                                          helper.getDateFormatStr(
-                                              mainBooking.dateBegin),
-                                          style: TextStyle(fontSize: 15)),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Ngày giờ hiện tại: ",
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold)),
-                                    Expanded(
-                                      child: Text(
-                                        helper.getDateFormatStr(
-                                          // mainBooking.dateBegin,
-                                          DateTime.now().toString(),
+                            if (mainBooking.eventTypeId == "ARERENTING" ||
+                                mainBooking.eventTypeId == "OWNGOTBIKE" ||
+                                mainBooking.eventTypeId == "CUSRETURNBIKE" ||
+                                mainBooking.eventTypeId == "PAYING")
+                              Column(
+                                children: [
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Ngày giờ thuê: ",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold)),
+                                      Expanded(
+                                        child: Text(
+                                            helper.getDateFormatStr(
+                                                mainBooking.dateBegin),
+                                            style: TextStyle(fontSize: 15)),
+                                      ),
+                                    ],
+                                  ),
+                                  if (mainBooking.dateEnd == null)
+                                    Column(
+                                      children: [
+                                        SizedBox(height: 10),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Ngày giờ hiện tại: ",
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            Expanded(
+                                              child: Text(
+                                                helper.getDateFormatStr(
+                                                  // mainBooking.dateBegin,
+                                                  DateTime.now().toString(),
+                                                ),
+                                                style: TextStyle(fontSize: 15),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        style: TextStyle(fontSize: 15),
+                                      ],
+                                    ),
+                                  //Ngày giờ trả xe
+                                  if (mainBooking.dateEnd != null)
+                                    Column(
+                                      children: [
+                                        SizedBox(height: 10),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Ngày giờ trả xe: ",
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            Expanded(
+                                              child: Text(
+                                                helper.getDateFormatStr(
+                                                    mainBooking.dateEnd),
+                                                style: TextStyle(fontSize: 15),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Thời gian thuê: ",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Thời gian thuê: ",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        helper
-                                            .getDayElapsed(
-                                              // mainBooking.dateCreated,
-                                              mainBooking.dateBegin,
-                                              DateTime.now().toString(),
-                                            )
-                                            .toString(),
-                                        style: TextStyle(fontSize: 15),
+                                      Expanded(
+                                        child: Text(
+                                          helper
+                                              .getDayElapsed(
+                                                // mainBooking.dateCreated,
+                                                mainBooking.dateBegin,
+                                                (mainBooking.dateEnd != null)
+                                                    ? mainBooking.dateEnd
+                                                    : DateTime.now().toString(),
+                                              )
+                                              .toString(),
+                                          style: TextStyle(fontSize: 15),
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+
                             SizedBox(height: 20),
                             // trạng thái
                             Row(
@@ -604,34 +664,45 @@ class _TrackingBookingState extends State<TrackingBooking> {
                               ],
                             ),
 
-                            // Thanh toán
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Tổng tiền: ",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
+                            // Tổng tiền
+                            if (mainBooking.eventTypeId == "ARERENTING" ||
+                                mainBooking.eventTypeId == "OWNGOTBIKE" ||
+                                mainBooking.eventTypeId == "CUSRETURNBIKE" ||
+                                mainBooking.eventTypeId == "PAYING")
+                              Column(
+                                children: [
+                                  SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Tổng tiền: ",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          helper.getPriceTotalStr(
+                                                mainBooking.dateBegin,
+                                                (mainBooking.dateEnd != null)
+                                                    ? mainBooking.dateEnd
+                                                    : DateTime.now().toString(),
+                                                mainBooking
+                                                    .bikeModel.bikeTypeModel.id,
+                                                mainBooking.payPackageModel,
+                                              ) +
+                                              " VND",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    helper.getPriceTotalStr(
-                                          mainBooking.dateBegin,
-                                          DateTime.now().toString(),
-                                          mainBooking
-                                              .bikeModel.bikeTypeModel.id,
-                                          mainBooking.payPackageModel,
-                                        ) +
-                                        " VND",
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
                             if (mainBooking.eventTypeId == "OWNGOTBIKE")
                               Column(
                                 children: [
@@ -694,6 +765,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
                       if (widget.isCustomer)
                         Column(
                           children: [
+                            //Đồng ý - huỷ
                             if (mainBooking.eventTypeId == "OWNSHIPPEDBIKE")
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -703,7 +775,11 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     title: 'Đồng ý thuê xe',
                                     onPressedElavateBtn: () {
                                       setState(() {
-                                        updateBikeIsBooking(true);
+                                        BookingModel tmpModel = mainBooking;
+                                        tmpModel.dateBegin =
+                                            DateTime.now().toIso8601String();
+                                        tmpModel.eventTypeId = "ARERENTING";
+                                        updateBikeIsBooking(true, tmpModel);
                                         // mainBooking.eventTypeId = "ARERENTING";
                                         // updateBookingEventType("ARERENTING");
                                       });
@@ -715,8 +791,9 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     title: 'Hủy thuê xe',
                                     onPressedOutlineBtn: () {
                                       setState(() {
-                                        // mainBooking.eventTypeId = "CANCELED";
-                                        updateBookingEventType("CANCELED");
+                                        BookingModel tmpModel = mainBooking;
+                                        tmpModel.eventTypeId = "CANCELED";
+                                        updateBookingEventType(tmpModel);
                                       });
                                       showConfirmDialog(
                                         "Huỷ thuê xe",
@@ -735,9 +812,11 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                   )
                                 ],
                               ),
+                            // chọn điểm trả xe - Yêu cầu trả xe
                             if (mainBooking.eventTypeId == "ARERENTING")
                               Column(
                                 children: [
+                                  // chọn điểm trả xe
                                   SizedBox(
                                     width: 380,
                                     height: 45,
@@ -778,6 +857,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                   ),
                                   if (widget.locationModel != null)
                                     SizedBox(height: 15),
+                                  //Yêu cầu trả xe
                                   if (widget.locationModel != null)
                                     Row(
                                       mainAxisAlignment:
@@ -788,17 +868,19 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                           title: 'Yêu cầu trả xe',
                                           onPressedElavateBtn: () {
                                             setState(() {
-                                              // mainBooking.eventTypeId =
-                                              //     "CUSRETURNBIKE";
-                                              updateBookingEventType(
-                                                  "CUSRETURNBIKE");
-                                              // helper.pushInto(
-                                              //   context,
-                                              //   BikeReturnMap(
-                                              //     userModel: widget.userModel,
-                                              //   ),
-                                              //   true,
-                                              // );
+                                              if (widget.locationModel !=
+                                                  null) {
+                                                BookingModel tmpModel =
+                                                    mainBooking;
+                                                // KIỂM TRA LOCATION TRẢ XE Ở ĐÂY
+                                                tmpModel.dateEnd =
+                                                    DateTime.now()
+                                                        .toIso8601String();
+                                                tmpModel.eventTypeId =
+                                                    "CUSRETURNBIKE";
+                                                updateBookingEventType(
+                                                    tmpModel);
+                                              }
                                             });
                                           },
                                         )
@@ -820,7 +902,10 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                       if (isPaymentTypeChange) {
                                         setState(() {
                                           // mainBooking.eventTypeId = "PAYING";
-                                          updateBookingEventType("PAYING");
+                                          BookingModel tmpModel = mainBooking;
+                                          tmpModel.eventTypeId = "PAYING";
+                                          updateBookingEventType(tmpModel);
+                                          // updateBookingEventType("PAYING");s
                                         });
                                       } else {
                                         showNotificationDialog(
@@ -850,8 +935,12 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                       setState(() {
                                         // mainBooking.eventTypeId =
                                         //     "OWNSHIPPINGBIKE";
-                                        updateBookingEventType(
-                                            "OWNSHIPPINGBIKE");
+                                        BookingModel tmpModel = mainBooking;
+                                        tmpModel.eventTypeId =
+                                            "OWNSHIPPINGBIKE";
+                                        updateBookingEventType(tmpModel);
+                                        // updateBookingEventType(
+                                        //     "OWNSHIPPINGBIKE");
                                       });
                                     },
                                   ),
@@ -862,7 +951,10 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     onPressedOutlineBtn: () {
                                       setState(() {
                                         // mainBooking.eventTypeId = "CANCELED";
-                                        updateBookingEventType("CANCELED");
+                                        BookingModel tmpModel = mainBooking;
+                                        tmpModel.eventTypeId = "CANCELED";
+                                        updateBookingEventType(tmpModel);
+                                        // updateBookingEventType("CANCELED");
                                       });
                                       showConfirmDialog(
                                         "Từ chối cho thuê",
@@ -887,8 +979,11 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                       setState(() {
                                         // mainBooking.eventTypeId =
                                         //     "OWNSHIPPEDBIKE";
-                                        updateBookingEventType(
-                                            "OWNSHIPPEDBIKE");
+                                        BookingModel tmpModel = mainBooking;
+                                        tmpModel.eventTypeId = "OWNSHIPPEDBIKE";
+                                        updateBookingEventType(tmpModel);
+                                        // updateBookingEventType(
+                                        //     "OWNSHIPPEDBIKE");
                                       });
                                     },
                                   ),
@@ -904,7 +999,10 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     onPressedElavateBtn: () {
                                       setState(() {
                                         // mainBooking.eventTypeId = "OWNGOTBIKE";
-                                        updateBookingEventType("OWNGOTBIKE");
+                                        BookingModel tmpModel = mainBooking;
+                                        tmpModel.eventTypeId = "OWNGOTBIKE";
+                                        updateBookingEventType(tmpModel);
+                                        // updateBookingEventType("OWNGOTBIKE");
                                       });
                                     },
                                   ),
@@ -919,14 +1017,18 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     title: 'Xác nhận thanh toán',
                                     onPressedElavateBtn: () {
                                       setState(() {
-                                        updateBikeIsBooking(false);
+                                        // updateBikeIsBooking(
+                                        //     false, "ARERENTING");
                                         // mainBooking.eventTypeId = "FINISHED";
                                         createPayment(
                                           _paymentTypeModel.id,
                                           mainBooking.id,
                                         );
                                         if (_isCreatePaymentSuccess) {
-                                          updateBookingEventType("FINISHED");
+                                          BookingModel tmpModel = mainBooking;
+                                          tmpModel.eventTypeId = "FINISHED";
+                                          updateBikeIsBooking(true, tmpModel);
+                                          // updateBookingEventType("FINISHED");
                                         }
                                       });
                                     },

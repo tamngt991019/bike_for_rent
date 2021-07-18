@@ -18,7 +18,7 @@ double calculatekDistance(
   return result;
 }
 
-// lay cac toa do trong ban kinh 5k
+// lay cac toa do trong ban kinh s
 List<LocationModel> getLocationsByRadius(
     LatLng _currentLatLing, List<LocationModel> listLoc, double radius) {
   List<LocationModel> result = [];
@@ -29,17 +29,6 @@ List<LocationModel> getLocationsByRadius(
     if (distance <= radius) {
       result.add(loc);
     }
-  }
-  return result;
-}
-
-// convert status code
-String getStatus(String statusStr) {
-  String result = "";
-  if (statusStr == "FINISHED") {
-    result = stt.FINISHED;
-  } else if (statusStr == "CANCELED") {
-    result = stt.CANCELED;
   }
   return result;
 }
@@ -82,15 +71,15 @@ bool isEmptyText(String value) {
 
 //tinh gio tinh tien
 // double.parse((result / list.length).toStringAsFixed(1));
-double daysElapsedSince(DateTime from, DateTime to) {
-// get the difference in term of days, and not just a 24h difference
-  from = DateTime(from.year, from.month, from.day, from.hour);
-  to = DateTime(to.year, to.month, to.day, from.hour);
-  String days = (to.difference(from).inMinutes / 1440).toString();
-  String hours = (to.difference(from).inMinutes / 1440).toString();
-  return to.difference(from).inSeconds.toDouble();
-  // return (days + " ngày " + hours + " giờ ");
-}
+// double daysElapsedSince(DateTime from, DateTime to) {
+// // get the difference in term of days, and not just a 24h difference
+//   from = DateTime(from.year, from.month, from.day, from.hour);
+//   to = DateTime(to.year, to.month, to.day, from.hour);
+//   String days = (to.difference(from).inMinutes / 1440).toString();
+//   String hours = (to.difference(from).inMinutes / 1440).toString();
+//   return to.difference(from).inSeconds.toDouble();
+//   // return (days + " ngày " + hours + " giờ ");
+// }
 
 // String dayElapsed(DateTime from, DateTime to) {
 //   from = DateTime(from.year, from.month, from.day, from.hour, from.minute);
@@ -118,16 +107,24 @@ String getDayElapsed(String dateFrom, String dateTo) {
   from = DateTime(from.year, from.month, from.day, from.hour, from.minute);
   to = DateTime(to.year, to.month, to.day, to.hour, to.minute);
   int difference = to.difference(from).inHours;
-  if (difference % 60 > 0) {
-    return (difference ~/ 24).toString() +
-        " ngày " +
-        ((difference % 24) + 1).toString() +
-        " giờ ";
+  String result = "";
+  if ((difference ~/ 24) > 0) {
+    result += (difference ~/ 24).toString() + " ngày ";
   }
-  return (difference ~/ 24).toString() +
-      " ngày " +
-      (difference % 24).toString() +
-      " giờ ";
+  if (difference % 60 >= 0) {
+    result += ((difference % 24) + 1).toString() + " giờ ";
+    // return (difference ~/ 24).toString() +
+    //     " ngày " +
+    //     ((difference % 24) + 1).toString() +
+    //     " giờ ";
+  } else {
+    result += (difference % 24).toString() + " giờ ";
+  }
+  // return (difference ~/ 24).toString() +
+  //     " ngày " +
+  //     (difference % 24).toString() +
+  //     " giờ ";
+  return result;
 }
 
 double getTotalHours(DateTime from, DateTime to) {
@@ -148,6 +145,9 @@ String getPriceTotalStr(String dateFrom, String dateTo, String bikeTypeId,
 
   double price = double.parse(payPackageModel.price.toString());
   double hours = double.parse(payPackageModel.hours.toString());
+  if (totalHours <= hours) {
+    return price.toString();
+  }
   double hoursRemaining = totalHours - hours;
   double result = 0;
   if (bikeTypeId.toLowerCase() == "xs".toLowerCase()) {

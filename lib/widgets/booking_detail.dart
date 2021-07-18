@@ -169,8 +169,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                   Expanded(
                     child: Text(
-                        DateFormat('dd/MM/yyyy – kk:mm:ss').format(
-                            DateTime.parse(widget.bookingModel.dateBegin)),
+                        helper.getDateFormatStr(widget.bookingModel.dateBegin),
                         style: TextStyle(fontSize: 15)),
                   ),
                 ],
@@ -185,8 +184,7 @@ class _BookingdetailState extends State<Bookingdetail> {
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                   Expanded(
                     child: Text(
-                        DateFormat('dd/MM/yyyy – kk:mm:ss').format(
-                            DateTime.parse(widget.bookingModel.dateEnd)),
+                        helper.getDateFormatStr(widget.bookingModel.dateEnd),
                         style: TextStyle(fontSize: 15)),
                   ),
                 ],
@@ -217,13 +215,10 @@ class _BookingdetailState extends State<Bookingdetail> {
                                       fontWeight: FontWeight.bold)),
                               Expanded(
                                 child: Text(
-                                    daysElapsedSince(
-                                                DateTime.parse(widget
-                                                    .bookingModel.dateBegin),
-                                                DateTime.parse(widget
-                                                    .bookingModel.dateEnd))
-                                            .toString() +
-                                        " ngày",
+                                    getDayElapsed(
+                                      widget.bookingModel.dateBegin,
+                                      widget.bookingModel.dateEnd,
+                                    ),
                                     style: TextStyle(fontSize: 15)),
                               ),
                             ],
@@ -244,8 +239,8 @@ class _BookingdetailState extends State<Bookingdetail> {
                                     fontSize: 15, fontWeight: FontWeight.bold)),
                             Expanded(
                               child: Text(
-                                helper.getStatus(widget.bookingModel.eventTypeId
-                                    .toUpperCase()),
+                                widget.bookingModel.eventTypeModel.name
+                                    .toUpperCase(),
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: (widget.bookingModel.eventTypeId

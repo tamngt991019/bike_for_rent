@@ -1,8 +1,10 @@
 import 'package:bike_for_rent/helper/helper.dart';
 import 'package:bike_for_rent/models/booking_model.dart';
+import 'package:bike_for_rent/widgets/notification_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:intl/intl.dart';
+import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
 class RentingCard extends StatefulWidget {
   final BookingModel bookingModel;
@@ -10,6 +12,8 @@ class RentingCard extends StatefulWidget {
   final bool isRequest;
   final bool isRenting;
   final bool isHistory;
+  final bool isTracking;
+  final bool isShowNoti;
   const RentingCard({
     Key key,
     this.bookingModel,
@@ -17,6 +21,8 @@ class RentingCard extends StatefulWidget {
     this.isRequest,
     this.isRenting,
     this.isHistory,
+    this.isTracking,
+    this.isShowNoti,
   }) : super(key: key);
 
   @override
@@ -28,7 +34,15 @@ class _RentingCardState extends State<RentingCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        helper.pushInto(context, widget.wg, true);
+        if (!widget.isShowNoti) {
+          helper.pushInto(context, widget.wg, true);
+        } else {
+          showNotificationDialog(
+            "Thông báo!",
+            "Vui lòng hoàn thành các yêu cầu đang xử lý trước khi nhận yêu cầu mới",
+            my_colors.primary,
+          );
+        }
       },
       child: Card(
         margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
@@ -206,7 +220,7 @@ class _RentingCardState extends State<RentingCard> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Ngày giờ thuê: ",
+                                "ThờI gian thuê: ",
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
@@ -214,9 +228,9 @@ class _RentingCardState extends State<RentingCard> {
                               ),
                               Expanded(
                                 child: Text(
-                                  DateFormat('yyyy-MM-dd – kk:mm').format(
-                                      DateTime.parse(
-                                          widget.bookingModel.dateBegin)),
+                                  helper.getDayElapsed(
+                                      widget.bookingModel.dateBegin,
+                                      DateTime.now().toString()),
                                   style: TextStyle(
                                     fontSize: 15,
                                   ),
@@ -230,35 +244,6 @@ class _RentingCardState extends State<RentingCard> {
                     if (widget.isHistory)
                       Column(
                         children: [
-                          SizedBox(height: 10),
-                          // Thời gian thuê
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Thời gian thuê: ",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  daysElapsedSince(
-                                              DateTime.parse(widget
-                                                  .bookingModel.dateBegin),
-                                              DateTime.parse(
-                                                  widget.bookingModel.dateEnd))
-                                          .toString() +
-                                      " ngày",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                           SizedBox(height: 10),
                           // Tổng tiền
                           Row(
@@ -291,6 +276,37 @@ class _RentingCardState extends State<RentingCard> {
                           ),
                         ],
                       ),
+                    if (widget.isHistory || widget.isTracking)
+                      Column(
+                        children: [
+                          SizedBox(height: 10),
+                          // Thời gian thuê
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Trạng thái: ",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  widget.bookingModel.eventTypeModel.name,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: (widget.bookingModel.eventTypeId ==
+                                              "CANCELED")
+                                          ? my_colors.danger
+                                          : my_colors.primary),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
@@ -298,6 +314,22 @@ class _RentingCardState extends State<RentingCard> {
           ),
         ),
       ),
+    );
+  }
+
+  // hien thi thong bao
+  dynamic showNotificationDialog(
+      String titleStr, String contentStr, Color titleCColor) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return NotificationDialog(
+          title: titleStr,
+          titleColor: titleCColor,
+          content: contentStr,
+        );
+      },
     );
   }
 }

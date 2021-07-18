@@ -197,10 +197,14 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                                     userModel: widget.userModel,
                                     isCustomer: false,
                                     isShowBackBtn: true,
+                                    bookingModel: bookingProcessingList[index],
                                   ),
                                   isRequest: true,
                                   isRenting: false,
                                   isHistory: false,
+                                  isTracking: false,
+                                  isShowNoti:
+                                      (!_isTrackingListEmpty) ? true : false,
                                 );
                               },
                             ),
@@ -226,21 +230,24 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                             ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
-                              itemCount: bookingAreRentingList == null
+                              itemCount: bookingTrackingList == null
                                   ? 0
-                                  : bookingAreRentingList.length,
+                                  : bookingTrackingList.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return RentingCard(
-                                  bookingModel: bookingAreRentingList[index],
+                                  bookingModel: bookingTrackingList[index],
                                   wg: TrackingBooking(
                                     tabIndex: 1,
                                     userModel: widget.userModel,
                                     isCustomer: false,
                                     isShowBackBtn: true,
+                                    bookingModel: bookingTrackingList[index],
                                   ),
                                   isRequest: false,
-                                  isRenting: true,
+                                  isRenting: false,
                                   isHistory: false,
+                                  isTracking: true,
+                                  isShowNoti: false,
                                 );
                               },
                             ),
@@ -272,21 +279,18 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                               itemBuilder: (BuildContext context, int index) {
                                 return RentingCard(
                                   bookingModel: bookingAreRentingList[index],
-                                  wg: (_isTrackingListEmpty)
-                                      ? showNotificationDialog(
-                                          "Thông báo",
-                                          "Vui lòng hoàn thành hết các yêu cầu đang xử lý!",
-                                          my_colors.primary,
-                                        )
-                                      : TrackingBooking(
-                                          tabIndex: 1,
-                                          userModel: widget.userModel,
-                                          isCustomer: false,
-                                          isShowBackBtn: true,
-                                        ),
+                                  wg: TrackingBooking(
+                                    tabIndex: 2,
+                                    userModel: widget.userModel,
+                                    isCustomer: false,
+                                    isShowBackBtn: true,
+                                    bookingModel: bookingAreRentingList[index],
+                                  ),
                                   isRequest: false,
                                   isRenting: true,
                                   isHistory: false,
+                                  isTracking: false,
+                                  isShowNoti: false,
                                 );
                               },
                             ),
@@ -326,6 +330,8 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                                   isRequest: false,
                                   isRenting: false,
                                   isHistory: true,
+                                  isTracking: false,
+                                  isShowNoti: false,
                                 );
                               },
                             ),
@@ -355,22 +361,6 @@ class _RentBikeManagerState extends State<RentBikeManager> {
           color: my_colors.primary,
         ),
       ),
-    );
-  }
-
-  // hien thi thong bao
-  dynamic showNotificationDialog(
-      String titleStr, String contentStr, Color titleCColor) {
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return NotificationDialog(
-          title: titleStr,
-          titleColor: titleCColor,
-          content: contentStr,
-        );
-      },
     );
   }
 }

@@ -109,7 +109,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       isCustomerHistory: true,
                       isCustomerHistoryDetail: false,
                     )
-                  : RentBikeManager(userModel: widget.userModel, tabIndex: 2),
+                  : RentBikeManager(userModel: widget.userModel, tabIndex: 3),
               false),
         ),
         // Body app
