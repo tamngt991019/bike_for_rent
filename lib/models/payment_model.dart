@@ -1,7 +1,7 @@
 class PaymentModel {
   String id;
   String bookingId;
-  String totalPrice;
+  double totalPrice;
   String paymentTypeId;
 
   PaymentModel({
@@ -14,7 +14,7 @@ class PaymentModel {
   factory PaymentModel.fromJson(Map<String, dynamic> json) => PaymentModel(
         id: json['id'] as String,
         bookingId: json['bookingId'] as String,
-        totalPrice: json['totalPrice'] as String,
+        totalPrice: json['totalPrice'] as double,
         paymentTypeId: json['paymentTypeId'] as String,
       );
 

@@ -217,11 +217,13 @@ class _BookingdetailState extends State<Bookingdetail> {
                                       fontWeight: FontWeight.bold)),
                               Expanded(
                                 child: Text(
-                                    dayElapsed(
-                                        DateTime.parse(
-                                            widget.bookingModel.dateBegin),
-                                        DateTime.parse(
-                                            widget.bookingModel.dateEnd)),
+                                    daysElapsedSince(
+                                                DateTime.parse(widget
+                                                    .bookingModel.dateBegin),
+                                                DateTime.parse(widget
+                                                    .bookingModel.dateEnd))
+                                            .toString() +
+                                        " ngày",
                                     style: TextStyle(fontSize: 15)),
                               ),
                             ],
@@ -303,15 +305,13 @@ class _BookingdetailState extends State<Bookingdetail> {
                                     fontSize: 15, fontWeight: FontWeight.bold)),
                             Expanded(
                               child: Text(
-                                  priceTotal(
-                                              daysElapsedSince(
-                                                  DateTime.parse(widget
-                                                      .bookingModel.dateBegin),
-                                                  DateTime.parse(widget
-                                                      .bookingModel.dateEnd)),
-                                              widget
-                                                  .bookingModel.payPackageModel)
-                                          .toString() +
+                                  helper.getPriceTotalStr(
+                                        widget.bookingModel.dateBegin,
+                                        widget.bookingModel.dateEnd,
+                                        widget.bookingModel.bikeModel
+                                            .bikeTypeModel.id,
+                                        widget.bookingModel.payPackageModel,
+                                      ) +
                                       " VND",
                                   style: TextStyle(fontSize: 15)),
                             ),
@@ -330,4 +330,3 @@ class _BookingdetailState extends State<Bookingdetail> {
 }
 
 // }
-

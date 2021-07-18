@@ -1,13 +1,18 @@
 import 'dart:async';
 
+import 'package:bike_for_rent/main.dart';
 import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
+import 'package:bike_for_rent/models/payment_model.dart';
 import 'package:bike_for_rent/models/payment_type_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
+import 'package:bike_for_rent/pages/bike_return_map.dart';
 import 'package:bike_for_rent/pages/home.dart';
 import 'package:bike_for_rent/pages/rent_bike_manager.dart';
+import 'package:bike_for_rent/services/bike_service.dart';
 import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:bike_for_rent/services/location_service.dart';
+import 'package:bike_for_rent/services/payment_service.dart';
 import 'package:bike_for_rent/services/payment_type_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/booking_detail.dart';
@@ -23,19 +28,20 @@ import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 
 // import 'package:dropdown_plus/dropdown_plus.dart';
 
 class TrackingBooking extends StatefulWidget {
   final UserModel userModel;
-  // final BookingModel bookingModel;
+  final LocationModel locationModel;
   final bool isCustomer;
   final bool isShowBackBtn;
   final int tabIndex;
   TrackingBooking({
     Key key,
     this.userModel,
-    // this.bookingModel,
+    this.locationModel,
     this.isCustomer,
     this.isShowBackBtn,
     this.tabIndex,
@@ -66,12 +72,27 @@ class _TrackingBookingState extends State<TrackingBooking> {
 
   BookingService bookingService = new BookingService();
   BookingModel mainBooking;
-  Future loadListTrackingBooking() {
+  Future loadListCustomerTrackingBooking() {
     if (mainBooking == null) {
       mainBooking = new BookingModel();
     }
     Future<List<BookingModel>> futureCase =
         bookingService.getCustomerBookingsTracking(widget.userModel.username);
+    futureCase.then((list) {
+      setState(() {
+        mainBooking = list.first;
+        _isLoadThisScreen = true;
+      });
+    });
+    return futureCase;
+  }
+
+  Future loadListOwnerTrackingBooking() {
+    if (mainBooking == null) {
+      mainBooking = new BookingModel();
+    }
+    Future<List<BookingModel>> futureCase =
+        bookingService.getOwnerBookingsTracking(widget.userModel.username);
     futureCase.then((list) {
       setState(() {
         mainBooking = list.first;
@@ -111,6 +132,72 @@ class _TrackingBookingState extends State<TrackingBooking> {
         );
       }
     });
+  }
+
+  BikeService bikeService = new BikeService();
+  void updateBikeIsBooking(bool isBooking) {
+    mainBooking.bikeModel.isBooking = isBooking;
+    Future<bool> futureCase = bikeService.updateBikeModel(
+        mainBooking.bikeModel.id, mainBooking.bikeModel);
+    futureCase.then((isUpdateSuccess) {
+      if (!isUpdateSuccess) {
+        showNotificationDialog(
+          "Cảnh bảo!",
+          "Thao tác thất bại, vui lòng thử lại!",
+          my_colors.danger,
+        );
+      } else {
+        updateBookingEventType("ARERENTING");
+      }
+    });
+  }
+
+  double totalPrice = 0;
+  bool _isCreatePaymentSuccess = false;
+  PaymentService paymentService = new PaymentService();
+  void createPayment(String paymentTypeId, String bookingId) {
+    Future<PaymentModel> futureCase = paymentService.createPayment(
+      PaymentModel(
+        paymentTypeId: paymentTypeId,
+        bookingId: bookingId,
+        totalPrice: totalPrice,
+      ),
+    );
+    futureCase.then((model) {
+      if (model != null) {
+        _isCreatePaymentSuccess = true;
+      } else {
+        showNotificationDialog(
+          "Cảnh bảo!",
+          "Thao tác thất bại, vui lòng thử lại!",
+          my_colors.danger,
+        );
+      }
+    });
+  }
+
+  String getAvatarStr() {
+    if (widget.isCustomer) {
+      return mainBooking.bikeModel.userModel.avatar;
+    } else {
+      return mainBooking.userModel.avatar;
+    }
+  }
+
+  String getFullnameStr() {
+    if (widget.isCustomer) {
+      return mainBooking.bikeModel.userModel.fullName;
+    } else {
+      return mainBooking.userModel.fullName;
+    }
+  }
+
+  String getPhoneStr() {
+    if (widget.isCustomer) {
+      return mainBooking.bikeModel.userModel.phone;
+    } else {
+      return mainBooking.userModel.phone;
+    }
   }
 
   @override
@@ -156,11 +243,12 @@ class _TrackingBookingState extends State<TrackingBooking> {
   );
   Completer<GoogleMapController> _ggMapControllerReturn = Completer();
   Set<Marker> _markersReturn = {};
+
   void _onMapCreatedReturn(GoogleMapController _controller) {
-    _ggMapControllerGet.complete(_controller);
+    _ggMapControllerReturn.complete(_controller);
     setState(() {
-      double lati = double.parse(mainBooking.locationReturnBikeModel.latitude);
-      double long = double.parse(mainBooking.locationReturnBikeModel.longitude);
+      double lati = double.parse(widget.locationModel.latitude);
+      double long = double.parse(widget.locationModel.longitude);
       getLocation(
         LatLng(lati, long),
         _markersReturn,
@@ -229,7 +317,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
         // Header app
         appBar: Appbar(
           height: 50,
-          titles: "Thuê xe",
+          titles: ((widget.isCustomer) ? "" : "cho ") + "thuê xe",
           isShowBackBtn: (widget.isCustomer) ? false : widget.isShowBackBtn,
           bottomAppBar: null,
           onPressedBackBtn: () => helper.pushInto(
@@ -245,7 +333,9 @@ class _TrackingBookingState extends State<TrackingBooking> {
         body: Center(
           child: SingleChildScrollView(
             child: FutureBuilder(
-              future: loadListTrackingBooking(),
+              future: (widget.isCustomer)
+                  ? loadListCustomerTrackingBooking()
+                  : loadListOwnerTrackingBooking(),
               builder: (context, snapshot) {
                 if (!_isLoadThisScreen) {
                   return Column(
@@ -273,11 +363,9 @@ class _TrackingBookingState extends State<TrackingBooking> {
                             // avatar
                             CircleAvatar(
                               radius: 30,
-                              backgroundImage: (mainBooking
-                                          .bikeModel.userModel.fullName !=
-                                      null)
-                                  ? NetworkImage(
-                                      mainBooking.bikeModel.userModel.avatar)
+                              backgroundImage: (mainBooking.bikeModel != null &&
+                                      mainBooking.userModel != null)
+                                  ? NetworkImage(getAvatarStr())
                                   : AssetImage(
                                       "lib/assets/images/avatar_logo.png",
                                     ),
@@ -290,10 +378,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                 children: [
                                   // tên người dùng
                                   Text(
-                                    (!widget.isCustomer)
-                                        ? widget.userModel.fullName
-                                        : mainBooking
-                                            .bikeModel.userModel.fullName,
+                                    getFullnameStr(),
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -301,15 +386,15 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                   ),
                                   SizedBox(height: 10),
                                   // sđt
-                                  if (mainBooking.bikeModel.userModel.phone !=
-                                      null)
-                                    Text(
-                                      "Số điện thoại: " +
-                                          mainBooking.bikeModel.userModel.phone,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                      ),
+                                  // if (mainBooking.bikeModel.userModel.phone !=
+                                  //         null &&
+                                  //     mainBooking.userModel.phone != null)
+                                  Text(
+                                    "Số điện thoại: " + getPhoneStr(),
+                                    style: TextStyle(
+                                      fontSize: 15,
                                     ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -359,19 +444,34 @@ class _TrackingBookingState extends State<TrackingBooking> {
                         _initialCameraPositionGet,
                         _markersGet,
                         _onMapCreatedGet,
+                        false,
                       ),
                       SizedBox(height: 10),
                       // Bike Return Location
-                      if (mainBooking.locationReturnBike != null &&
-                          mainBooking.locationReturnBikeModel != null)
-                        getLocationWidget(
-                          "Địa điểm " +
-                              ((widget.isCustomer) ? "trả" : "lấy") +
-                              " xe:",
-                          _bikeReturnAddress,
-                          _initialCameraPositionReturn,
-                          _markersReturn,
-                          _onMapCreatedReturn,
+                      if (widget.locationModel != null)
+                        InkWell(
+                          onTap: () {
+                            if (widget.userModel.username ==
+                                mainBooking.userName)
+                              helper.pushInto(
+                                context,
+                                BikeReturnMap(
+                                  userModel: widget.userModel,
+                                  locationModel: widget.locationModel,
+                                ),
+                                true,
+                              );
+                          },
+                          child: getLocationWidget(
+                            "Địa điểm " +
+                                ((widget.isCustomer) ? "trả" : "lấy") +
+                                " xe:",
+                            _bikeReturnAddress,
+                            _initialCameraPositionReturn,
+                            _markersReturn,
+                            _onMapCreatedReturn,
+                            true,
+                          ),
                         ),
                       //=======================================================
                       Divider(
@@ -414,17 +514,68 @@ class _TrackingBookingState extends State<TrackingBooking> {
                             ),
                             SizedBox(height: 10),
                             // thời gian thuê
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Column(
                               children: [
-                                Text("Thời gian thuê: ",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold)),
-                                Expanded(
-                                  child: Text("Đang tính . . .",
-                                      style: TextStyle(fontSize: 15)),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Ngày giờ thuê: ",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold)),
+                                    Expanded(
+                                      child: Text(
+                                          helper.getDateFormatStr(
+                                              mainBooking.dateBegin),
+                                          style: TextStyle(fontSize: 15)),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Ngày giờ hiện tại: ",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold)),
+                                    Expanded(
+                                      child: Text(
+                                        helper.getDateFormatStr(
+                                          // mainBooking.dateBegin,
+                                          DateTime.now().toString(),
+                                        ),
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Thời gian thuê: ",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        helper
+                                            .getDayElapsed(
+                                              // mainBooking.dateCreated,
+                                              mainBooking.dateBegin,
+                                              DateTime.now().toString(),
+                                            )
+                                            .toString(),
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -452,71 +603,81 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                 ),
                               ],
                             ),
-                            if (mainBooking.eventTypeId == "PAYING")
-                              SizedBox(height: 20),
-                            // Tổng tiền
-                            if (mainBooking.eventTypeId == "PAYING")
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Tổng tiền: ",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      "123456 vnd",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            SizedBox(height: 10),
+
                             // Thanh toán
-                            if (mainBooking.eventTypeId == "PAYING")
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Thanh toán: ",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Tổng tiền: ",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
-                              ),
-                            SizedBox(height: 10),
-                            InkWell(
-                              onTap: () {
-                                showDropdownPaymentType(context);
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        _paymentTypeStr,
+                                Expanded(
+                                  child: Text(
+                                    helper.getPriceTotalStr(
+                                          mainBooking.dateBegin,
+                                          DateTime.now().toString(),
+                                          mainBooking
+                                              .bikeModel.bikeTypeModel.id,
+                                          mainBooking.payPackageModel,
+                                        ) +
+                                        " VND",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (mainBooking.eventTypeId == "OWNGOTBIKE")
+                              Column(
+                                children: [
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Thanh toán: ",
                                         style: TextStyle(
                                           fontSize: 15,
-                                          color: _paymentTypeColor,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  InkWell(
+                                    onTap: () {
+                                      showDropdownPaymentType(context);
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              _paymentTypeStr,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color: _paymentTypeColor,
+                                              ),
+                                            ),
+                                          ),
+                                          Icon(Icons.arrow_drop_down),
+                                        ],
+                                      ),
                                     ),
-                                    Icon(Icons.arrow_drop_down),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -539,11 +700,12 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                 children: [
                                   ElavateBtn(
                                     width: 180,
-                                    title: 'Đã nhận xe',
+                                    title: 'Đồng ý thuê xe',
                                     onPressedElavateBtn: () {
                                       setState(() {
+                                        updateBikeIsBooking(true);
                                         // mainBooking.eventTypeId = "ARERENTING";
-                                        updateBookingEventType("ARERENTING");
+                                        // updateBookingEventType("ARERENTING");
                                       });
                                     },
                                   ),
@@ -574,20 +736,74 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                 ],
                               ),
                             if (mainBooking.eventTypeId == "ARERENTING")
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              Column(
                                 children: [
-                                  ElavateBtn(
+                                  SizedBox(
                                     width: 380,
-                                    title: 'Yêu cầu trả xe',
-                                    onPressedElavateBtn: () {
-                                      setState(() {
-                                        // mainBooking.eventTypeId =
-                                        //     "CUSRETURNBIKE";
-                                        updateBookingEventType("CUSRETURNBIKE");
-                                      });
-                                    },
-                                  )
+                                    height: 45,
+                                    child: InkWell(
+                                      onTap: () {
+                                        helper.pushInto(
+                                          context,
+                                          BikeReturnMap(
+                                            userModel: widget.userModel,
+                                            locationModel: widget.locationModel,
+                                          ),
+                                          true,
+                                        );
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            width: 2,
+                                            color: my_colors.primary,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Chọn vị trí trả xe',
+                                            style: TextStyle(
+                                              color: my_colors.primary,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  if (widget.locationModel != null)
+                                    SizedBox(height: 15),
+                                  if (widget.locationModel != null)
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ElavateBtn(
+                                          width: 380,
+                                          title: 'Yêu cầu trả xe',
+                                          onPressedElavateBtn: () {
+                                            setState(() {
+                                              // mainBooking.eventTypeId =
+                                              //     "CUSRETURNBIKE";
+                                              updateBookingEventType(
+                                                  "CUSRETURNBIKE");
+                                              // helper.pushInto(
+                                              //   context,
+                                              //   BikeReturnMap(
+                                              //     userModel: widget.userModel,
+                                              //   ),
+                                              //   true,
+                                              // );
+                                            });
+                                          },
+                                        )
+                                      ],
+                                    ),
                                 ],
                               ),
                             if (mainBooking.eventTypeId == "OWNGOTBIKE")
@@ -598,10 +814,21 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     width: 380,
                                     title: 'Thanh toán',
                                     onPressedElavateBtn: () {
-                                      setState(() {
-                                        // mainBooking.eventTypeId = "PAYING";
-                                        updateBookingEventType("PAYING");
-                                      });
+                                      bool isPaymentTypeChange =
+                                          _paymentTypeStr ==
+                                              "Chọn hình thức thanh toán:";
+                                      if (isPaymentTypeChange) {
+                                        setState(() {
+                                          // mainBooking.eventTypeId = "PAYING";
+                                          updateBookingEventType("PAYING");
+                                        });
+                                      } else {
+                                        showNotificationDialog(
+                                          "Cảnh báo!",
+                                          "Vui lòng chọn hình thức thuê xe!",
+                                          my_colors.danger,
+                                        );
+                                      }
                                     },
                                   )
                                 ],
@@ -692,8 +919,15 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     title: 'Xác nhận thanh toán',
                                     onPressedElavateBtn: () {
                                       setState(() {
+                                        updateBikeIsBooking(false);
                                         // mainBooking.eventTypeId = "FINISHED";
-                                        updateBookingEventType("FINISHED");
+                                        createPayment(
+                                          _paymentTypeModel.id,
+                                          mainBooking.id,
+                                        );
+                                        if (_isCreatePaymentSuccess) {
+                                          updateBookingEventType("FINISHED");
+                                        }
                                       });
                                     },
                                   )
@@ -845,11 +1079,13 @@ class _TrackingBookingState extends State<TrackingBooking> {
   }
 
   Widget getLocationWidget(
-      String title,
-      String address,
-      CameraPosition initCamera,
-      Set<Marker> markers,
-      Function(GoogleMapController) onMapCreated) {
+    String title,
+    String address,
+    CameraPosition initCamera,
+    Set<Marker> markers,
+    Function(GoogleMapController) onMapCreated,
+    bool isReturn,
+  ) {
     return Column(
       children: [
         Padding(
@@ -876,6 +1112,18 @@ class _TrackingBookingState extends State<TrackingBooking> {
             initialCameraPosition: initCamera,
             markers: markers,
             onMapCreated: onMapCreated,
+            onTap: (val) {
+              if (isReturn) {
+                helper.pushInto(
+                  context,
+                  BikeReturnMap(
+                    userModel: widget.userModel,
+                    locationModel: widget.locationModel,
+                  ),
+                  true,
+                );
+              }
+            },
           ),
         ),
       ],
