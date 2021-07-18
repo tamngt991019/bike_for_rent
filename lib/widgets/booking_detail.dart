@@ -1,20 +1,9 @@
-import 'package:bike_for_rent/constants/api_url.dart';
 import 'package:bike_for_rent/helper/helper.dart';
-import 'package:bike_for_rent/models/bike_brand_model.dart';
 import 'package:bike_for_rent/models/bike_model.dart';
-import 'package:bike_for_rent/models/bike_type_model.dart';
 import 'package:bike_for_rent/models/booking_model.dart';
-import 'package:bike_for_rent/models/pay_package_model.dart';
-import 'package:bike_for_rent/models/payment_type_model.dart';
-import 'package:bike_for_rent/services/bike_brand_service.dart';
-import 'package:bike_for_rent/services/bike_service.dart';
-import 'package:bike_for_rent/services/bike_type_service.dart';
-import 'package:bike_for_rent/services/payment_type_service.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
-import 'package:intl/intl.dart';
-import 'package:jiffy/jiffy.dart';
 
 class Bookingdetail extends StatefulWidget {
   final BookingModel bookingModel;

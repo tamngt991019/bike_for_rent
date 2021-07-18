@@ -4,13 +4,10 @@ import 'package:bike_for_rent/pages/bike_get_map.dart';
 import 'package:bike_for_rent/pages/history.dart';
 import 'package:bike_for_rent/pages/home.dart';
 import 'package:bike_for_rent/pages/personal.dart';
-import 'package:bike_for_rent/pages/rent_bike_filter.dart';
 import 'package:bike_for_rent/services/user_service.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:flutter/material.dart';
-
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
-import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class Login extends StatefulWidget {
   final int currentIndex;

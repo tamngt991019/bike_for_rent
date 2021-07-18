@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:bike_for_rent/main.dart';
 import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
 import 'package:bike_for_rent/models/payment_model.dart';
@@ -11,7 +9,6 @@ import 'package:bike_for_rent/pages/home.dart';
 import 'package:bike_for_rent/pages/rent_bike_manager.dart';
 import 'package:bike_for_rent/services/bike_service.dart';
 import 'package:bike_for_rent/services/booking_service.dart';
-import 'package:bike_for_rent/services/location_service.dart';
 import 'package:bike_for_rent/services/payment_service.dart';
 import 'package:bike_for_rent/services/payment_type_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
@@ -28,7 +25,6 @@ import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
 
 // import 'package:dropdown_plus/dropdown_plus.dart';
 

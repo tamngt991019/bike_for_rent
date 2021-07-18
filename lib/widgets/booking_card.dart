@@ -1,7 +1,5 @@
-import 'package:bike_for_rent/models/bike_image_model.dart';
 import 'package:bike_for_rent/models/bike_model.dart';
 import 'package:bike_for_rent/models/booking_model.dart';
-import 'package:bike_for_rent/services/bike_image_service.dart';
 import 'package:bike_for_rent/widgets/booking_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';

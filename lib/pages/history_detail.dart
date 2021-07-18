@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';

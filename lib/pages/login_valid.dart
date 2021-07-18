@@ -1,11 +1,6 @@
-import 'package:bike_for_rent/models/user_model.dart';
-import 'package:bike_for_rent/pages/home.dart';
 import 'package:bike_for_rent/pages/login.dart';
-import 'package:bike_for_rent/widgets/app_bar.dart';
-import 'package:bike_for_rent/widgets/bottom_bar.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:flutter/material.dart';
-import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:bike_for_rent/helper/helper.dart' as helper;
 
 class LoginValid extends StatelessWidget {

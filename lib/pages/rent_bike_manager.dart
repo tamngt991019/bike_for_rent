@@ -6,7 +6,6 @@ import 'package:bike_for_rent/pages/tracking_booking.dart';
 import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/bottom_bar.dart';
-import 'package:bike_for_rent/widgets/notification_dialog.dart';
 import 'package:bike_for_rent/widgets/renting_card.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;

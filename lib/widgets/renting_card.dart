@@ -1,9 +1,7 @@
-import 'package:bike_for_rent/helper/helper.dart';
 import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/widgets/notification_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/helper/helper.dart' as helper;
-import 'package:intl/intl.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
 class RentingCard extends StatefulWidget {
