@@ -9,6 +9,7 @@ import 'package:bike_for_rent/pages/home.dart';
 import 'package:bike_for_rent/pages/rent_bike_manager.dart';
 import 'package:bike_for_rent/services/bike_service.dart';
 import 'package:bike_for_rent/services/booking_service.dart';
+import 'package:bike_for_rent/services/location_service.dart';
 import 'package:bike_for_rent/services/payment_service.dart';
 import 'package:bike_for_rent/services/payment_type_service.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
@@ -55,6 +56,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
   Color _paymentTypeColor = Colors.grey[700];
   String _paymentTypeIdSelected = "";
 
+  LocationModel returnLocation;
   bool _isLoadThisScreen = false;
 
   List<String> imageUrls() {
@@ -94,6 +96,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
     futureCase.then((list) {
       setState(() {
         mainBooking = list.first;
+        returnLocation = list.first.locationReturnBikeModel;
         _isLoadThisScreen = true;
       });
     });
@@ -109,6 +112,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
     futureCase.then((model) {
       setState(() {
         mainBooking = model;
+        returnLocation = model.locationReturnBikeModel;
         _isLoadThisScreen = true;
       });
     });
@@ -212,14 +216,23 @@ class _TrackingBookingState extends State<TrackingBooking> {
     }
   }
 
-  LocationModel _bikeReturnLocationModel;
+  LocationService locationService = new LocationService();
+  String getIdOfNewLocation(LocationModel locModel) {
+    Future<LocationModel> futureCase = locationService.createLocation(locModel);
+    futureCase.then((model) {
+      setState(() {
+        returnLocation = model;
+      });
+      return model.id;
+    });
+    return null;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // if(widget.bookingModel.locationReturnBikeModel != null){
-
-    // }
+    returnLocation = widget.locationModel;
   }
 
   //========================================================================
@@ -263,8 +276,13 @@ class _TrackingBookingState extends State<TrackingBooking> {
   void _onMapCreatedReturn(GoogleMapController _controller) {
     _ggMapControllerReturn.complete(_controller);
     setState(() {
-      double lati = double.parse(widget.locationModel.latitude);
-      double long = double.parse(widget.locationModel.longitude);
+      if (mainBooking.locationReturnBikeModel != null) {
+        returnLocation = mainBooking.locationReturnBikeModel;
+      } else {
+        returnLocation = widget.locationModel;
+      }
+      double lati = double.parse(returnLocation.latitude);
+      double long = double.parse(returnLocation.longitude);
       getLocation(
         LatLng(lati, long),
         _markersReturn,
@@ -460,19 +478,23 @@ class _TrackingBookingState extends State<TrackingBooking> {
                       ),
                       SizedBox(height: 10),
                       // Bike Return Location
-                      if (_bikeReturnLocationModel != null)
+                      if (mainBooking.locationReturnBikeModel != null ||
+                          widget.locationModel != null)
                         InkWell(
                           onTap: () {
-                            if (widget.userModel.username ==
-                                mainBooking.userName)
-                              helper.pushInto(
-                                context,
-                                BikeReturnMap(
-                                  userModel: widget.userModel,
-                                  locationModel: widget.locationModel,
-                                ),
-                                true,
-                              );
+                            if (mainBooking.eventTypeId == "ARERENTING") {
+                              if (widget.userModel.username ==
+                                  mainBooking.userName) {
+                                helper.pushInto(
+                                  context,
+                                  BikeReturnMap(
+                                    userModel: widget.userModel,
+                                    locationModel: returnLocation,
+                                  ),
+                                  true,
+                                );
+                              }
+                            }
                           },
                           child: getLocationWidget(
                             "Địa điểm " +
@@ -482,7 +504,12 @@ class _TrackingBookingState extends State<TrackingBooking> {
                             _initialCameraPositionReturn,
                             _markersReturn,
                             _onMapCreatedReturn,
-                            true,
+                            (mainBooking.eventTypeId == "ARERENTING")
+                                ? (widget.userModel.username ==
+                                        mainBooking.userName)
+                                    ? true
+                                    : false
+                                : false,
                           ),
                         ),
                       //=======================================================
@@ -770,14 +797,12 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     width: 180,
                                     title: 'Đồng ý thuê xe',
                                     onPressedElavateBtn: () {
+                                      BookingModel tmpModel = mainBooking;
+                                      tmpModel.dateBegin =
+                                          DateTime.now().toIso8601String();
+                                      tmpModel.eventTypeId = "ARERENTING";
                                       setState(() {
-                                        BookingModel tmpModel = mainBooking;
-                                        tmpModel.dateBegin =
-                                            DateTime.now().toIso8601String();
-                                        tmpModel.eventTypeId = "ARERENTING";
                                         updateBikeIsBooking(true, tmpModel);
-                                        // mainBooking.eventTypeId = "ARERENTING";
-                                        // updateBookingEventType("ARERENTING");
                                       });
                                     },
                                   ),
@@ -786,24 +811,24 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     width: 180,
                                     title: 'Hủy thuê xe',
                                     onPressedOutlineBtn: () {
+                                      BookingModel tmpModel = mainBooking;
+                                      tmpModel.eventTypeId = "CANCELED";
                                       setState(() {
-                                        BookingModel tmpModel = mainBooking;
-                                        tmpModel.eventTypeId = "CANCELED";
                                         updateBookingEventType(tmpModel);
                                       });
-                                      showConfirmDialog(
-                                        "Huỷ thuê xe",
-                                        "Bạn có muốn huỷ yêu cầu thuê xe này không?",
-                                        RentBikeManager(
-                                          userModel: widget.userModel,
-                                          tabIndex: 0,
-                                        ),
-                                      );
-                                      showConfirmDialog(
-                                        "Tiếp tục thuê?",
-                                        "Bạn có muốn tiếp tục thuê không?",
-                                        Home(userModel: widget.userModel),
-                                      );
+                                      // showConfirmDialog(
+                                      //   "Huỷ thuê xe",
+                                      //   "Bạn có muốn huỷ yêu cầu thuê xe này không?",
+                                      //   RentBikeManager(
+                                      //     userModel: widget.userModel,
+                                      //     tabIndex: 0,
+                                      //   ),
+                                      // );
+                                      // showConfirmDialog(
+                                      //   "Tiếp tục thuê?",
+                                      //   "Bạn có muốn tiếp tục thuê không?",
+                                      //   Home(userModel: widget.userModel),
+                                      // );
                                     },
                                   )
                                 ],
@@ -863,21 +888,38 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                           width: 380,
                                           title: 'Yêu cầu trả xe',
                                           onPressedElavateBtn: () {
-                                            setState(() {
-                                              if (widget.locationModel !=
+                                            if (widget.locationModel != null) {
+                                              BookingModel tmpModel =
+                                                  mainBooking;
+                                              // KIỂM TRA LOCATION TRẢ XE Ở ĐÂY
+                                              if (widget.locationModel.id !=
                                                   null) {
-                                                BookingModel tmpModel =
-                                                    mainBooking;
-                                                // KIỂM TRA LOCATION TRẢ XE Ở ĐÂY
+                                                tmpModel.locationReturnBike =
+                                                    widget.locationModel.id;
+                                              } else {
+                                                tmpModel.locationReturnBike =
+                                                    getIdOfNewLocation(
+                                                        widget.locationModel);
+                                              }
+                                              if (tmpModel.locationReturnBike !=
+                                                  null) {
                                                 tmpModel.dateEnd =
                                                     DateTime.now()
                                                         .toIso8601String();
                                                 tmpModel.eventTypeId =
                                                     "CUSRETURNBIKE";
-                                                updateBookingEventType(
-                                                    tmpModel);
+                                                setState(() {
+                                                  updateBookingEventType(
+                                                      tmpModel);
+                                                });
+                                              } else {
+                                                showNotificationDialog(
+                                                  "Cảnh báo!",
+                                                  "Thao tác thất bại!",
+                                                  my_colors.danger,
+                                                );
                                               }
-                                            });
+                                            }
                                           },
                                         )
                                       ],
