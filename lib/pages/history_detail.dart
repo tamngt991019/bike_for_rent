@@ -52,17 +52,6 @@ class _HistoryDetailState extends State<HistoryDetail> {
     return futureCases;
   }
 
-  List<String> imageUrls() {
-    List<String> imageUrls = [
-      "https://media.publit.io/file/BikeForRent/banner/banner1.jpg",
-      "https://media.publit.io/file/BikeForRent/banner/banner2.jpg",
-      "https://media.publit.io/file/BikeForRent/banner/banner3.jpg",
-      "https://media.publit.io/file/BikeForRent/banner/banner4.jpg",
-      "https://media.publit.io/file/BikeForRent/banner/banner5.jpg",
-    ];
-    return imageUrls;
-  }
-
   String _bikeGetAddress = "";
   String _bikeReturnAddress = "";
 
@@ -112,280 +101,278 @@ class _HistoryDetailState extends State<HistoryDetail> {
               false),
         ),
         // Body app
-        body: SingleChildScrollView(
-          child: FutureBuilder(
-              future: getBookingById(widget.bookingModel.id),
-              builder: (context, snapshot) {
-                if (_isHistoryDetailEmpty) {
-                  return getEmptyScreen("Đang tải ...");
-                }
-                return Column(
-                  children: [
-                    ImageSlideshow(
-                      width: double.infinity,
-                      height: 250,
-                      initialPage: 0,
-                      indicatorColor: my_colors.primary,
-                      indicatorBackgroundColor: Colors.white,
-                      children: imageUrls()
-                          .map((img) => ClipRRect(
-                              child: Image.network(img, fit: BoxFit.cover)))
-                          .toList(),
-                      onPageChanged: (value) {
-                        print('Page changed: $value');
-                      },
-                      autoPlayInterval: 60000,
+        body: FutureBuilder(
+          future: getBookingById(widget.bookingModel.id),
+          builder: (context, snapshot) {
+            if (_isHistoryDetailEmpty) {
+              return getEmptyScreen("Đang tải ...");
+            }
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  ImageSlideshow(
+                    width: double.infinity,
+                    height: 250,
+                    initialPage: 0,
+                    indicatorColor: my_colors.primary,
+                    indicatorBackgroundColor: Colors.white,
+                    children: bookingModelReload.bikeModel.listBikeImage
+                        .map((imgs) => ClipRRect(
+                            child: Image.network(imgs.imageUrl,
+                                fit: BoxFit.cover)))
+                        .toList(),
+                    onPageChanged: (value) {},
+                    autoPlayInterval: 60000,
+                  ),
+                  // thông tin yêu cầu thuê
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Bookingdetail(
+                      bookingModel: bookingModelReload,
+                      bikeModel: bookingModelReload.bikeModel,
+                      isCustomerHistory: true,
+                      isCustomerHistoryDetail: true,
                     ),
-                    // thông tin yêu cầu thuê
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Bookingdetail(
-                        bookingModel: bookingModelReload,
-                        bikeModel: bookingModelReload.bikeModel,
-                        isCustomerHistory: true,
-                        isCustomerHistoryDetail: true,
+                  ),
+                  SizedBox(height: 20),
+                  // vị trí nhận xe
+                  Container(
+                    margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: Row(
+                      children: [
+                        FrameText(
+                          title: "Địa điểm nhận xe",
+                          content:
+                              bookingModelReload.locationGetBikeModel.address,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // map vị trí nhận xe
+                  Container(
+                    height: 250,
+                    child: GoogleMap(
+                      rotateGesturesEnabled: false,
+                      scrollGesturesEnabled: false,
+                      tiltGesturesEnabled: false,
+                      zoomGesturesEnabled: false,
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(
+                            double.parse(bookingModelReload
+                                .locationGetBikeModel.latitude),
+                            double.parse(bookingModelReload
+                                .locationGetBikeModel.longitude)),
+                        zoom: 13,
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    // vị trí nhận xe
-                    Container(
-                      margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                      child: Row(
-                        children: [
-                          FrameText(
-                            title: "Địa điểm nhận xe",
-                            content:
-                                bookingModelReload.locationGetBikeModel.address,
-                          ),
-                        ],
-                      ),
-                    ),
-                    // map vị trí nhận xe
-                    Container(
-                      height: 250,
-                      child: GoogleMap(
-                        rotateGesturesEnabled: false,
-                        scrollGesturesEnabled: false,
-                        tiltGesturesEnabled: false,
-                        zoomGesturesEnabled: false,
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(
+                      markers: <Marker>{
+                        Marker(
+                          markerId: MarkerId("ID-1"),
+                          position: LatLng(
                               double.parse(bookingModelReload
                                   .locationGetBikeModel.latitude),
                               double.parse(bookingModelReload
                                   .locationGetBikeModel.longitude)),
-                          zoom: 13,
+                        )
+                      },
+                      onMapCreated: onMapCreated,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  // vị trí trả xe
+                  Container(
+                    margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: Row(
+                      children: [
+                        FrameText(
+                          title: "Địa điểm trả xe",
+                          content: bookingModelReload
+                              .locationReturnBikeModel.address,
+                          //"địa chỉ bị null",
                         ),
-                        markers: <Marker>{
-                          Marker(
-                            markerId: MarkerId("ID-1"),
-                            position: LatLng(
-                                double.parse(bookingModelReload
-                                    .locationGetBikeModel.latitude),
-                                double.parse(bookingModelReload
-                                    .locationGetBikeModel.longitude)),
-                          )
-                        },
-                        onMapCreated: onMapCreated,
-                      ),
+                      ],
                     ),
-                    SizedBox(height: 20),
-                    // vị trí trả xe
-                    Container(
-                      margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                      child: Row(
-                        children: [
-                          FrameText(
-                            title: "Địa điểm trả xe",
-                            content: bookingModelReload
-                                .locationReturnBikeModel.address,
-                            //"địa chỉ bị null",
-                          ),
-                        ],
+                  ),
+                  //map vị trí trả xe
+                  Container(
+                    height: 250,
+                    child: GoogleMap(
+                      rotateGesturesEnabled: false,
+                      scrollGesturesEnabled: false,
+                      tiltGesturesEnabled: false,
+                      zoomGesturesEnabled: false,
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(
+                            double.parse(bookingModelReload
+                                .locationReturnBikeModel.latitude),
+                            double.parse(bookingModelReload
+                                .locationReturnBikeModel.longitude)),
+                        zoom: 13,
                       ),
-                    ),
-                    //map vị trí trả xe
-                    Container(
-                      height: 250,
-                      child: GoogleMap(
-                        rotateGesturesEnabled: false,
-                        scrollGesturesEnabled: false,
-                        tiltGesturesEnabled: false,
-                        zoomGesturesEnabled: false,
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(
+                      markers: <Marker>{
+                        Marker(
+                          markerId: MarkerId("ID-1"),
+                          position: LatLng(
                               double.parse(bookingModelReload
                                   .locationReturnBikeModel.latitude),
                               double.parse(bookingModelReload
                                   .locationReturnBikeModel.longitude)),
-                          zoom: 13,
+                        )
+                      },
+                      onMapCreated: onMapCreated,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  // đánh giá của bạn
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.isCustomer
+                              ? "Đánh giá của bạn: "
+                              : "Đánh giá của khách hàng",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        markers: <Marker>{
-                          Marker(
-                            markerId: MarkerId("ID-1"),
-                            position: LatLng(
-                                double.parse(bookingModelReload
-                                    .locationReturnBikeModel.latitude),
-                                double.parse(bookingModelReload
-                                    .locationReturnBikeModel.longitude)),
-                          )
-                        },
-                        onMapCreated: onMapCreated,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    // đánh giá của bạn
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 10, left: 10, right: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.isCustomer
-                                ? "Đánh giá của bạn: "
-                                : "Đánh giá của khách hàng",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // avatar
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundImage: NetworkImage(
+                                  "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
                             ),
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // avatar
-                              CircleAvatar(
-                                radius: 20,
-                                backgroundImage: NetworkImage(
-                                    "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
-                              ),
-                              SizedBox(width: 10),
-                              // tên người dùng và sđt
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // tên người dùng
-                                    Text(
-                                      bookingModelReload.userModel.fullName,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                            SizedBox(width: 10),
+                            // tên người dùng và sđt
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // tên người dùng
+                                  Text(
+                                    bookingModelReload.userModel.fullName,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        for (var i = 0; i < 5; i++)
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 25,
-                                          ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      for (var i = 0; i < 5; i++)
+                                        Icon(
+                                          Icons.star,
+                                          color: Colors.yellow,
+                                          size: 25,
+                                        ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          // Nội dung đánh giá của bạn
-                          Row(
-                            children: [
-                              FrameText(
-                                title: "",
-                                content: bookingModelReload.customerReport,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 10, left: 10, right: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.isCustomer
-                                ? "Đánh giá của chủ xe: "
-                                : "Đánh giá của bạn",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
                             ),
-                          ),
-                          SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // avatar
-                              CircleAvatar(
-                                radius: 20,
-                                backgroundImage: NetworkImage(
-                                    "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
-                              ),
-                              SizedBox(width: 10),
-                              // tên người dùng và sđt
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // tên người dùng
-                                    Text(
-                                      bookingModelReload
-                                          .bikeModel.userModel.fullName,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        for (var i = 0; i < 5; i++)
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 22,
-                                          ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          // Nội dung đánh giá của bạn
-                          Row(
-                            children: [
-                              FrameText(
-                                title: "",
-                                content: bookingModelReload.ownerReport,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                        // Nội dung đánh giá của bạn
+                        Row(
+                          children: [
+                            FrameText(
+                              title: "",
+                              content: bookingModelReload.customerReport,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                );
-              }),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.isCustomer
+                              ? "Đánh giá của chủ xe: "
+                              : "Đánh giá của bạn",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // avatar
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundImage: NetworkImage(
+                                  "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
+                            ),
+                            SizedBox(width: 10),
+                            // tên người dùng và sđt
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // tên người dùng
+                                  Text(
+                                    bookingModelReload
+                                        .bikeModel.userModel.fullName,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      for (var i = 0; i < 5; i++)
+                                        Icon(
+                                          Icons.star,
+                                          color: Colors.yellow,
+                                          size: 22,
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        // Nội dung đánh giá của bạn
+                        Row(
+                          children: [
+                            FrameText(
+                              title: "",
+                              content: bookingModelReload.ownerReport,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
         // Bottom bar app
         bottomNavigationBar: BottomBar(
@@ -393,6 +380,18 @@ class _HistoryDetailState extends State<HistoryDetail> {
           userModel: (widget.isCustomer)
               ? widget.userModel
               : widget.bookingModel.bikeModel.userModel,
+        ),
+      ),
+    );
+  }
+
+  Widget getEmptyScreen(String content) {
+    return Center(
+      child: Text(
+        content,
+        style: TextStyle(
+          fontSize: 20,
+          color: my_colors.primary,
         ),
       ),
     );

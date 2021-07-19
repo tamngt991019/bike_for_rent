@@ -206,7 +206,6 @@ class _RentingCardState extends State<RentingCard> {
                           ),
                         ],
                       ),
-
                     //isRenting
                     if (widget.isRenting)
                       Column(

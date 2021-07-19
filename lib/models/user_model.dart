@@ -13,6 +13,7 @@ class UserModel {
   bool ownerVerified;
   bool isRenting;
   String status;
+  dynamic token;
 
   UserModel({
     this.username,
@@ -29,6 +30,7 @@ class UserModel {
     this.ownerVerified,
     this.isRenting,
     this.status,
+    this.token,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -46,6 +48,7 @@ class UserModel {
         ownerVerified: json['ownerVerified'] as bool,
         isRenting: json['isRenting'] as bool,
         status: json['status'] as String,
+        token: json['token'] as dynamic,
       );
 
   Map<String, dynamic> toJson() => {

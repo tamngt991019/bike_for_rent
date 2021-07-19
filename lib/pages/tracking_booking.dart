@@ -64,17 +64,6 @@ class _TrackingBookingState extends State<TrackingBooking> {
   LocationModel returnLocation;
   bool _isLoadThisScreen = false;
 
-  List<String> imageUrls() {
-    List<String> imageUrls = [
-      "https://media.publit.io/file/BikeForRent/banner/banner1.jpg",
-      "https://media.publit.io/file/BikeForRent/banner/banner2.jpg",
-      "https://media.publit.io/file/BikeForRent/banner/banner3.jpg",
-      "https://media.publit.io/file/BikeForRent/banner/banner4.jpg",
-      "https://media.publit.io/file/BikeForRent/banner/banner5.jpg",
-    ];
-    return imageUrls;
-  }
-
   BookingService bookingService = new BookingService();
   BookingModel mainBooking;
   Future loadListCustomerTrackingBooking() {
@@ -451,9 +440,10 @@ class _TrackingBookingState extends State<TrackingBooking> {
                         initialPage: 0,
                         indicatorColor: my_colors.primary,
                         indicatorBackgroundColor: Colors.white,
-                        children: imageUrls()
-                            .map((img) => ClipRRect(
-                                child: Image.network(img, fit: BoxFit.cover)))
+                        children: mainBooking.bikeModel.listBikeImage
+                            .map((imgs) => ClipRRect(
+                                child: Image.network(imgs.imageUrl,
+                                    fit: BoxFit.cover)))
                             .toList(),
                         onPageChanged: (value) {},
                         autoPlayInterval: 60000,
