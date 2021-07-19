@@ -286,10 +286,10 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                             initialPage: 0,
                             indicatorColor: my_colors.primary,
                             indicatorBackgroundColor: Colors.white,
-                            children: imageUrls()
-                                .map((img) => ClipRRect(
-                                    child:
-                                        Image.network(img, fit: BoxFit.cover)))
+                            children: _bikeModel.listBikeImage
+                                .map((imgs) => ClipRRect(
+                                    child: Image.network(imgs.imageUrl,
+                                        fit: BoxFit.cover)))
                                 .toList(),
                             onPageChanged: (value) {},
                             autoPlayInterval: 60000,
@@ -424,8 +424,13 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                                     children: [
                                       if (_isLoadOnwerRatingInfo)
                                         RatingBarIndicator(
-                                          rating: getRatingAverage(
-                                              ownerWithRatingList),
+                                          rating: (ownerWithRatingList ==
+                                                      null ||
+                                                  ownerWithRatingList.length ==
+                                                      0)
+                                              ? 0
+                                              : getRatingAverage(
+                                                  ownerWithRatingList),
                                           itemBuilder: (context, index) => Icon(
                                             Icons.star,
                                             color: Colors.yellow,

@@ -58,12 +58,12 @@ class _BookingCardState extends State<BookingCard> {
               initialPage: 0,
               indicatorColor: my_colors.primary,
               indicatorBackgroundColor: Colors.white,
-              children: imageUrls()
-                  .map((img) => ClipRRect(
+              children: widget.bikeModel.listBikeImage
+                  .map((imgs) => ClipRRect(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(15),
                           topRight: Radius.circular(15)),
-                      child: Image.network(img, fit: BoxFit.cover)))
+                      child: Image.network(imgs.imageUrl, fit: BoxFit.cover)))
                   .toList(),
               onPageChanged: (value) {},
               autoPlayInterval: 60000,

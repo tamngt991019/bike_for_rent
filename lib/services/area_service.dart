@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
+import 'package:bike_for_rent/constants/api.dart' as api;
 
 class AreaService {
   //get trả về response code 200
@@ -43,11 +44,11 @@ class AreaService {
     Response response;
     AreaModel result;
     try {
-      response = await post(Uri.parse(apiUrl.area),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(areaModel.toJson()));
+      response = await post(
+        Uri.parse(apiUrl.area),
+        headers: api.header,
+        body: jsonEncode(areaModel.toJson()),
+      );
       if (response.statusCode == 201) {
         result = AreaModel.fromJson(json.decode(response.body));
       }

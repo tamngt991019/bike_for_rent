@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
+import 'package:bike_for_rent/constants/api.dart' as api;
 
 class UserService {
   //get trả về response code 200
@@ -10,7 +11,10 @@ class UserService {
     Response response;
     List<UserModel> result;
     try {
-      response = response = await get(Uri.parse(apiUrl.user));
+      response = response = await get(
+        Uri.parse(apiUrl.user),
+        headers: api.header,
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -27,7 +31,10 @@ class UserService {
     Response response;
     UserModel result;
     try {
-      response = await get(Uri.parse('${apiUrl.user}/$id'));
+      response = await get(
+        Uri.parse('${apiUrl.user}/$id'),
+        headers: api.header,
+      );
 
       if (response.statusCode == 200) {
         result = UserModel.fromJson(json.decode(response.body));
@@ -43,7 +50,10 @@ class UserService {
     Response response;
     UserModel result;
     try {
-      response = await get(Uri.parse('${apiUrl.user}/login?id=$id&pass=$pass'));
+      response = await get(
+        Uri.parse('${apiUrl.user}/login?id=$id&pass=$pass'),
+        headers: api.header,
+      );
 
       if (response.statusCode == 200) {
         result = UserModel.fromJson(json.decode(response.body));
@@ -59,11 +69,11 @@ class UserService {
     Response response;
     UserModel result;
     try {
-      response = await post(Uri.parse(apiUrl.user),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(userModel.toJson()));
+      response = await post(
+        Uri.parse(apiUrl.user),
+        headers: api.header,
+        body: jsonEncode(userModel.toJson()),
+      );
       if (response.statusCode == 201) {
         result = UserModel.fromJson(json.decode(response.body));
       }
@@ -80,9 +90,7 @@ class UserService {
     try {
       response = await put(
         Uri.parse('${apiUrl.user}/$id'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: api.header,
         body: jsonEncode(userModel.toJson()),
       );
       if (response.statusCode == 204) {
@@ -99,7 +107,10 @@ class UserService {
     Response response;
     bool result = false;
     try {
-      response = await delete(Uri.parse('${apiUrl.user}/$id'));
+      response = await delete(
+        Uri.parse('${apiUrl.user}/$id'),
+        headers: api.header,
+      );
       if (response.statusCode == 204) {
         result = true;
       }

@@ -156,16 +156,16 @@ class _HistoryState extends State<History> {
       ),
     );
   }
-}
 
-Widget getEmptyScreen(String content) {
-  return Center(
-    child: Text(
-      content,
-      style: TextStyle(
-        fontSize: 20,
-        color: my_colors.primary,
+  Widget getEmptyScreen(String content) {
+    return Center(
+      child: Text(
+        content,
+        style: TextStyle(
+          fontSize: 20,
+          color: my_colors.primary,
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
