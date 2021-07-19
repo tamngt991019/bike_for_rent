@@ -6,6 +6,7 @@ import 'package:bike_for_rent/models/payment_type_model.dart';
 import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/pages/bike_return_map.dart';
 import 'package:bike_for_rent/pages/home.dart';
+import 'package:bike_for_rent/pages/rating.dart';
 import 'package:bike_for_rent/pages/rent_bike_manager.dart';
 import 'package:bike_for_rent/services/bike_service.dart';
 import 'package:bike_for_rent/services/booking_service.dart';
@@ -24,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
+import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -51,6 +53,9 @@ class TrackingBooking extends StatefulWidget {
 }
 
 class _TrackingBookingState extends State<TrackingBooking> {
+  dynamic ratingNum = 0.0;
+  // String ratingContent = "";
+  final ratingContent = TextEditingController();
   // Bike type dropdown ---------------------------------
   String _paymentTypeStr = "Chọn hình thức thanh toán:";
   Color _paymentTypeColor = Colors.grey[700];
@@ -79,10 +84,12 @@ class _TrackingBookingState extends State<TrackingBooking> {
     Future<List<BookingModel>> futureCase =
         bookingService.getCustomerBookingsTracking(widget.userModel.username);
     futureCase.then((list) {
-      setState(() {
-        mainBooking = list.first;
-        _isLoadThisScreen = true;
-      });
+      if (this.mounted) {
+        setState(() {
+          mainBooking = list.first;
+          _isLoadThisScreen = true;
+        });
+      }
     });
     return futureCase;
   }
@@ -94,11 +101,13 @@ class _TrackingBookingState extends State<TrackingBooking> {
     Future<List<BookingModel>> futureCase =
         bookingService.getOwnerBookingsTracking(widget.userModel.username);
     futureCase.then((list) {
-      setState(() {
-        mainBooking = list.first;
-        returnLocation = list.first.locationReturnBikeModel;
-        _isLoadThisScreen = true;
-      });
+      if (this.mounted) {
+        setState(() {
+          mainBooking = list.first;
+          returnLocation = list.first.locationReturnBikeModel;
+          _isLoadThisScreen = true;
+        });
+      }
     });
     return futureCase;
   }
@@ -110,11 +119,13 @@ class _TrackingBookingState extends State<TrackingBooking> {
     Future<BookingModel> futureCase =
         bookingService.getTrackingBookingById(widget.bookingModel.id);
     futureCase.then((model) {
-      setState(() {
-        mainBooking = model;
-        returnLocation = model.locationReturnBikeModel;
-        _isLoadThisScreen = true;
-      });
+      if (this.mounted) {
+        setState(() {
+          mainBooking = model;
+          returnLocation = model.locationReturnBikeModel;
+          _isLoadThisScreen = true;
+        });
+      }
     });
     return futureCase;
   }
@@ -140,12 +151,14 @@ class _TrackingBookingState extends State<TrackingBooking> {
     Future<bool> futureCase =
         bookingService.updateBookingModel(model.id, model);
     futureCase.then((isUpdateSuccess) {
-      if (!isUpdateSuccess) {
-        showNotificationDialog(
-          "Cảnh bảo!",
-          "Thao tác thất bại, vui lòng thử lại!",
-          my_colors.danger,
-        );
+      if (this.mounted) {
+        if (!isUpdateSuccess) {
+          showNotificationDialog(
+            "Cảnh bảo!",
+            "Thao tác thất bại, vui lòng thử lại! update even type",
+            my_colors.danger,
+          );
+        }
       }
     });
   }
@@ -156,38 +169,35 @@ class _TrackingBookingState extends State<TrackingBooking> {
     Future<bool> futureCase = bikeService.updateBikeModel(
         mainBooking.bikeModel.id, mainBooking.bikeModel);
     futureCase.then((isUpdateSuccess) {
-      if (!isUpdateSuccess) {
-        showNotificationDialog(
-          "Cảnh bảo!",
-          "Thao tác thất bại, vui lòng thử lại!",
-          my_colors.danger,
-        );
-      } else {
-        updateBookingEventType(bookingModel);
+      if (this.mounted) {
+        if (!isUpdateSuccess) {
+          showNotificationDialog(
+            "Cảnh bảo!",
+            "Thao tác thất bại, vui lòng thử lại!",
+            my_colors.danger,
+          );
+        } else {
+          updateBookingEventType(bookingModel);
+        }
       }
     });
   }
 
-  double totalPrice = 0;
   bool _isCreatePaymentSuccess = false;
   PaymentService paymentService = new PaymentService();
-  void createPayment(String paymentTypeId, String bookingId) {
-    Future<PaymentModel> futureCase = paymentService.createPayment(
-      PaymentModel(
-        paymentTypeId: paymentTypeId,
-        bookingId: bookingId,
-        totalPrice: totalPrice,
-      ),
-    );
+  void createPayment(PaymentModel model) {
+    Future<PaymentModel> futureCase = paymentService.createPayment(model);
     futureCase.then((model) {
-      if (model != null) {
-        _isCreatePaymentSuccess = true;
-      } else {
-        showNotificationDialog(
-          "Cảnh bảo!",
-          "Thao tác thất bại, vui lòng thử lại!",
-          my_colors.danger,
-        );
+      if (this.mounted) {
+        if (model != null) {
+          _isCreatePaymentSuccess = true;
+        } else {
+          showNotificationDialog(
+            "Cảnh bảo!",
+            "Thao tác thất bại, vui lòng thử lại!",
+            my_colors.danger,
+          );
+        }
       }
     });
   }
@@ -220,10 +230,12 @@ class _TrackingBookingState extends State<TrackingBooking> {
   String getIdOfNewLocation(LocationModel locModel) {
     Future<LocationModel> futureCase = locationService.createLocation(locModel);
     futureCase.then((model) {
-      setState(() {
-        returnLocation = model;
-      });
-      return model.id;
+      if (this.mounted) {
+        setState(() {
+          returnLocation = model;
+        });
+        return model.id;
+      }
     });
     return null;
   }
@@ -555,7 +567,8 @@ class _TrackingBookingState extends State<TrackingBooking> {
                             if (mainBooking.eventTypeId == "ARERENTING" ||
                                 mainBooking.eventTypeId == "OWNGOTBIKE" ||
                                 mainBooking.eventTypeId == "CUSRETURNBIKE" ||
-                                mainBooking.eventTypeId == "PAYING")
+                                mainBooking.eventTypeId == "PAYING" ||
+                                mainBooking.eventTypeId == "RATING")
                               Column(
                                 children: [
                                   SizedBox(height: 10),
@@ -691,7 +704,8 @@ class _TrackingBookingState extends State<TrackingBooking> {
                             if (mainBooking.eventTypeId == "ARERENTING" ||
                                 mainBooking.eventTypeId == "OWNGOTBIKE" ||
                                 mainBooking.eventTypeId == "CUSRETURNBIKE" ||
-                                mainBooking.eventTypeId == "PAYING")
+                                mainBooking.eventTypeId == "PAYING" ||
+                                mainBooking.eventTypeId == "RATING")
                               Column(
                                 children: [
                                   SizedBox(height: 20),
@@ -726,7 +740,9 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                   ),
                                 ],
                               ),
-                            if (mainBooking.eventTypeId == "OWNGOTBIKE")
+                            if (mainBooking.eventTypeId == "OWNGOTBIKE" &&
+                                widget.userModel.username ==
+                                    mainBooking.userName)
                               Column(
                                 children: [
                                   SizedBox(height: 10),
@@ -783,8 +799,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
                         color: Colors.black,
                       ),
                       SizedBox(height: 15),
-                      // Các nút cập nhật trạng thái của booking
-                      // các nút của người thuê
+
                       if (widget.isCustomer)
                         Column(
                           children: [
@@ -891,7 +906,6 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                             if (widget.locationModel != null) {
                                               BookingModel tmpModel =
                                                   mainBooking;
-                                              // KIỂM TRA LOCATION TRẢ XE Ở ĐÂY
                                               if (widget.locationModel.id !=
                                                   null) {
                                                 tmpModel.locationReturnBike =
@@ -935,20 +949,39 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     title: 'Thanh toán',
                                     onPressedElavateBtn: () {
                                       bool isPaymentTypeChange =
-                                          _paymentTypeStr ==
+                                          _paymentTypeStr !=
                                               "Chọn hình thức thanh toán:";
                                       if (isPaymentTypeChange) {
-                                        setState(() {
-                                          // mainBooking.eventTypeId = "PAYING";
+                                        String totalPriceStr =
+                                            helper.getPriceTotalStr(
+                                          mainBooking.dateBegin,
+                                          mainBooking.dateEnd,
+                                          mainBooking
+                                              .bikeModel.bikeTypeModel.id,
+                                          mainBooking.payPackageModel,
+                                        );
+
+                                        PaymentModel payModel = PaymentModel(
+                                          bookingId: mainBooking.id,
+                                          paymentTypeId: _paymentTypeModel.id,
+                                          totalPrice:
+                                              double.parse(totalPriceStr),
+                                        );
+
+                                        createPayment(payModel);
+
+                                        if (_isCreatePaymentSuccess) {
                                           BookingModel tmpModel = mainBooking;
                                           tmpModel.eventTypeId = "PAYING";
-                                          updateBookingEventType(tmpModel);
-                                          // updateBookingEventType("PAYING");s
-                                        });
+
+                                          setState(() {
+                                            updateBookingEventType(tmpModel);
+                                          });
+                                        }
                                       } else {
                                         showNotificationDialog(
                                           "Cảnh báo!",
-                                          "Vui lòng chọn hình thức thuê xe!",
+                                          "Vui lòng chọn hình thức thanh toán!",
                                           my_colors.danger,
                                         );
                                       }
@@ -1054,20 +1087,10 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                     width: 380,
                                     title: 'Xác nhận thanh toán',
                                     onPressedElavateBtn: () {
+                                      BookingModel tmpModel = mainBooking;
+                                      tmpModel.eventTypeId = "RATING";
                                       setState(() {
-                                        // updateBikeIsBooking(
-                                        //     false, "ARERENTING");
-                                        // mainBooking.eventTypeId = "FINISHED";
-                                        createPayment(
-                                          _paymentTypeModel.id,
-                                          mainBooking.id,
-                                        );
-                                        if (_isCreatePaymentSuccess) {
-                                          BookingModel tmpModel = mainBooking;
-                                          tmpModel.eventTypeId = "FINISHED";
-                                          updateBikeIsBooking(true, tmpModel);
-                                          // updateBookingEventType("FINISHED");
-                                        }
+                                        updateBikeIsBooking(false, tmpModel);
                                       });
                                     },
                                   )
@@ -1075,6 +1098,124 @@ class _TrackingBookingState extends State<TrackingBooking> {
                               ),
                           ],
                         ),
+
+                      if (mainBooking.eventTypeId == "RATING")
+                        if ((widget.userModel.username ==
+                                    mainBooking.userName &&
+                                !mainBooking.isCustomerRated) ||
+                            (widget.userModel.username !=
+                                    mainBooking.userName &&
+                                !mainBooking.isOwnerRated))
+                          Column(
+                            children: [
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                margin: EdgeInsets.only(left: 10, right: 10),
+                                elevation: 5,
+                                child: Padding(
+                                  padding: EdgeInsets.all(15),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Đánh giá:",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 20),
+                                      RatingStars(
+                                        value: ratingNum,
+                                        onValueChanged: (val) {
+                                          setState(() {
+                                            ratingNum = val;
+                                          });
+                                        },
+                                        starBuilder: (index, color) => Icon(
+                                          Icons.star,
+                                          color: color,
+                                          size: 50,
+                                        ),
+                                        starSize: 50,
+                                        starCount: 5,
+                                        maxValue: 5,
+                                        starSpacing: 5,
+                                        valueLabelVisibility: false,
+                                        starOffColor: Colors.grey,
+                                        starColor: Colors.yellow,
+                                      ),
+                                      SizedBox(height: 20),
+                                      TextField(
+                                        controller: ratingContent,
+                                        minLines: 1,
+                                        keyboardType: TextInputType.multiline,
+                                        maxLines: null,
+                                        decoration: InputDecoration(
+                                            labelText: "Nội dung đánh giá"),
+                                        style: TextStyle(fontSize: 15),
+                                        onChanged: (val) {},
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElavateBtn(
+                                    width: 180,
+                                    title: 'Gửi đánh giá',
+                                    onPressedElavateBtn: () {
+                                      setState(() {
+                                        BookingModel tmpModel = mainBooking;
+                                        if (widget.userModel.username ==
+                                            mainBooking.userName) {
+                                          mainBooking.customerRating =
+                                              ratingNum.toInt();
+                                          mainBooking.customerReport =
+                                              ratingContent.text;
+                                          mainBooking.isCustomerRated = true;
+                                        } else {
+                                          mainBooking.ownerRating =
+                                              ratingNum.toInt();
+                                          mainBooking.ownerReport =
+                                              ratingContent.text;
+                                          mainBooking.isOwnerRated = true;
+                                        }
+                                        if (mainBooking.isCustomerRated &&
+                                            mainBooking.isOwnerRated) {
+                                          tmpModel.eventTypeId = "FINISHED";
+                                        }
+                                        setState(() {
+                                          updateBookingEventType(tmpModel);
+                                        });
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: 20),
+                                  OutlineBtn(
+                                    width: 180,
+                                    title: 'Bỏ qua',
+                                    onPressedOutlineBtn: () {
+                                      BookingModel tmpModel = mainBooking;
+                                      tmpModel.eventTypeId = "FINISHED";
+                                      setState(() {
+                                        updateBookingEventType(tmpModel);
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+
                       SizedBox(height: 15),
                       //===========================================
                     ],

@@ -125,6 +125,9 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
   }
 
   double getRatingAverage(List<BookingModel> list) {
+    if (list == null) {
+      return 0;
+    }
     double result = 0;
     for (var item in list) {
       result += item.customerRating;

@@ -157,6 +157,12 @@ String getPriceTotalStr(String dateFrom, String dateTo, String bikeTypeId,
   return result.toString();
 }
 
+// String getPriceTotalStr(String dateFrom, String dateTo, String bikeTypeId,
+//     PayPackageModel payPackageModel) {
+//   return getPriceTotal(dateFrom, dateTo, bikeTypeId, payPackageModel)
+//       .toString();
+// }
+
 // String getTotalPriceStr(String dateFrom, String dateTo) {
 //   String result;
 //   DateTime from = DateTime.parse(dateFrom);

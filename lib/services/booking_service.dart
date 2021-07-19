@@ -255,7 +255,7 @@ class BookingService {
     try {
       response = await post(Uri.parse(apiUrl.booking),
           headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
+            'content-type': 'application/json; charset=UTF-8',
           },
           body: jsonEncode(bookingModel.toJson()));
       if (response.statusCode == 201) {
@@ -275,7 +275,7 @@ class BookingService {
       response = await put(
         Uri.parse('${apiUrl.booking}/$id'),
         headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
+          'content-type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(bookingModel.toJson()),
       );
