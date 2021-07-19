@@ -1,3 +1,5 @@
+import 'package:bike_for_rent/models/booking_model.dart';
+import 'package:bike_for_rent/models/user_model.dart';
 import 'package:bike_for_rent/widgets/app_bar.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:bike_for_rent/widgets/outline_btn.dart';
@@ -6,7 +8,9 @@ import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 
 class Rating extends StatefulWidget {
-  Rating({Key key}) : super(key: key);
+  final UserModel userModel;
+  final BookingModel bookingModel;
+  Rating({Key key, this.userModel, this.bookingModel}) : super(key: key);
 
   @override
   _RatingState createState() => _RatingState();

@@ -104,20 +104,20 @@ class _HistoryState extends State<History> {
                 currentIndex: 2,
                 content: "Vui lòng đăng nhập để xem lịch sử thuê xe!",
               )
-            : SingleChildScrollView(
-                physics: ScrollPhysics(),
-                padding:
-                    EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                child: Column(
-                  children: [
-                    FutureBuilder(
-                      future: loadListCustomerBookingFinishedCanceled(
-                          widget.userModel.username),
-                      builder: (context, snapshot) {
-                        if (_isHistoryListEmpty) {
-                          return getEmptyScreen("Không có lịch sử cho thuê xe");
-                        }
-                        return ListView.builder(
+            : FutureBuilder(
+                future: loadListCustomerBookingFinishedCanceled(
+                    widget.userModel.username),
+                builder: (context, snapshot) {
+                  if (_isHistoryListEmpty) {
+                    return getEmptyScreen("Không có lịch sử cho thuê xe");
+                  }
+                  return SingleChildScrollView(
+                    physics: ScrollPhysics(),
+                    padding:
+                        EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                    child: Column(
+                      children: [
+                        ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemCount:
@@ -142,11 +142,11 @@ class _HistoryState extends State<History> {
                               ),
                             );
                           },
-                        );
-                      },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
         // Bottom bar app
         bottomNavigationBar: BottomBar(

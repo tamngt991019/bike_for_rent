@@ -14,10 +14,12 @@ class BookingModel {
   String locationReturnBike;
   String dateBegin;
   String dateEnd;
-  int customerRating;
+  dynamic customerRating;
   String customerReport;
-  int ownerRating;
+  bool isCustomerRated;
+  dynamic ownerRating;
   String ownerReport;
+  bool isOwnerRated;
   String eventTypeId;
   UserModel userModel;
   BikeModel bikeModel;
@@ -38,8 +40,10 @@ class BookingModel {
     this.dateEnd,
     this.customerRating,
     this.customerReport,
+    this.isCustomerRated,
     this.ownerRating,
     this.ownerReport,
+    this.isOwnerRated,
     this.eventTypeId,
     this.userModel,
     this.bikeModel,
@@ -57,12 +61,14 @@ class BookingModel {
         dateCreated: json['dateCreated'] as String,
         locationGetBike: json['locationGetBike'] as String,
         locationReturnBike: json['locationReturnBike'] as String,
-        dateBegin: json['dateBegin'],
-        dateEnd: json['dateEnd'],
-        customerRating: json['customerRating'] as int,
+        dateBegin: json['dateBegin'] as String,
+        dateEnd: json['dateEnd'] as String,
+        customerRating: json['customerRating'] as dynamic,
         customerReport: json['customerReport'] as String,
-        ownerRating: json['ownerRating'] as int,
+        isCustomerRated: json['isCustomerRated'] as bool,
+        ownerRating: json['ownerRating'] as dynamic,
         ownerReport: json['ownerReport'] as String,
+        isOwnerRated: json['isOwnerRated'] as bool,
         eventTypeId: json['eventTypeId'] as String,
         userModel: json['usernameNavigation'] == null
             ? null
@@ -95,8 +101,10 @@ class BookingModel {
         "dateEnd": dateEnd,
         "customerRating": customerRating,
         "customerReport": customerReport,
+        "isCustomerRated": isCustomerRated,
         "ownerRating": ownerRating,
         "ownerReport": ownerReport,
+        "isOwnerRated": isOwnerRated,
         "eventTypeId": eventTypeId,
       };
 }
