@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
+import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class BikeImageService {
   //get trả về response code 200
@@ -10,7 +11,10 @@ class BikeImageService {
     Response response;
     List<BikeImageModel> result;
     try {
-      response = response = await get(Uri.parse(apiUrl.bikeImage));
+      response = response = await get(
+        Uri.parse(apiUrl.bikeImage),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -18,7 +22,8 @@ class BikeImageService {
             body.map((dynamic item) => BikeImageModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -28,13 +33,17 @@ class BikeImageService {
     Response response;
     BikeImageModel result;
     try {
-      response = await get(Uri.parse('${apiUrl.bikeImage}/$id'));
+      response = await get(
+        Uri.parse('${apiUrl.bikeImage}/$id'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         result = BikeImageModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -45,15 +54,14 @@ class BikeImageService {
     BikeImageModel result;
     try {
       response = await post(Uri.parse(apiUrl.bikeImage),
-          headers: <String, String>{
-            'Content-Image': 'application/json; charset=UTF-8',
-          },
+          headers: configJson.header(),
           body: jsonEncode(bikeImageModel.toJson()));
       if (response.statusCode == 201) {
         result = BikeImageModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -66,16 +74,15 @@ class BikeImageService {
     try {
       response = await put(
         Uri.parse('${apiUrl.bikeImage}/$id'),
-        headers: <String, String>{
-          'Content-Image': 'application/json; charset=UTF-8',
-        },
+        headers: configJson.header(),
         body: jsonEncode(bikeImageModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -85,12 +92,16 @@ class BikeImageService {
     Response response;
     bool result = false;
     try {
-      response = await delete(Uri.parse('${apiUrl.bikeImage}/$id'));
+      response = await delete(
+        Uri.parse('${apiUrl.bikeImage}/$id'),
+        headers: configJson.header(),
+      );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }

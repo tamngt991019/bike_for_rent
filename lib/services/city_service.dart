@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
+import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class CityService {
   //get trả về response code 200
@@ -10,14 +11,18 @@ class CityService {
     Response response;
     List<CityModel> result;
     try {
-      response = response = await get(Uri.parse(apiUrl.city));
+      response = response = await get(
+        Uri.parse(apiUrl.city),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
         result = body.map((dynamic item) => CityModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -27,13 +32,17 @@ class CityService {
     Response response;
     CityModel result;
     try {
-      response = await get(Uri.parse('${apiUrl.city}/$id'));
+      response = await get(
+        Uri.parse('${apiUrl.city}/$id'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         result = CityModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -43,16 +52,17 @@ class CityService {
     Response response;
     CityModel result;
     try {
-      response = await post(Uri.parse(apiUrl.city),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(cityModel.toJson()));
+      response = await post(
+        Uri.parse(apiUrl.city),
+        headers: configJson.header(),
+        body: jsonEncode(cityModel.toJson()),
+      );
       if (response.statusCode == 201) {
         result = CityModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -64,16 +74,15 @@ class CityService {
     try {
       response = await put(
         Uri.parse('${apiUrl.city}/$id'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: configJson.header(),
         body: jsonEncode(cityModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -83,12 +92,16 @@ class CityService {
     Response response;
     bool result = false;
     try {
-      response = await delete(Uri.parse('${apiUrl.city}/$id'));
+      response = await delete(
+        Uri.parse('${apiUrl.city}/$id'),
+        headers: configJson.header(),
+      );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }

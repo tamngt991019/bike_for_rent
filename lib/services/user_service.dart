@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
-import 'package:bike_for_rent/constants/api.dart' as api;
+import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class UserService {
   //get trả về response code 200
@@ -13,7 +13,7 @@ class UserService {
     try {
       response = response = await get(
         Uri.parse(apiUrl.user),
-        headers: api.header,
+        headers: configJson.header(),
       );
 
       if (response.statusCode == 200) {
@@ -21,7 +21,8 @@ class UserService {
         result = body.map((dynamic item) => UserModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -33,14 +34,15 @@ class UserService {
     try {
       response = await get(
         Uri.parse('${apiUrl.user}/$id'),
-        headers: api.header,
+        headers: configJson.header(),
       );
 
       if (response.statusCode == 200) {
         result = UserModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -52,14 +54,15 @@ class UserService {
     try {
       response = await get(
         Uri.parse('${apiUrl.user}/login?id=$id&pass=$pass'),
-        headers: api.header,
+        headers: configJson.header(),
       );
 
       if (response.statusCode == 200) {
         result = UserModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -71,14 +74,15 @@ class UserService {
     try {
       response = await post(
         Uri.parse(apiUrl.user),
-        headers: api.header,
+        headers: configJson.header(),
         body: jsonEncode(userModel.toJson()),
       );
       if (response.statusCode == 201) {
         result = UserModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -90,14 +94,15 @@ class UserService {
     try {
       response = await put(
         Uri.parse('${apiUrl.user}/$id'),
-        headers: api.header,
+        headers: configJson.header(),
         body: jsonEncode(userModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -109,13 +114,14 @@ class UserService {
     try {
       response = await delete(
         Uri.parse('${apiUrl.user}/$id'),
-        headers: api.header,
+        headers: configJson.header(),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
+import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class BookingService {
   //get trả về response code 200
@@ -10,7 +11,10 @@ class BookingService {
     Response response;
     List<BookingModel> result;
     try {
-      response = response = await get(Uri.parse(apiUrl.booking));
+      response = response = await get(
+        Uri.parse(apiUrl.booking),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -18,7 +22,8 @@ class BookingService {
             body.map((dynamic item) => BookingModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -28,13 +33,17 @@ class BookingService {
     Response response;
     BookingModel result;
     try {
-      response = await get(Uri.parse('${apiUrl.booking}/$id'));
+      response = await get(
+        Uri.parse('${apiUrl.booking}/$id'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         result = BookingModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -44,13 +53,17 @@ class BookingService {
     Response response;
     BookingModel result;
     try {
-      response = await get(Uri.parse('${apiUrl.booking}/tracking/detail/$id'));
+      response = await get(
+        Uri.parse('${apiUrl.booking}/tracking/detail/$id'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         result = BookingModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -61,8 +74,10 @@ class BookingService {
     Response response;
     List<BookingModel> result;
     try {
-      response = await get(Uri.parse(
-          '${apiUrl.booking}/customer/processing?username=$username'));
+      response = await get(
+        Uri.parse('${apiUrl.booking}/customer/processing?username=$username'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -70,7 +85,8 @@ class BookingService {
             body.map((dynamic item) => BookingModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -82,7 +98,9 @@ class BookingService {
     List<BookingModel> result;
     try {
       response = await get(
-          Uri.parse('${apiUrl.booking}/customer/tracking?username=$username'));
+        Uri.parse('${apiUrl.booking}/customer/tracking?username=$username'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -90,7 +108,8 @@ class BookingService {
             body.map((dynamic item) => BookingModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -101,7 +120,9 @@ class BookingService {
     List<BookingModel> result;
     try {
       response = await get(
-          Uri.parse('${apiUrl.booking}/owner/tracking?username=$username'));
+        Uri.parse('${apiUrl.booking}/owner/tracking?username=$username'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -109,7 +130,8 @@ class BookingService {
             body.map((dynamic item) => BookingModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -121,7 +143,9 @@ class BookingService {
     List<BookingModel> result;
     try {
       response = response = await get(
-          Uri.parse('${apiUrl.booking}/customer/bike/fc?username=$username'));
+        Uri.parse('${apiUrl.booking}/customer/bike/fc?username=$username'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -129,7 +153,8 @@ class BookingService {
             body.map((dynamic item) => BookingModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -139,8 +164,10 @@ class BookingService {
     Response response;
     List<BookingModel> result;
     try {
-      response = response = await get(Uri.parse(
-          '${apiUrl.booking}/owner/manager/history?username=$username'));
+      response = response = await get(
+        Uri.parse('${apiUrl.booking}/owner/manager/history?username=$username'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -148,7 +175,8 @@ class BookingService {
             body.map((dynamic item) => BookingModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -158,8 +186,11 @@ class BookingService {
     Response response;
     List<BookingModel> result;
     try {
-      response = response = await get(Uri.parse(
-          '${apiUrl.booking}/owner/manager/processing?username=$username'));
+      response = response = await get(
+        Uri.parse(
+            '${apiUrl.booking}/owner/manager/processing?username=$username'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -167,7 +198,8 @@ class BookingService {
             body.map((dynamic item) => BookingModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -177,8 +209,11 @@ class BookingService {
     Response response;
     List<BookingModel> result;
     try {
-      response = response = await get(Uri.parse(
-          '${apiUrl.booking}/owner/manager/arerenting?username=$username'));
+      response = response = await get(
+        Uri.parse(
+            '${apiUrl.booking}/owner/manager/arerenting?username=$username'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -186,7 +221,8 @@ class BookingService {
             body.map((dynamic item) => BookingModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -196,8 +232,10 @@ class BookingService {
     Response response;
     List<BookingModel> result;
     try {
-      response = response =
-          await get(Uri.parse('${apiUrl.booking}/bike/rating?bikeId=$bikeId'));
+      response = response = await get(
+        Uri.parse('${apiUrl.booking}/bike/rating?bikeId=$bikeId'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -205,7 +243,8 @@ class BookingService {
             body.map((dynamic item) => BookingModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -216,7 +255,9 @@ class BookingService {
     List<BookingModel> result;
     try {
       response = response = await get(
-          Uri.parse('${apiUrl.booking}/owner/rating?username=$username'));
+        Uri.parse('${apiUrl.booking}/owner/rating?username=$username'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -224,7 +265,8 @@ class BookingService {
             body.map((dynamic item) => BookingModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -235,7 +277,9 @@ class BookingService {
     List<BookingModel> result;
     try {
       response = response = await get(
-          Uri.parse('${apiUrl.booking}/owner/processing?username=$username'));
+        Uri.parse('${apiUrl.booking}/owner/processing?username=$username'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -243,7 +287,8 @@ class BookingService {
             body.map((dynamic item) => BookingModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -254,15 +299,14 @@ class BookingService {
     BookingModel result;
     try {
       response = await post(Uri.parse(apiUrl.booking),
-          headers: <String, String>{
-            'content-type': 'application/json; charset=UTF-8',
-          },
+          headers: configJson.header(),
           body: jsonEncode(bookingModel.toJson()));
       if (response.statusCode == 201) {
         result = BookingModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -274,16 +318,15 @@ class BookingService {
     try {
       response = await put(
         Uri.parse('${apiUrl.booking}/$id'),
-        headers: <String, String>{
-          'content-type': 'application/json; charset=UTF-8',
-        },
+        headers: configJson.header(),
         body: jsonEncode(bookingModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -293,12 +336,16 @@ class BookingService {
     Response response;
     bool result = false;
     try {
-      response = await delete(Uri.parse('${apiUrl.booking}/$id'));
+      response = await delete(
+        Uri.parse('${apiUrl.booking}/$id'),
+        headers: configJson.header(),
+      );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -308,13 +355,17 @@ class BookingService {
     Response response;
     bool result = false;
     try {
-      response = await get(Uri.parse(
-          '${apiUrl.booking}/customer/check/tracking?username=$username'));
+      response = await get(
+        Uri.parse(
+            '${apiUrl.booking}/customer/check/tracking?username=$username'),
+        headers: configJson.header(),
+      );
       if (response.statusCode == 200) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -324,13 +375,16 @@ class BookingService {
     Response response;
     bool result = false;
     try {
-      response = await get(Uri.parse(
-          '${apiUrl.booking}/owner/check/tracking?username=$username'));
+      response = await get(
+        Uri.parse('${apiUrl.booking}/owner/check/tracking?username=$username'),
+        headers: configJson.header(),
+      );
       if (response.statusCode == 200) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }

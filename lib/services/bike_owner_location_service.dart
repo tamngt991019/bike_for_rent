@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
+import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class BikeOwnerLocationService {
   //get trả về response code 200
@@ -10,7 +11,10 @@ class BikeOwnerLocationService {
     Response response;
     List<BikeOwnerLocationModel> result;
     try {
-      response = response = await get(Uri.parse(apiUrl.bikeOwnerLocation));
+      response = response = await get(
+        Uri.parse(apiUrl.bikeOwnerLocation),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -19,7 +23,8 @@ class BikeOwnerLocationService {
             .toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -29,13 +34,17 @@ class BikeOwnerLocationService {
     Response response;
     BikeOwnerLocationModel result;
     try {
-      response = await get(Uri.parse('${apiUrl.bikeOwnerLocation}/$id'));
+      response = await get(
+        Uri.parse('${apiUrl.bikeOwnerLocation}/$id'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         result = BikeOwnerLocationModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -46,16 +55,17 @@ class BikeOwnerLocationService {
     Response response;
     BikeOwnerLocationModel result;
     try {
-      response = await post(Uri.parse(apiUrl.bikeOwnerLocation),
-          headers: <String, String>{
-            'Content-OwnerLocation': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(bikeOwnerLocationModel.toJson()));
+      response = await post(
+        Uri.parse(apiUrl.bikeOwnerLocation),
+        headers: configJson.header(),
+        body: jsonEncode(bikeOwnerLocationModel.toJson()),
+      );
       if (response.statusCode == 201) {
         result = BikeOwnerLocationModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -68,16 +78,15 @@ class BikeOwnerLocationService {
     try {
       response = await put(
         Uri.parse('${apiUrl.bikeOwnerLocation}/$id'),
-        headers: <String, String>{
-          'Content-OwnerLocation': 'application/json; charset=UTF-8',
-        },
+        headers: configJson.header(),
         body: jsonEncode(bikeOwnerLocationModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -87,12 +96,16 @@ class BikeOwnerLocationService {
     Response response;
     bool result = false;
     try {
-      response = await delete(Uri.parse('${apiUrl.bikeOwnerLocation}/$id'));
+      response = await delete(
+        Uri.parse('${apiUrl.bikeOwnerLocation}/$id'),
+        headers: configJson.header(),
+      );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
