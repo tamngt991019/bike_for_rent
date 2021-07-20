@@ -56,13 +56,8 @@ class _RentBikeListState extends State<RentBikeList> {
       bikeList = [];
     }
     Future<List<BikeModel>> futureCases =
-        bikeService.getBikesWithLocationDistance(
-      username,
-      bikeTypeId,
-      currentlati,
-      currentLong,
-      radius,
-    );
+        bikeService.getBikesWithLocationDistance(username, bikeTypeId,
+            currentlati, currentLong, radius, widget.userModel.token);
     futureCases.then((list) {
       if (this.mounted) {
         setState(() {

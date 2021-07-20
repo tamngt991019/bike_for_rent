@@ -7,13 +7,13 @@ import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class PaymentTypeService {
   //get trả về response code 200
-  Future<List<PaymentTypeModel>> getPaymentTypeModels() async {
+  Future<List<PaymentTypeModel>> getPaymentTypeModels(dynamic token) async {
     Response response;
     List<PaymentTypeModel> result;
     try {
       response = response = await get(
         Uri.parse(apiUrl.paymentType),
-        headers: configJson.header(),
+        headers: configJson.headerAuth(token),
       );
 
       if (response.statusCode == 200) {
@@ -23,87 +23,87 @@ class PaymentTypeService {
             .toList();
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
 
   //get trả về response code 200
-  Future<PaymentTypeModel> getPaymentTypeById(String id) async {
+  Future<PaymentTypeModel> getPaymentTypeById(String id, dynamic token) async {
     Response response;
     PaymentTypeModel result;
     try {
       response = await get(
         Uri.parse('${apiUrl.paymentType}/$id'),
-        headers: configJson.header(),
+        headers: configJson.headerAuth(token),
       );
 
       if (response.statusCode == 200) {
         result = PaymentTypeModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
 
   //post trả về response code 201
   Future<PaymentTypeModel> createPaymentType(
-      PaymentTypeModel paymentTypeModel) async {
+      PaymentTypeModel paymentTypeModel, dynamic token) async {
     Response response;
     PaymentTypeModel result;
     try {
       response = await post(Uri.parse(apiUrl.paymentType),
-          headers: configJson.header(),
+          headers: configJson.headerAuth(token),
           body: jsonEncode(paymentTypeModel.toJson()));
       if (response.statusCode == 201) {
         result = PaymentTypeModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
 
   //put trả về response code 204
   Future<bool> updatePaymentTypeModel(
-      String id, PaymentTypeModel paymentTypeModel) async {
+      String id, PaymentTypeModel paymentTypeModel, dynamic token) async {
     Response response;
     bool result = false;
     try {
       response = await put(
         Uri.parse('${apiUrl.paymentType}/$id'),
-        headers: configJson.header(),
+        headers: configJson.headerAuth(token),
         body: jsonEncode(paymentTypeModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
 
   //delete trả về response code 204
-  Future<bool> deletePaymentType(String id) async {
+  Future<bool> deletePaymentType(String id, dynamic token) async {
     Response response;
     bool result = false;
     try {
       response = await delete(
         Uri.parse('${apiUrl.paymentType}/$id'),
-        headers: configJson.header(),
+        headers: configJson.headerAuth(token),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }

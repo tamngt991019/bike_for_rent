@@ -36,7 +36,8 @@ List<LocationModel> getLocationsByRadius(
 void pushInto(BuildContext context, Widget wg, bool isRightToLeft) {
   Navigator.of(context).pushAndRemoveUntil(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => wg,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            MaterialApp(home: wg),
         transitionDuration: Duration(milliseconds: 750),
         transitionsBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secondaryAnimation, Widget child) {
@@ -53,7 +54,7 @@ void pushInto(BuildContext context, Widget wg, bool isRightToLeft) {
           // return FadeTransition(
           //   opacity: animation,
           //   child: child,
-          // );
+          // ); runApp(MaterialApp(home: Register(currentIndex: 0)));
         },
       ),
       (route) => false);

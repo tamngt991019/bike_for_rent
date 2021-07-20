@@ -61,7 +61,7 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
       bikeTypeList = [];
     }
     Future<List<BikeTypeModel>> futureCases =
-        bikeTypeService.getBikeTypeModels();
+        bikeTypeService.getBikeTypeModels(widget.userModel.token);
     futureCases.then((list) {
       if (this.mounted) {
         setState(() {
@@ -77,7 +77,8 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
     if (_bikeTypeModel == null) {
       this._bikeTypeModel = new BikeTypeModel();
     }
-    Future<BikeTypeModel> futureCases = bikeTypeService.getBikeTypeById(id);
+    Future<BikeTypeModel> futureCases =
+        bikeTypeService.getBikeTypeById(id, widget.userModel.token);
     futureCases.then((model) {
       if (this.mounted) {
         setState(() {
@@ -94,8 +95,8 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
     if (ppkList == null) {
       ppkList = [];
     }
-    Future<List<PayPackageModel>> futureCases =
-        ppkService.getPayPackageModelsByBikeType(bileTypeId);
+    Future<List<PayPackageModel>> futureCases = ppkService
+        .getPayPackageModelsByBikeType(bileTypeId, widget.userModel.token);
     futureCases.then((list) {
       if (this.mounted) {
         setState(() {
@@ -111,7 +112,8 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
     if (_ppkModel == null) {
       this._ppkModel = new PayPackageModel();
     }
-    Future<PayPackageModel> futureCases = ppkService.getPayPackageById(id);
+    Future<PayPackageModel> futureCases =
+        ppkService.getPayPackageById(id, widget.userModel.token);
     futureCases.then((model) {
       if (this.mounted) {
         setState(() {
@@ -128,7 +130,8 @@ class _RentBikeFilterState extends State<RentBikeFilter> {
     if (_locationModel == null) {
       this._locationModel = new LocationModel();
     }
-    Future<LocationModel> futureCases = locService.getLocationById(id);
+    Future<LocationModel> futureCases =
+        locService.getLocationById(id, widget.userModel.token);
     futureCases.then((model) {
       if (this.mounted) {
         setState(() {

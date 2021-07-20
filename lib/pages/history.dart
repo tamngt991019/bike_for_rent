@@ -38,7 +38,8 @@ class _HistoryState extends State<History> {
       bookingList = [];
     }
     Future<List<BookingModel>> futureCases =
-        bookingService.getListCustomerBookingWithBikeFinishedCanceled(username);
+        bookingService.getListCustomerBookingWithBikeFinishedCanceled(
+            username, widget.userModel.token);
     futureCases.then((_bookingList) {
       if (this.mounted) {
         setState(() {
@@ -58,7 +59,8 @@ class _HistoryState extends State<History> {
     if (bikeModel == null) {
       bikeModel = new BikeModel();
     }
-    Future<BikeModel> futureCases = bikeService.getBikeById(id);
+    Future<BikeModel> futureCases =
+        bikeService.getBikeById(id, widget.userModel.token);
     futureCases.then((model) {
       if (this.mounted) {
         setState(() {
@@ -77,7 +79,8 @@ class _HistoryState extends State<History> {
       userModel = null;
       print("null usermodel ở history rồi nè");
     }
-    Future<UserModel> futureCases = userService.getUserById(id);
+    Future<UserModel> futureCases =
+        userService.getUserById(id, widget.userModel.token);
     futureCases.then((_userModel) {
       if (this.mounted) {
         setState(() {
@@ -108,44 +111,48 @@ class _HistoryState extends State<History> {
                 future: loadListCustomerBookingFinishedCanceled(
                     widget.userModel.username),
                 builder: (context, snapshot) {
-                  if (_isHistoryListEmpty) {
-                    return getEmptyScreen("Không có lịch sử cho thuê xe");
-                  }
-                  return SingleChildScrollView(
-                    physics: ScrollPhysics(),
-                    padding:
-                        EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                    child: Column(
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount:
-                              bookingList == null ? 0 : bookingList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return InkWell(
-                              onTap: () => helper.pushInto(
-                                context,
-                                HistoryDetail(
-                                  userModel: widget.userModel,
-                                  bookingModel: bookingList[index],
-                                  isCustomer: true,
-                                ),
-                                true,
+                  return (!snapshot.hasData)
+                      ?
+                      // if (_isHistoryListEmpty) {
+                      getEmptyScreen("Không có lịch sử cho thuê xe")
+                      // }
+                      : SingleChildScrollView(
+                          physics: ScrollPhysics(),
+                          padding: EdgeInsets.only(
+                              left: 10, right: 10, top: 5, bottom: 5),
+                          child: Column(
+                            children: [
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: bookingList == null
+                                    ? 0
+                                    : bookingList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return InkWell(
+                                    onTap: () => helper.pushInto(
+                                      context,
+                                      HistoryDetail(
+                                        userModel: widget.userModel,
+                                        bookingModel: bookingList[index],
+                                        isCustomer: true,
+                                      ),
+                                      true,
+                                    ),
+                                    child: BookingCard(
+                                      bookingModel: bookingList[index],
+                                      bikeModel: bookingList[index].bikeModel,
+                                      isCustomerHistory:
+                                          widget.isCustomerHistory,
+                                      isCustomerHistoryDetail:
+                                          widget.isCustomerHistoryDetail,
+                                    ),
+                                  );
+                                },
                               ),
-                              child: BookingCard(
-                                bookingModel: bookingList[index],
-                                bikeModel: bookingList[index].bikeModel,
-                                isCustomerHistory: widget.isCustomerHistory,
-                                isCustomerHistoryDetail:
-                                    widget.isCustomerHistoryDetail,
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  );
+                            ],
+                          ),
+                        );
                 },
               ),
         // Bottom bar app

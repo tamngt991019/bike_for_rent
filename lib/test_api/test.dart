@@ -1,124 +1,124 @@
-import 'package:bike_for_rent/models/user_model.dart';
-import 'package:bike_for_rent/pages/history.dart';
-import 'package:bike_for_rent/services/user_service.dart';
-import 'package:bike_for_rent/test_api/test_add.dart';
-import 'package:bike_for_rent/test_api/test_detail.dart';
-import 'package:bike_for_rent/widgets/app_bar.dart';
-import 'package:bike_for_rent/widgets/bottom_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
+// import 'package:bike_for_rent/models/user_model.dart';
+// import 'package:bike_for_rent/pages/history.dart';
+// import 'package:bike_for_rent/services/user_service.dart';
+// import 'package:bike_for_rent/test_api/test_add.dart';
+// import 'package:bike_for_rent/test_api/test_detail.dart';
+// import 'package:bike_for_rent/widgets/app_bar.dart';
+// import 'package:bike_for_rent/widgets/bottom_bar.dart';
+// import 'package:flutter/material.dart';
+// import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
 
-class Test extends StatefulWidget {
-  Test({Key key}) : super(key: key);
+// class Test extends StatefulWidget {
+//   Test({Key key}) : super(key: key);
 
-  @override
-  _TestState createState() => _TestState();
-}
+//   @override
+//   _TestState createState() => _TestState();
+// }
 
-class _TestState extends State<Test> {
-  final UserService userApi = new UserService();
+// class _TestState extends State<Test> {
+//   final UserService userApi = new UserService();
 
-  List<UserModel> userList;
+//   List<UserModel> userList;
 
-  Future loadList() {
-    if (userList == null) {
-      userList = [];
-    }
-    Future<List<UserModel>> futureCases = userApi.getUserModels();
-    futureCases.then((_userList) {
-      if (this.mounted) {
-        setState(() {
-          this.userList = _userList;
-          // print(userList.length);
-        });
-      }
-    });
-    return futureCases;
-  }
+//   Future loadList() {
+//     if (userList == null) {
+//       userList = [];
+//     }
+//     Future<List<UserModel>> futureCases = userApi.getUserModels(userModel.token);
+//     futureCases.then((_userList) {
+//       if (this.mounted) {
+//         setState(() {
+//           this.userList = _userList;
+//           // print(userList.length);
+//         });
+//       }
+//     });
+//     return futureCases;
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: my_colors.materialPimary,
-      ),
-      home: Scaffold(
-        // Header app
-        appBar: Appbar(
-            height: 50,
-            titles: "Danh sách người dùng",
-            isShowBackBtn: false,
-            bottomAppBar: null,
-            onPressedBackBtn: () {}),
-        // Body app
-        body: SingleChildScrollView(
-          physics: ScrollPhysics(),
-          child: Column(
-            children: [
-              FutureBuilder(
-                future: loadList(),
-                builder: (context, snapshot) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: userList == null ? 0 : userList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        elevation: 5,
-                        margin: EdgeInsets.all(20),
-                        child: InkWell(
-                          onTap: () {
-                            runApp(UserDetail(usermodel: userList[index]));
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: (userList[index].avatar !=
-                                            null)
-                                        ? NetworkImage(
-                                            "https://media.publit.io/file/BikeForRent/test_avatar.jpg")
-                                        : AssetImage(
-                                            "lib/assets/images/default.png")),
-                                SizedBox(width: 20),
-                                // tên người dùng và sđt
-                                Expanded(
-                                  child: Text(
-                                    userList[index].username,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  runApp(MaterialApp(home: Add()));
-                },
-                child: Text("Test CRUD"),
-              )
-            ],
-          ),
-        ),
-        // Bottom bar app
-        // bottomNavigationBar: BottomBar(
-        //   bottomBarIndex: 3,
-        // ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       theme: ThemeData(
+//         primarySwatch: my_colors.materialPimary,
+//       ),
+//       home: Scaffold(
+//         // Header app
+//         appBar: Appbar(
+//             height: 50,
+//             titles: "Danh sách người dùng",
+//             isShowBackBtn: false,
+//             bottomAppBar: null,
+//             onPressedBackBtn: () {}),
+//         // Body app
+//         body: SingleChildScrollView(
+//           physics: ScrollPhysics(),
+//           child: Column(
+//             children: [
+//               FutureBuilder(
+//                 future: loadList(),
+//                 builder: (context, snapshot) {
+//                   return ListView.builder(
+//                     shrinkWrap: true,
+//                     physics: NeverScrollableScrollPhysics(),
+//                     itemCount: userList == null ? 0 : userList.length,
+//                     itemBuilder: (BuildContext context, int index) {
+//                       return Card(
+//                         shape: RoundedRectangleBorder(
+//                           borderRadius: BorderRadius.circular(15),
+//                         ),
+//                         elevation: 5,
+//                         margin: EdgeInsets.all(20),
+//                         child: InkWell(
+//                           onTap: () {
+//                             runApp(UserDetail(usermodel: userList[index]));
+//                           },
+//                           child: Padding(
+//                             padding: const EdgeInsets.all(10),
+//                             child: Row(
+//                               children: [
+//                                 CircleAvatar(
+//                                     radius: 30,
+//                                     backgroundImage: (userList[index].avatar !=
+//                                             null)
+//                                         ? NetworkImage(
+//                                             "https://media.publit.io/file/BikeForRent/test_avatar.jpg")
+//                                         : AssetImage(
+//                                             "lib/assets/images/bfr_logo.png")),
+//                                 SizedBox(width: 20),
+//                                 // tên người dùng và sđt
+//                                 Expanded(
+//                                   child: Text(
+//                                     userList[index].username,
+//                                     style: TextStyle(
+//                                       fontSize: 20,
+//                                       fontWeight: FontWeight.bold,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ],
+//                             ),
+//                           ),
+//                         ),
+//                       );
+//                     },
+//                   );
+//                 },
+//               ),
+//               ElevatedButton(
+//                 onPressed: () {
+//                   runApp(MaterialApp(home: Add()));
+//                 },
+//                 child: Text("Test CRUD"),
+//               )
+//             ],
+//           ),
+//         ),
+//         // Bottom bar app
+//         // bottomNavigationBar: BottomBar(
+//         //   bottomBarIndex: 3,
+//         // ),
+//       ),
+//     );
+//   }
+// }

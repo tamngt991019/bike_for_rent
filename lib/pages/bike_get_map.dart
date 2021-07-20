@@ -134,8 +134,8 @@ class _BikeGetMapState extends State<BikeGetMap> {
     super.initState();
     if (widget.userModel != null) {
       BookingService bookingService = new BookingService();
-      Future<bool> checkFuture = bookingService
-          .isExistCustomerTrackingBooking(widget.userModel.username);
+      Future<bool> checkFuture = bookingService.isExistCustomerTrackingBooking(
+          widget.userModel.username, widget.userModel.token);
       checkFuture.then((check) {
         if (check) {
           Navigator.of(context).pushAndRemoveUntil(
@@ -163,8 +163,9 @@ class _BikeGetMapState extends State<BikeGetMap> {
     if (locList == null) {
       locList = [];
     }
-    Future<List<LocationModel>> futureCases = locService
-        .getLocationsWithLatLngAndDistacne(currentlati, currentLong, radius);
+    Future<List<LocationModel>> futureCases =
+        locService.getLocationsWithLatLngAndDistacne(
+            currentlati, currentLong, radius, widget.userModel.token);
     futureCases.then((list) {
       if (this.mounted) {
         setState(() {
@@ -455,60 +456,63 @@ class _BikeGetMapState extends State<BikeGetMap> {
                   ),
                   builder: (context, snapshot) {
                     return ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: locList == null ? 0 : locList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        LocationModel item = locList[index];
-                        if (!_isLoadListLocation) {
-                          return Center(
-                            child: Text(
-                              "Đang tải . . .",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: my_colors.primary,
-                              ),
-                            ),
-                          );
-                        } else {
-                          return Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            elevation: 5,
-                            margin: EdgeInsets.only(
-                                left: 20, right: 20, top: 5, bottom: 5),
-                            child: InkWell(
-                              onTap: () {
-                                _locationModel = item;
-                                double lati = double.parse(item.latitude);
-                                double long = double.parse(item.longitude);
-                                getLocation(LatLng(lati, long));
-                                Navigator.of(context).pop();
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      'lib/assets/images/location.png',
-                                      scale: 10,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: locList == null ? 0 : locList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          LocationModel item = locList[index];
+                          // if (!_isLoadListLocation) {
+                          return (!snapshot.hasData)
+                              ? Center(
+                                  child: Text(
+                                    "Đang tải . . .",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: my_colors.primary,
                                     ),
-                                    SizedBox(width: 20),
-                                    Expanded(
-                                      child: Text(
-                                        item.name,
-                                        style: TextStyle(fontSize: 15),
+                                  ),
+                                )
+                              // } else {
+                              //   return
+                              : Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  elevation: 5,
+                                  margin: EdgeInsets.only(
+                                      left: 20, right: 20, top: 5, bottom: 5),
+                                  child: InkWell(
+                                    onTap: () {
+                                      _locationModel = item;
+                                      double lati = double.parse(item.latitude);
+                                      double long =
+                                          double.parse(item.longitude);
+                                      getLocation(LatLng(lati, long));
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.all(10),
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            'lib/assets/images/location.png',
+                                            scale: 10,
+                                          ),
+                                          SizedBox(width: 20),
+                                          Expanded(
+                                            child: Text(
+                                              item.name,
+                                              style: TextStyle(fontSize: 15),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
+                                  ),
+                                );
                         }
-                      },
-                    );
+                        // },
+                        );
                   },
                 ),
                 SizedBox(height: 15),
