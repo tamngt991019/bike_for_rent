@@ -92,8 +92,8 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
     if (bookingByBikeIdWithRatingList == null) {
       bookingByBikeIdWithRatingList = [];
     }
-    Future<List<BookingModel>> futureCases =
-        bookingService.getListBookingByBikeIdWithRating(bikeId);
+    Future<List<BookingModel>> futureCases = bookingService
+        .getListBookingByBikeIdWithRating(bikeId, widget.userModel.token);
     futureCases.then((list) {
       if (this.mounted) {
         setState(() {
@@ -111,8 +111,8 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
     if (_bikeModel == null) {
       _bikeModel = new BikeModel();
     }
-    Future<BikeModel> futureCases =
-        bikeService.getBikeByIdWithTypeBrandImagesUser(id);
+    Future<BikeModel> futureCases = bikeService
+        .getBikeByIdWithTypeBrandImagesUser(id, widget.userModel.token);
     futureCases.then((model) {
       if (this.mounted) {
         setState(() {
@@ -156,8 +156,8 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
     if (ownerWithRatingList == null) {
       ownerWithRatingList = [];
     }
-    Future<List<BookingModel>> futureCases =
-        bookingService.getListOwnerBookingWithRating(username);
+    Future<List<BookingModel>> futureCases = bookingService
+        .getListOwnerBookingWithRating(username, widget.userModel.token);
     futureCases.then((list) {
       if (this.mounted) {
         setState(() {
@@ -177,7 +177,8 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
   LocationService locService = new LocationService();
   LatLng _latLing;
   Future getLocationById(String id) {
-    Future<LocationModel> futureCases = locService.getLocationById(id);
+    Future<LocationModel> futureCases =
+        locService.getLocationById(id, widget.userModel.token);
     futureCases.then((model) {
       _latLing =
           LatLng(double.parse(model.latitude), double.parse(model.longitude));
@@ -474,8 +475,8 @@ class _RentBikeDetailState extends State<RentBikeDetail> {
                           payPackageId: widget.payPackageModel.id,
                           eventTypeId: "PROCESSING",
                         );
-                        Future<BookingModel> bookingDuture =
-                            bookingService.createBooking(newBooking);
+                        Future<BookingModel> bookingDuture = bookingService
+                            .createBooking(newBooking, widget.userModel.token);
                         bookingDuture.then((value) {
                           if (value != null) {
                             print("Thuê thành công!");

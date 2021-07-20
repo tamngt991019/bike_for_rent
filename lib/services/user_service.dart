@@ -7,13 +7,13 @@ import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class UserService {
   //get trả về response code 200
-  Future<List<UserModel>> getUserModels() async {
+  Future<List<UserModel>> getUserModels(dynamic token) async {
     Response response;
     List<UserModel> result;
     try {
       response = response = await get(
         Uri.parse(apiUrl.user),
-        headers: configJson.header(),
+        headers: configJson.headerAuth(token),
       );
 
       if (response.statusCode == 200) {
@@ -21,28 +21,28 @@ class UserService {
         result = body.map((dynamic item) => UserModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
 
   //get trả về response code 200
-  Future<UserModel> getUserById(String id) async {
+  Future<UserModel> getUserById(String id, dynamic token) async {
     Response response;
     UserModel result;
     try {
       response = await get(
         Uri.parse('${apiUrl.user}/$id'),
-        headers: configJson.header(),
+        headers: configJson.headerAuth(token),
       );
 
       if (response.statusCode == 200) {
         result = UserModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
@@ -61,8 +61,8 @@ class UserService {
         result = UserModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
@@ -81,47 +81,48 @@ class UserService {
         result = UserModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
 
   //put trả về response code 204
-  Future<bool> updateUserModel(String id, UserModel userModel) async {
+  Future<bool> updateUserModel(
+      String id, UserModel userModel, dynamic token) async {
     Response response;
     bool result = false;
     try {
       response = await put(
         Uri.parse('${apiUrl.user}/$id'),
-        headers: configJson.header(),
+        headers: configJson.headerAuth(token),
         body: jsonEncode(userModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
 
   //delete trả về response code 204
-  Future<bool> deleteUser(String id) async {
+  Future<bool> deleteUser(String id, dynamic token) async {
     Response response;
     bool result = false;
     try {
       response = await delete(
         Uri.parse('${apiUrl.user}/$id'),
-        headers: configJson.header(),
+        headers: configJson.headerAuth(token),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }

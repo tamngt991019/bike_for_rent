@@ -113,9 +113,9 @@ class _PersonalState extends State<Personal> {
                                 setState(() {
                                   _userModel.ownerVerified = true;
                                   userService.updateUserModel(
-                                    _userModel.username,
-                                    _userModel,
-                                  );
+                                      _userModel.username,
+                                      _userModel,
+                                      widget.userModel.token);
                                 });
                               },
                             ),
@@ -207,9 +207,7 @@ class _PersonalState extends State<Personal> {
       }
     });
     Future<bool> checkUpdate = userService.updateUserModel(
-      _userModel.username,
-      _userModel,
-    );
+        _userModel.username, _userModel, widget.userModel.token);
 
     checkUpdate.then((value) {
       if (value) {

@@ -7,13 +7,13 @@ import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class BikeTypeService {
   //get trả về response code 200
-  Future<List<BikeTypeModel>> getBikeTypeModels() async {
+  Future<List<BikeTypeModel>> getBikeTypeModels(dynamic token) async {
     Response response;
     List<BikeTypeModel> result;
     try {
       response = response = await get(
         Uri.parse(apiUrl.bikeType),
-        headers: configJson.header(),
+        headers: configJson.headerAuth(token),
       );
 
       if (response.statusCode == 200) {
@@ -22,86 +22,87 @@ class BikeTypeService {
             body.map((dynamic item) => BikeTypeModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
 
   //get trả về response code 200
-  Future<BikeTypeModel> getBikeTypeById(String id) async {
+  Future<BikeTypeModel> getBikeTypeById(String id, dynamic token) async {
     Response response;
     BikeTypeModel result;
     try {
       response = await get(
         Uri.parse('${apiUrl.bikeType}/$id'),
-        headers: configJson.header(),
+        headers: configJson.headerAuth(token),
       );
 
       if (response.statusCode == 200) {
         result = BikeTypeModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
 
   //post trả về response code 201
-  Future<BikeTypeModel> createBikeType(BikeTypeModel bikeTypeModel) async {
+  Future<BikeTypeModel> createBikeType(
+      BikeTypeModel bikeTypeModel, dynamic token) async {
     Response response;
     BikeTypeModel result;
     try {
       response = await post(Uri.parse(apiUrl.bikeType),
-          headers: configJson.header(),
+          headers: configJson.headerAuth(token),
           body: jsonEncode(bikeTypeModel.toJson()));
       if (response.statusCode == 201) {
         result = BikeTypeModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
 
   //put trả về response code 204
   Future<bool> updateBikeTypeModel(
-      String id, BikeTypeModel bikeTypeModel) async {
+      String id, BikeTypeModel bikeTypeModel, dynamic token) async {
     Response response;
     bool result = false;
     try {
       response = await put(
         Uri.parse('${apiUrl.bikeType}/$id'),
-        headers: configJson.header(),
+        headers: configJson.headerAuth(token),
         body: jsonEncode(bikeTypeModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }
 
   //delete trả về response code 204
-  Future<bool> deleteBikeType(String id) async {
+  Future<bool> deleteBikeType(String id, dynamic token) async {
     Response response;
     bool result = false;
     try {
       response = await delete(
         Uri.parse('${apiUrl.bikeType}/$id'),
-        headers: configJson.header(),
+        headers: configJson.headerAuth(token),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      // throw Exception;
-      print(Exception);
+      throw Exception;
+      // print(Exception);
     }
     return result;
   }

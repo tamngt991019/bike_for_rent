@@ -32,8 +32,8 @@ class _RentBikeManagerState extends State<RentBikeManager> {
     if (bookingHistoryList == null) {
       bookingHistoryList = [];
     }
-    Future<List<BookingModel>> futureCases =
-        bookingService.ownerBookingHistoryList(username);
+    Future<List<BookingModel>> futureCases = bookingService
+        .ownerBookingHistoryList(username, widget.userModel.token);
     futureCases.then((_bookingHistoryList) {
       if (this.mounted) {
         setState(() {
@@ -53,8 +53,8 @@ class _RentBikeManagerState extends State<RentBikeManager> {
     if (bookingProcessingList == null) {
       bookingProcessingList = [];
     }
-    Future<List<BookingModel>> futureCases =
-        bookingService.ownerBookingProcessingList(username);
+    Future<List<BookingModel>> futureCases = bookingService
+        .ownerBookingProcessingList(username, widget.userModel.token);
     futureCases.then((_bookingProcessingList) {
       if (this.mounted) {
         setState(() {
@@ -75,8 +75,8 @@ class _RentBikeManagerState extends State<RentBikeManager> {
     if (bookingAreRentingList == null) {
       bookingAreRentingList = [];
     }
-    Future<List<BookingModel>> futureCases =
-        bookingService.ownerBookingAreRentingList(username);
+    Future<List<BookingModel>> futureCases = bookingService
+        .ownerBookingAreRentingList(username, widget.userModel.token);
     futureCases.then((_bookingAreRentingList) {
       if (this.mounted) {
         setState(() {
@@ -97,8 +97,8 @@ class _RentBikeManagerState extends State<RentBikeManager> {
     if (bookingTrackingList == null) {
       bookingTrackingList = [];
     }
-    Future<List<BookingModel>> futureCases =
-        bookingService.getOwnerBookingsTracking(username);
+    Future<List<BookingModel>> futureCases = bookingService
+        .getOwnerBookingsTracking(username, widget.userModel.token);
     futureCases.then((_bookingTrackingList) {
       if (this.mounted) {
         setState(() {

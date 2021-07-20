@@ -175,9 +175,7 @@ class _LoginState extends State<Login> {
                                     isEmptyUsername == false) {
                                   Future<UserModel> userModelFuture =
                                       UserService().login(
-                                    txtUsername.text,
-                                    txtPassword.text,
-                                  );
+                                          txtUsername.text, txtPassword.text);
                                   userModelFuture.then((value) {
                                     setState(() {
                                       if (value != null) {

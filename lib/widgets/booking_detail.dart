@@ -148,36 +148,43 @@ class _BookingdetailState extends State<Bookingdetail> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Ngày / giờ thuê xe: ",
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                  Expanded(
-                    child: Text(
-                        helper.getDateFormatStr(widget.bookingModel.dateBegin),
-                        style: TextStyle(fontSize: 15)),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Ngày / giờ trả xe: ",
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                  Expanded(
-                    child: Text(
-                        helper.getDateFormatStr(widget.bookingModel.dateEnd),
-                        style: TextStyle(fontSize: 15)),
-                  ),
-                ],
-              ),
+              if (widget.bookingModel.eventTypeId != "CANCELED")
+                Column(
+                  children: [
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Ngày / giờ thuê xe: ",
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                        Expanded(
+                          child: Text(
+                              helper.getDateFormatStr(
+                                  widget.bookingModel.dateBegin),
+                              style: TextStyle(fontSize: 15)),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Ngày / giờ trả xe: ",
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                        Expanded(
+                          child: Text(
+                              helper.getDateFormatStr(
+                                  widget.bookingModel.dateEnd),
+                              style: TextStyle(fontSize: 15)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
             ],
           ),
         if (widget.isCustomerHistory)
@@ -188,7 +195,8 @@ class _BookingdetailState extends State<Bookingdetail> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (widget.isCustomerHistoryDetail)
+                  if (widget.isCustomerHistoryDetail &&
+                      widget.bookingModel.eventTypeId != "CANCELED")
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -215,7 +223,9 @@ class _BookingdetailState extends State<Bookingdetail> {
                         ],
                       ),
                     ),
-                  if (widget.isCustomerHistoryDetail) SizedBox(width: 10),
+                  if (widget.isCustomerHistoryDetail &&
+                      widget.bookingModel.eventTypeId != "CANCELED")
+                    SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -249,7 +259,8 @@ class _BookingdetailState extends State<Bookingdetail> {
               ),
             ],
           ),
-        if (widget.isCustomerHistory)
+        if (widget.isCustomerHistory &&
+            widget.bookingModel.eventTypeId != "CANCELED")
           Column(
             children: [
               SizedBox(height: 20),

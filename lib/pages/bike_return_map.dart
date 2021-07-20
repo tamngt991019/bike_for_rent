@@ -133,8 +133,9 @@ class _BikeReturnMapState extends State<BikeReturnMap> {
     if (locList == null) {
       locList = [];
     }
-    Future<List<LocationModel>> futureCases = locService
-        .getLocationsWithLatLngAndDistacne(currentlati, currentLong, radius);
+    Future<List<LocationModel>> futureCases =
+        locService.getLocationsWithLatLngAndDistacne(
+            currentlati, currentLong, radius, widget.userModel.token);
     futureCases.then((list) {
       if (this.mounted) {
         setState(() {
@@ -267,7 +268,7 @@ class _BikeReturnMapState extends State<BikeReturnMap> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Địa điểm nhận xe: ",
+                                            "Địa điểm trả xe: ",
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.bold,
