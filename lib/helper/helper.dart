@@ -61,13 +61,21 @@ void pushInto(BuildContext context, Widget wg, bool isRightToLeft) {
 
 // kiem tra fill trong
 bool isEmptyText(String value) {
-  if (value.isEmpty) {
+  if (value.isEmpty || value == null) {
     return true;
   } else {
     return false;
   }
 }
 
+bool isPhoneFormatValid(String value) {
+  Pattern pattern = r'(0)[0-9]{9}$';
+  RegExp regex = new RegExp(pattern);
+  if (!regex.hasMatch(value))
+    return false;
+  else
+    return true;
+}
 //tinh gio tinh tien
 // double.parse((result / list.length).toStringAsFixed(1));
 // double daysElapsedSince(DateTime from, DateTime to) {

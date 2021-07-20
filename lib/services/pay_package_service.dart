@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
+import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class PayPackageService {
   //get trả về response code 200
@@ -10,7 +11,10 @@ class PayPackageService {
     Response response;
     List<PayPackageModel> result;
     try {
-      response = response = await get(Uri.parse(apiUrl.payPackage));
+      response = response = await get(
+        Uri.parse(apiUrl.payPackage),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -18,7 +22,8 @@ class PayPackageService {
             body.map((dynamic item) => PayPackageModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -30,7 +35,9 @@ class PayPackageService {
     List<PayPackageModel> result;
     try {
       response = response = await get(
-          Uri.parse('${apiUrl.payPackage}/bikeTypeId?bikeTypeId=$bikeTypeId'));
+        Uri.parse('${apiUrl.payPackage}/bikeTypeId?bikeTypeId=$bikeTypeId'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -38,7 +45,8 @@ class PayPackageService {
             body.map((dynamic item) => PayPackageModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -48,13 +56,17 @@ class PayPackageService {
     Response response;
     PayPackageModel result;
     try {
-      response = await get(Uri.parse('${apiUrl.payPackage}/$id'));
+      response = await get(
+        Uri.parse('${apiUrl.payPackage}/$id'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         result = PayPackageModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -66,15 +78,14 @@ class PayPackageService {
     PayPackageModel result;
     try {
       response = await post(Uri.parse(apiUrl.payPackage),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
+          headers: configJson.header(),
           body: jsonEncode(payPackageModel.toJson()));
       if (response.statusCode == 201) {
         result = PayPackageModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -87,16 +98,15 @@ class PayPackageService {
     try {
       response = await put(
         Uri.parse('${apiUrl.payPackage}/$id'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: configJson.header(),
         body: jsonEncode(payPackageModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -106,12 +116,16 @@ class PayPackageService {
     Response response;
     bool result = false;
     try {
-      response = await delete(Uri.parse('${apiUrl.payPackage}/$id'));
+      response = await delete(
+        Uri.parse('${apiUrl.payPackage}/$id'),
+        headers: configJson.header(),
+      );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
+import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class BikeBrandService {
   //get trả về response code 200
@@ -10,7 +11,10 @@ class BikeBrandService {
     Response response;
     List<BikeBrandModel> result;
     try {
-      response = response = await get(Uri.parse(apiUrl.bikeBrand));
+      response = response = await get(
+        Uri.parse(apiUrl.bikeBrand),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -18,7 +22,8 @@ class BikeBrandService {
             body.map((dynamic item) => BikeBrandModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -28,13 +33,17 @@ class BikeBrandService {
     Response response;
     BikeBrandModel result;
     try {
-      response = await get(Uri.parse('${apiUrl.bikeBrand}/$id'));
+      response = await get(
+        Uri.parse('${apiUrl.bikeBrand}/$id'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         result = BikeBrandModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -44,16 +53,17 @@ class BikeBrandService {
     Response response;
     BikeBrandModel result;
     try {
-      response = await post(Uri.parse(apiUrl.bikeBrand),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(bikeBrandModel.toJson()));
+      response = await post(
+        Uri.parse(apiUrl.bikeBrand),
+        headers: configJson.header(),
+        body: jsonEncode(bikeBrandModel.toJson()),
+      );
       if (response.statusCode == 201) {
         result = BikeBrandModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -66,16 +76,15 @@ class BikeBrandService {
     try {
       response = await put(
         Uri.parse('${apiUrl.bikeBrand}/$id'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: configJson.header(),
         body: jsonEncode(bikeBrandModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -85,12 +94,16 @@ class BikeBrandService {
     Response response;
     bool result = false;
     try {
-      response = await delete(Uri.parse('${apiUrl.bikeBrand}/$id'));
+      response = await delete(
+        Uri.parse('${apiUrl.bikeBrand}/$id'),
+        headers: configJson.header(),
+      );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }

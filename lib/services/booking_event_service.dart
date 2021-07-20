@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
+import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class BookingEventService {
   //get trả về response code 200
@@ -10,7 +11,10 @@ class BookingEventService {
     Response response;
     List<BookingEventModel> result;
     try {
-      response = response = await get(Uri.parse(apiUrl.bookingEvent));
+      response = response = await get(
+        Uri.parse(apiUrl.bookingEvent),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -19,7 +23,8 @@ class BookingEventService {
             .toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -29,13 +34,17 @@ class BookingEventService {
     Response response;
     BookingEventModel result;
     try {
-      response = await get(Uri.parse('${apiUrl.bookingEvent}/$id'));
+      response = await get(
+        Uri.parse('${apiUrl.bookingEvent}/$id'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         result = BookingEventModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -47,15 +56,14 @@ class BookingEventService {
     BookingEventModel result;
     try {
       response = await post(Uri.parse(apiUrl.bookingEvent),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
+          headers: configJson.header(),
           body: jsonEncode(bookingEventModel.toJson()));
       if (response.statusCode == 201) {
         result = BookingEventModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -68,16 +76,15 @@ class BookingEventService {
     try {
       response = await put(
         Uri.parse('${apiUrl.bookingEvent}/$id'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: configJson.header(),
         body: jsonEncode(bookingEventModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -87,12 +94,16 @@ class BookingEventService {
     Response response;
     bool result = false;
     try {
-      response = await delete(Uri.parse('${apiUrl.bookingEvent}/$id'));
+      response = await delete(
+        Uri.parse('${apiUrl.bookingEvent}/$id'),
+        headers: configJson.header(),
+      );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }

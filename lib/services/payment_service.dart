@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
+import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class PaymentService {
   //get trả về response code 200
@@ -10,7 +11,10 @@ class PaymentService {
     Response response;
     List<PaymentModel> result;
     try {
-      response = response = await get(Uri.parse(apiUrl.payment));
+      response = response = await get(
+        Uri.parse(apiUrl.payment),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -18,7 +22,8 @@ class PaymentService {
             body.map((dynamic item) => PaymentModel.fromJson(item)).toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -28,13 +33,17 @@ class PaymentService {
     Response response;
     PaymentModel result;
     try {
-      response = await get(Uri.parse('${apiUrl.payment}/$id'));
+      response = await get(
+        Uri.parse('${apiUrl.payment}/$id'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         result = PaymentModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -45,15 +54,14 @@ class PaymentService {
     PaymentModel result;
     try {
       response = await post(Uri.parse(apiUrl.payment),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
+          headers: configJson.header(),
           body: jsonEncode(paymentModel.toJson()));
       if (response.statusCode == 201) {
         result = PaymentModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -65,16 +73,15 @@ class PaymentService {
     try {
       response = await put(
         Uri.parse('${apiUrl.payment}/$id'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: configJson.header(),
         body: jsonEncode(paymentModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -84,12 +91,16 @@ class PaymentService {
     Response response;
     bool result = false;
     try {
-      response = await delete(Uri.parse('${apiUrl.payment}/$id'));
+      response = await delete(
+        Uri.parse('${apiUrl.payment}/$id'),
+        headers: configJson.header(),
+      );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }

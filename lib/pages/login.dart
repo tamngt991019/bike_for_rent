@@ -8,6 +8,7 @@ import 'package:bike_for_rent/services/user_service.dart';
 import 'package:bike_for_rent/widgets/elevate_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_for_rent/constants/my_colors.dart' as my_colors;
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class Login extends StatefulWidget {
   final int currentIndex;
@@ -41,26 +42,6 @@ class _LoginState extends State<Login> {
       return Personal(userModel: _userModel);
     }
   }
-
-  // void returnPreviousScreen(int index, UserModel userModel) {
-  //   if (index == 0) {
-  //     // helper.pushInto(context, Home(userModel: userModel), false);
-  //     runApp(MaterialApp(home: Home(userModel: userModel)));
-  //   } else if (index == 1) {
-  //     // helper.pushInto(context, RentBikeFilter(userModel: userModel), false);
-  //     runApp(MaterialApp(home: RentBikeFilter(userModel: userModel)));
-  //   } else if (index == 2) {
-  //     runApp(MaterialApp(
-  //         home: History(
-  //       userModel: userModel,
-  //       isCustomerHistory: false,
-  //       isCustomerHistoryDetail: false,
-  //     )));
-  //   } else if (index == 3) {
-  //     // helper.pushInto(context, Personal(userModel: userModel), false);
-  //     runApp(MaterialApp(home: Personal(userModel: userModel)));
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -106,24 +87,22 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-
+                SizedBox(height: 30),
                 Image.asset(
                   "lib/assets/images/bfr_logo.png",
                   width: 200,
                   height: 200,
                   color: Colors.white,
                 ),
-                SizedBox(height: 30),
                 Container(
                   width: MediaQuery.of(context).size.width * .8,
-                  // height: MediaQuery.of(context).size.height * .4,
                   child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
                     elevation: 5,
                     child: Padding(
-                      padding: const EdgeInsets.only(
+                      padding: EdgeInsets.only(
                           left: 20, right: 30, top: 10, bottom: 20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -305,10 +284,14 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                // SignInButton(
-                //   Buttons.Google,
-                //   text: "Sign up with Google",
-                //   onPressed: () {},
+                // SizedBox(
+                //   width: MediaQuery.of(context).size.width * .8,
+                //   height: 45,
+                //   child: SignInButton(
+                //     Buttons.Google,
+                //     text: "Sign up with Google",
+                //     onPressed: () {},
+                //   ),
                 // )
               ],
             ),

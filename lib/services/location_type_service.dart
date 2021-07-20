@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:bike_for_rent/constants/api_url.dart' as apiUrl;
+import 'package:bike_for_rent/constants/config_json.dart' as configJson;
 
 class LocationTypeService {
   //get trả về response code 200
@@ -10,7 +11,10 @@ class LocationTypeService {
     Response response;
     List<LocationTypeModel> result;
     try {
-      response = response = await get(Uri.parse(apiUrl.locationType));
+      response = response = await get(
+        Uri.parse(apiUrl.locationType),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
@@ -19,7 +23,8 @@ class LocationTypeService {
             .toList();
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -29,13 +34,17 @@ class LocationTypeService {
     Response response;
     LocationTypeModel result;
     try {
-      response = await get(Uri.parse('${apiUrl.locationType}/$id'));
+      response = await get(
+        Uri.parse('${apiUrl.locationType}/$id'),
+        headers: configJson.header(),
+      );
 
       if (response.statusCode == 200) {
         result = LocationTypeModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -47,15 +56,14 @@ class LocationTypeService {
     LocationTypeModel result;
     try {
       response = await post(Uri.parse(apiUrl.locationType),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
+          headers: configJson.header(),
           body: jsonEncode(locationTypeModel.toJson()));
       if (response.statusCode == 201) {
         result = LocationTypeModel.fromJson(json.decode(response.body));
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -68,16 +76,15 @@ class LocationTypeService {
     try {
       response = await put(
         Uri.parse('${apiUrl.locationType}/$id'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: configJson.header(),
         body: jsonEncode(locationTypeModel.toJson()),
       );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
@@ -87,12 +94,16 @@ class LocationTypeService {
     Response response;
     bool result = false;
     try {
-      response = await delete(Uri.parse('${apiUrl.locationType}/$id'));
+      response = await delete(
+        Uri.parse('${apiUrl.locationType}/$id'),
+        headers: configJson.header(),
+      );
       if (response.statusCode == 204) {
         result = true;
       }
     } catch (Exception) {
-      throw Exception;
+      // throw Exception;
+      print(Exception);
     }
     return result;
   }
