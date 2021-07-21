@@ -143,7 +143,7 @@ class _TrackingBookingState extends State<TrackingBooking> {
     return futureCase;
   }
 
-  bool _isUpdateBookingSuccess = false;
+  // bool _isUpdateBookingSuccess = false;
   void updateBookingEventType(BookingModel model) {
     Future<bool> futureCase = bookingService.updateBookingModel(
         model.id, model, widget.userModel.token);
@@ -156,15 +156,11 @@ class _TrackingBookingState extends State<TrackingBooking> {
             my_colors.danger,
           );
         } else {
-          BookingEventModel beModel = BookingEventModel(
-            bookingId: model.id,
-            eventTypeId: model.id,
-          );
-          createBookingEvent(beModel);
-          if (model.eventTypeId == "PAYING" ||
-              model.eventTypeId == "FINISHED") {
-            _isUpdateBookingSuccess = true;
-          }
+          // BookingEventModel beModel = BookingEventModel(
+          //   bookingId: model.id,
+          //   eventTypeId: model.id,
+          // );
+          // createBookingEvent(beModel);
         }
       }
     });
@@ -252,21 +248,28 @@ class _TrackingBookingState extends State<TrackingBooking> {
   }
 
   Position _currentPosition;
-  void getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
+  Future<Position> getCurrentLocation() async {
+    return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    setState(() {
-      _currentPosition = position;
-    });
+    // setState(() {
+    //   _currentPosition = position;
+    // });
   }
 
   BookingEventService bookingEventService = new BookingEventService();
   // BookingEventModel bookingEventModel;
   // bool _isCreateBookingEventSuccess = false;
   void createBookingEvent(BookingEventModel model) {
-    getCurrentLocation();
-    model.latitude = _currentPosition.latitude.toString();
-    model.longtitude = _currentPosition.longitude.toString();
+    getCurrentLocation().then((value) {
+      model.latitude = value.latitude.toString();
+      model.longtitude = value.longitude.toString();
+    });
+
+    print("Vô nè !!!!!!!!!!!!!!!!!!!!!!!!!");
+    print(model.bookingId);
+    print(model.eventTypeId);
+
+    print("Vô nè !!!!!!!!!!!!!!!!!!!!!!!!!");
     Future<BookingEventModel> futuresCase =
         bookingEventService.createBookingEvent(model, widget.userModel.token);
     futuresCase.then((_model) {
@@ -278,7 +281,19 @@ class _TrackingBookingState extends State<TrackingBooking> {
             my_colors.danger,
           );
         } else {
-          // _isCreateBookingEventSuccess = true;
+          print("Vô nè ok nè !!!!!!!!!!!!!!!!!!!!!!!!!");
+          if (mainBooking.eventTypeId == "PAYING" ||
+              mainBooking.eventTypeId == "FINISHED") {
+            helper.pushInto(
+              context,
+              Rating(
+                userModel: widget.userModel,
+                bookingModel: mainBooking,
+              ),
+              true,
+            );
+            // _isUpdateBookingSuccess = true;
+          }
         }
       }
     });
@@ -1065,18 +1080,18 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                                       "PAYING";
                                                   updateBookingEventType(
                                                       tmpModel);
-                                                  if (_isUpdateBookingSuccess) {
-                                                    helper.pushInto(
-                                                      context,
-                                                      Rating(
-                                                        userModel:
-                                                            widget.userModel,
-                                                        bookingModel:
-                                                            mainBooking,
-                                                      ),
-                                                      true,
-                                                    );
-                                                  }
+                                                  // if (_isUpdateBookingSuccess) {
+                                                  //   helper.pushInto(
+                                                  //     context,
+                                                  //     Rating(
+                                                  //       userModel:
+                                                  //           widget.userModel,
+                                                  //       bookingModel:
+                                                  //           mainBooking,
+                                                  //     ),
+                                                  //     true,
+                                                  //   );
+                                                  // }
                                                   // });
                                                 }
                                               });
@@ -1191,16 +1206,16 @@ class _TrackingBookingState extends State<TrackingBooking> {
                                             setState(() {
                                               updateBikeIsBooking(
                                                   false, tmpModel);
-                                              if (_isUpdateBookingSuccess) {
-                                                helper.pushInto(
-                                                  context,
-                                                  Rating(
-                                                    userModel: widget.userModel,
-                                                    bookingModel: mainBooking,
-                                                  ),
-                                                  true,
-                                                );
-                                              }
+                                              // if (_isUpdateBookingSuccess) {
+                                              //   helper.pushInto(
+                                              //     context,
+                                              //     Rating(
+                                              //       userModel: widget.userModel,
+                                              //       bookingModel: mainBooking,
+                                              //     ),
+                                              //     true,
+                                              //   );
+                                              // }
                                             });
                                           },
                                         )

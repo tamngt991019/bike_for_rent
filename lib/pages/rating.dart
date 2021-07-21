@@ -100,16 +100,19 @@ class _RatingState extends State<Rating> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    "Đánh giá " +
-                                        ((widget.userModel.username ==
-                                                mainBooking.userName)
-                                            ? "chủ xe và dịch vụ"
-                                            : "khách hàng"),
-                                    style: TextStyle(
-                                      fontSize: 45,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                  Expanded(
+                                    child: Text(
+                                      "Đánh giá " +
+                                          ((widget.userModel.username ==
+                                                  mainBooking.userName)
+                                              ? "chủ xe và dịch vụ"
+                                              : "khách hàng"),
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ],
