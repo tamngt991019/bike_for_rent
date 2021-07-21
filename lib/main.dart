@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 void main() {
   // HttpOverrides.global = new MyHttpOverrides();
-  runApp(MaterialApp(home: Rating()));
+  runApp(MaterialApp(home: Home()));
 }
 
 // class MyHttpOverrides extends HttpOverrides {
