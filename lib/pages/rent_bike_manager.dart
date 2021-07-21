@@ -116,26 +116,6 @@ class _RentBikeManagerState extends State<RentBikeManager> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // if (widget.userModel != null) {
-    //   BookingService bookingService = new BookingService();
-    //   Future<bool> checkFuture =
-    //       bookingService.isExistOwnerTrackingBooking(widget.userModel.username);
-    //   checkFuture.then((check) {
-    //     if (check) {
-    //       Navigator.of(context).pushAndRemoveUntil(
-    //         MaterialPageRoute(
-    //           builder: (BuildContext context) => TrackingBooking(
-    //             userModel: widget.userModel,
-    //             isCustomer: false,
-    //             isShowBackBtn: false,
-    //             tabIndex: 0,
-    //           ),
-    //         ),
-    //         (route) => false,
-    //       );
-    //     }
-    //   });
-    // }
   }
 
   @override
@@ -202,8 +182,6 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                                   isRenting: false,
                                   isHistory: false,
                                   isTracking: false,
-                                  isShowNoti:
-                                      (!_isTrackingListEmpty) ? true : false,
                                 );
                               },
                             ),
@@ -246,7 +224,6 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                                   isRenting: false,
                                   isHistory: false,
                                   isTracking: true,
-                                  isShowNoti: false,
                                 );
                               },
                             ),
@@ -289,7 +266,6 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                                   isRenting: true,
                                   isHistory: false,
                                   isTracking: false,
-                                  isShowNoti: false,
                                 );
                               },
                             ),
@@ -330,7 +306,6 @@ class _RentBikeManagerState extends State<RentBikeManager> {
                                   isRenting: false,
                                   isHistory: true,
                                   isTracking: false,
-                                  isShowNoti: false,
                                 );
                               },
                             ),

@@ -24,9 +24,9 @@ class _RatingState extends State<Rating> {
   final ratingContent = TextEditingController();
   bool _isEmptyContent = true;
   String errorStr = "";
-  BookingModel _bookingModel;
+
   BookingService bookingService = new BookingService();
-  void updateBookingEventType(BookingModel model) {
+  void updateBookingRating(BookingModel model) {
     Future<bool> futureCase = bookingService.updateBookingModel(
         model.id, model, widget.userModel.token);
     futureCase.then((isUpdateSuccess) {
@@ -45,14 +45,15 @@ class _RatingState extends State<Rating> {
     });
   }
 
+  BookingModel mainBooking;
   Future getBookingById(String id) async {
-    if (_bookingModel == null) {
-      _bookingModel = new BookingModel();
+    if (mainBooking == null) {
+      mainBooking = new BookingModel();
     }
     Future<BookingModel> futureCase =
         bookingService.getBookingById(id, widget.userModel.token);
     futureCase.then((model) {
-      _bookingModel = model;
+      mainBooking = model;
     });
     return futureCase;
   }
@@ -72,121 +73,156 @@ class _RatingState extends State<Rating> {
           // Header app
           appBar: AppBar(toolbarHeight: 0),
           // Body app
-          body:
-              // // FutureBuilder(
-              // //   future: (widget.isCustomer)
-              // //       ? loadListCustomerTrackingBooking()
-              // //       : getOwnerTrackingBookingById(),
-              //   builder: (context, snapshot) {
-              // if (!_isLoadThisScreen) {
-              // return
-              Container(
-            height: MediaQuery.of(context).size.height,
-            color: my_colors.primary,
-            child: Center(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    Row(
+          body: FutureBuilder(
+            future: getBookingById(widget.bookingModel.id),
+            builder: (context, snapshot) {
+              return (!snapshot.hasData)
+                  ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Đánh giá",
+                          "Đang tải . . .",
                           style: TextStyle(
-                            fontSize: 45,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            fontSize: 20,
+                            color: my_colors.primary,
                           ),
                         ),
                       ],
-                    ),
-                    SizedBox(height: 10),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      elevation: 5,
-                      child: Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            Column(
-                              children: [
-                                SizedBox(height: 10),
-                                Text(
-                                  errorStr,
-                                  style: TextStyle(fontSize: 15),
-                                )
-                              ],
-                            ),
-                            RatingStars(
-                              value: ratingNum,
-                              onValueChanged: (val) {
-                                setState(() {
-                                  ratingNum = val;
-                                });
-                              },
-                              starBuilder: (index, color) => Icon(
-                                Icons.star,
-                                color: color,
-                                size: 50,
+                    )
+                  : Container(
+                      height: MediaQuery.of(context).size.height,
+                      color: my_colors.primary,
+                      child: Center(
+                        child: SingleChildScrollView(
+                          padding: EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Đánh giá " +
+                                        ((widget.userModel.username ==
+                                                mainBooking.userName)
+                                            ? "chủ xe và dịch vụ"
+                                            : "khách hàng"),
+                                    style: TextStyle(
+                                      fontSize: 45,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              starSize: 50,
-                              starCount: 5,
-                              maxValue: 5,
-                              starSpacing: 5,
-                              valueLabelVisibility: false,
-                              starOffColor: Colors.grey,
-                              starColor: Colors.yellow,
-                            ),
-                            SizedBox(height: 10),
-                            TextField(
-                              controller: ratingContent,
-                              minLines: 1,
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              decoration: InputDecoration(
-                                  labelText: "Nội dung đánh giá"),
-                              style: TextStyle(fontSize: 20),
-                              onChanged: (val) {},
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElavateBtn(
-                                  width: 150,
-                                  title: 'Gửi đánh giá',
-                                  onPressedElavateBtn: () {
-                                    if (ratingNum > 0 &&
-                                        (ratingContent.text.isEmpty == false ||
-                                            ratingContent.text != null)) {
-                                    } else {
-                                      errorStr =
-                                          "Vui lòng nhập sô sao và nội dung đánh giá";
-                                    }
-                                  },
+                              SizedBox(height: 10),
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
-                                SizedBox(width: 20),
-                                OutlineBtn(
-                                    width: 150,
-                                    title: 'Bỏ qua',
-                                    onPressedOutlineBtn: () {}),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                          ],
+                                elevation: 5,
+                                child: Padding(
+                                  padding: EdgeInsets.all(15),
+                                  child: Column(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          SizedBox(height: 10),
+                                          Text(
+                                            errorStr,
+                                            style: TextStyle(fontSize: 15),
+                                          )
+                                        ],
+                                      ),
+                                      RatingStars(
+                                        value: ratingNum,
+                                        onValueChanged: (val) {
+                                          setState(() {
+                                            ratingNum = val;
+                                          });
+                                        },
+                                        starBuilder: (index, color) => Icon(
+                                          Icons.star,
+                                          color: color,
+                                          size: 50,
+                                        ),
+                                        starSize: 50,
+                                        starCount: 5,
+                                        maxValue: 5,
+                                        starSpacing: 5,
+                                        valueLabelVisibility: false,
+                                        starOffColor: Colors.grey,
+                                        starColor: Colors.yellow,
+                                      ),
+                                      SizedBox(height: 10),
+                                      TextField(
+                                        controller: ratingContent,
+                                        minLines: 1,
+                                        keyboardType: TextInputType.multiline,
+                                        maxLines: null,
+                                        decoration: InputDecoration(
+                                            labelText: "Nội dung đánh giá"),
+                                        style: TextStyle(fontSize: 20),
+                                        onChanged: (val) {},
+                                      ),
+                                      SizedBox(height: 20),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          ElavateBtn(
+                                            width: 150,
+                                            title: 'Gửi đánh giá',
+                                            onPressedElavateBtn: () {
+                                              if (ratingNum > 0 &&
+                                                  (ratingContent.text.isEmpty ==
+                                                          false ||
+                                                      ratingContent.text !=
+                                                          null)) {
+                                                if (widget.userModel.username ==
+                                                    mainBooking.userName) {
+                                                  mainBooking.customerRating =
+                                                      ratingNum.toInt();
+                                                  mainBooking.customerReport =
+                                                      ratingContent.text;
+                                                  mainBooking.isCustomerRated =
+                                                      true;
+                                                } else {
+                                                  mainBooking.ownerRating =
+                                                      ratingNum.toInt();
+                                                  mainBooking.ownerReport =
+                                                      ratingContent.text;
+                                                  mainBooking.isOwnerRated =
+                                                      true;
+                                                }
+                                                setState(() {
+                                                  updateBookingRating(
+                                                      mainBooking);
+                                                });
+                                              } else {
+                                                errorStr =
+                                                    "Vui lòng nhập sô sao và nội dung đánh giá";
+                                              }
+                                            },
+                                          ),
+                                          SizedBox(width: 20),
+                                          OutlineBtn(
+                                              width: 150,
+                                              title: 'Bỏ qua',
+                                              onPressedOutlineBtn: () {}),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              // SizedBox(height: 100),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    // SizedBox(height: 100),
-                  ],
-                ),
-              ),
-            ),
-            // );
-            // },
+                    );
+            },
           )
           // Bottom bar app
           // bottomNavigationBar: BottomBar(

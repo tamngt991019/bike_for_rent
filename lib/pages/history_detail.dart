@@ -307,39 +307,38 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                       //"địa chỉ bị null",
                                     ),
                                     //map vị trí trả xe
-                                    Container(
-                                      height: 250,
-                                      child: GoogleMap(
-                                        rotateGesturesEnabled: false,
-                                        scrollGesturesEnabled: false,
-                                        tiltGesturesEnabled: false,
-                                        zoomGesturesEnabled: false,
-                                        initialCameraPosition: CameraPosition(
-                                          target: LatLng(
-                                              double.parse(bookingModelReload
-                                                  .locationReturnBikeModel
-                                                  .latitude),
-                                              double.parse(bookingModelReload
-                                                  .locationReturnBikeModel
-                                                  .longitude)),
-                                          zoom: 13,
-                                        ),
-                                        markers: <Marker>{
-                                          Marker(
-                                            markerId: MarkerId("ID-1"),
-                                            position: LatLng(
-                                                double.parse(bookingModelReload
-                                                    .locationReturnBikeModel
-                                                    .latitude),
-                                                double.parse(bookingModelReload
-                                                    .locationReturnBikeModel
-                                                    .longitude)),
-                                          )
-                                        },
-                                        onMapCreated: onMapCreated,
-                                      ),
-                                    ),
                                   ],
+                                ),
+                              ),
+                              Container(
+                                height: 250,
+                                child: GoogleMap(
+                                  rotateGesturesEnabled: false,
+                                  scrollGesturesEnabled: false,
+                                  tiltGesturesEnabled: false,
+                                  zoomGesturesEnabled: false,
+                                  initialCameraPosition: CameraPosition(
+                                    target: LatLng(
+                                        double.parse(bookingModelReload
+                                            .locationReturnBikeModel.latitude),
+                                        double.parse(bookingModelReload
+                                            .locationReturnBikeModel
+                                            .longitude)),
+                                    zoom: 13,
+                                  ),
+                                  markers: <Marker>{
+                                    Marker(
+                                      markerId: MarkerId("ID-1"),
+                                      position: LatLng(
+                                          double.parse(bookingModelReload
+                                              .locationReturnBikeModel
+                                              .latitude),
+                                          double.parse(bookingModelReload
+                                              .locationReturnBikeModel
+                                              .longitude)),
+                                    )
+                                  },
+                                  onMapCreated: onMapCreated,
                                 ),
                               ),
                               SizedBox(height: 20),
@@ -424,7 +423,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(
+                                padding: EdgeInsets.only(
                                     bottom: 10, left: 10, right: 10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -507,6 +506,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                           ),
                       ],
                     ),
+                    //   ],
+                    // ),
                   );
           },
         ),
