@@ -228,7 +228,8 @@ class _RentingCardState extends State<RentingCard> {
                         ],
                       ),
                     // isHistory
-                    if (widget.isHistory)
+                    if (widget.isHistory &&
+                        widget.bookingModel.eventTypeId != "CANCELED")
                       Column(
                         children: [
                           SizedBox(height: 10),

@@ -343,165 +343,183 @@ class _HistoryDetailState extends State<HistoryDetail> {
                               ),
                               SizedBox(height: 20),
                               // đánh giá của bạn
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: 10, left: 10, right: 10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      widget.isCustomer
-                                          ? "Đánh giá của bạn: "
-                                          : "Đánh giá của khách hàng",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        // avatar
-                                        CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage: NetworkImage(
-                                              "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
+                              if (bookingModelReload.isCustomerRated)
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: 10, left: 10, right: 10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.isCustomer
+                                            ? "Đánh giá của bạn: "
+                                            : "Đánh giá của khách hàng",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        SizedBox(width: 10),
-                                        // tên người dùng và sđt
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              // tên người dùng
-                                              Text(
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          // avatar
+                                          CircleAvatar(
+                                            radius: 20,
+                                            backgroundImage: NetworkImage(
                                                 bookingModelReload
-                                                    .userModel.fullName,
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  for (var i = 0; i < 5; i++)
-                                                    Icon(
-                                                      Icons.star,
-                                                      color: Colors.yellow,
-                                                      size: 25,
-                                                    ),
-                                                ],
-                                              ),
-                                            ],
+                                                    .userModel.avatar),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    // Nội dung đánh giá của bạn
-                                    Row(
-                                      children: [
-                                        FrameText(
-                                          title: "",
-                                          content:
-                                              bookingModelReload.customerReport,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: 10, left: 10, right: 10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      widget.isCustomer
-                                          ? "Đánh giá của chủ xe: "
-                                          : "Đánh giá của bạn",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
+                                          SizedBox(width: 10),
+                                          // tên người dùng và sđt
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                // tên người dùng
+                                                Text(
+                                                  bookingModelReload
+                                                      .userModel.fullName,
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    for (var i = 0;
+                                                        i <
+                                                            bookingModelReload
+                                                                .customerRating;
+                                                        i++)
+                                                      Icon(
+                                                        Icons.star,
+                                                        color: Colors.yellow,
+                                                        size: 25,
+                                                      ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        // avatar
-                                        CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage: NetworkImage(
-                                              "https://media.publit.io/file/BikeForRent/test_avatar.jpg"),
-                                        ),
-                                        SizedBox(width: 10),
-                                        // tên người dùng và sđt
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              // tên người dùng
-                                              Text(
-                                                bookingModelReload.bikeModel
-                                                    .userModel.fullName,
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              SizedBox(height: 5),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  for (var i = 0; i < 5; i++)
-                                                    Icon(
-                                                      Icons.star,
-                                                      color: Colors.yellow,
-                                                      size: 22,
-                                                    ),
-                                                ],
-                                              ),
-                                            ],
+                                      // Nội dung đánh giá của bạn
+                                      Row(
+                                        children: [
+                                          FrameText(
+                                            title: "",
+                                            content: bookingModelReload
+                                                .customerReport,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    // Nội dung đánh giá của bạn
-                                    Row(
-                                      children: [
-                                        FrameText(
-                                          title: "",
-                                          content:
-                                              bookingModelReload.ownerReport,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
+
+                              if (bookingModelReload.isOwnerRated)
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: 10, left: 10, right: 10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.isCustomer
+                                            ? "Đánh giá của chủ xe: "
+                                            : "Đánh giá của bạn",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          // avatar
+                                          CircleAvatar(
+                                            radius: 20,
+                                            backgroundImage: NetworkImage(
+                                                bookingModelReload.bikeModel
+                                                    .userModel.avatar),
+                                          ),
+                                          SizedBox(width: 10),
+                                          // tên người dùng và sđt
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                // tên người dùng
+                                                Text(
+                                                  bookingModelReload.bikeModel
+                                                      .userModel.fullName,
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 5),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    for (var i = 0;
+                                                        i <
+                                                            bookingModelReload
+                                                                .ownerRating;
+                                                        i++)
+                                                      Icon(
+                                                        Icons.star,
+                                                        color: Colors.yellow,
+                                                        size: 22,
+                                                      ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      // Nội dung đánh giá của bạn
+                                      Row(
+                                        children: [
+                                          FrameText(
+                                            title: "",
+                                            content: (bookingModelReload
+                                                        .ownerReport !=
+                                                    null)
+                                                ? bookingModelReload.ownerReport
+                                                : "",
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
                             ],
                           ),
                       ],
