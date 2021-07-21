@@ -295,53 +295,53 @@ class _HistoryDetailState extends State<HistoryDetail> {
                         if (bookingModelReload.eventTypeId != "CANCELED")
                           Column(
                             children: [
-                              Container(
-                                margin: EdgeInsets.only(
-                                    left: 10, right: 10, bottom: 10),
-                                child: Row(
-                                  children: [
-                                    FrameText(
-                                      title: "Địa điểm trả xe",
-                                      content: bookingModelReload
-                                          .locationReturnBikeModel.address,
-                                      //"địa chỉ bị null",
-                                    ),
-                                    //map vị trí trả xe
-                                    Container(
-                                      height: 250,
-                                      child: GoogleMap(
-                                        rotateGesturesEnabled: false,
-                                        scrollGesturesEnabled: false,
-                                        tiltGesturesEnabled: false,
-                                        zoomGesturesEnabled: false,
-                                        initialCameraPosition: CameraPosition(
-                                          target: LatLng(
-                                              double.parse(bookingModelReload
-                                                  .locationReturnBikeModel
-                                                  .latitude),
-                                              double.parse(bookingModelReload
-                                                  .locationReturnBikeModel
-                                                  .longitude)),
-                                          zoom: 13,
-                                        ),
-                                        markers: <Marker>{
-                                          Marker(
-                                            markerId: MarkerId("ID-1"),
-                                            position: LatLng(
-                                                double.parse(bookingModelReload
-                                                    .locationReturnBikeModel
-                                                    .latitude),
-                                                double.parse(bookingModelReload
-                                                    .locationReturnBikeModel
-                                                    .longitude)),
-                                          )
-                                        },
-                                        onMapCreated: onMapCreated,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              // Container(
+                              //   margin: EdgeInsets.only(
+                              //       left: 10, right: 10, bottom: 10),
+                              //   child: Row(
+                              //     children: [
+                              //       FrameText(
+                              //         title: "Địa điểm trả xe",
+                              //         content: bookingModelReload
+                              //             .locationReturnBikeModel.address,
+                              //         //"địa chỉ bị null",
+                              //       ),
+                              //       //map vị trí trả xe
+                              //       Container(
+                              //         height: 250,
+                              //         child: GoogleMap(
+                              //           rotateGesturesEnabled: false,
+                              //           scrollGesturesEnabled: false,
+                              //           tiltGesturesEnabled: false,
+                              //           zoomGesturesEnabled: false,
+                              //           initialCameraPosition: CameraPosition(
+                              //             target: LatLng(
+                              //                 double.parse(bookingModelReload
+                              //                     .locationReturnBikeModel
+                              //                     .latitude),
+                              //                 double.parse(bookingModelReload
+                              //                     .locationReturnBikeModel
+                              //                     .longitude)),
+                              //             zoom: 13,
+                              //           ),
+                              //           markers: <Marker>{
+                              //             Marker(
+                              //               markerId: MarkerId("ID-1"),
+                              //               position: LatLng(
+                              //                   double.parse(bookingModelReload
+                              //                       .locationReturnBikeModel
+                              //                       .latitude),
+                              //                   double.parse(bookingModelReload
+                              //                       .locationReturnBikeModel
+                              //                       .longitude)),
+                              //             )
+                              //           },
+                              //           onMapCreated: onMapCreated,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                               SizedBox(height: 20),
                               // đánh giá của bạn
                               Padding(
@@ -410,13 +410,18 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                         ),
                                       ],
                                     ),
+                                    //
                                     // Nội dung đánh giá của bạn
                                     Row(
                                       children: [
                                         FrameText(
                                           title: "",
-                                          content:
-                                              bookingModelReload.customerReport,
+                                          content: bookingModelReload
+                                                      .customerReport !=
+                                                  null
+                                              ? bookingModelReload
+                                                  .customerReport
+                                              : "Không có đánh giá",
                                         ),
                                       ],
                                     ),
@@ -462,6 +467,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               // tên người dùng
+
                                               Text(
                                                 bookingModelReload.bikeModel
                                                     .userModel.fullName,
@@ -494,10 +500,12 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                     Row(
                                       children: [
                                         FrameText(
-                                          title: "",
-                                          content:
-                                              bookingModelReload.ownerReport,
-                                        ),
+                                            title: "",
+                                            content: bookingModelReload
+                                                        .ownerReport !=
+                                                    null
+                                                ? bookingModelReload.ownerReport
+                                                : "Không có đánh giá"),
                                       ],
                                     ),
                                   ],
