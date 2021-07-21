@@ -16,7 +16,7 @@ class ElavateBtn extends StatelessWidget {
       child: ElevatedButton(
         child: Text(
           title,
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 18),
         ),
         style: ButtonStyle(
             shape: MaterialStateProperty.all(RoundedRectangleBorder(

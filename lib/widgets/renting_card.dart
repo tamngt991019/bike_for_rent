@@ -11,7 +11,6 @@ class RentingCard extends StatefulWidget {
   final bool isRenting;
   final bool isHistory;
   final bool isTracking;
-  final bool isShowNoti;
   const RentingCard({
     Key key,
     this.bookingModel,
@@ -20,7 +19,6 @@ class RentingCard extends StatefulWidget {
     this.isRenting,
     this.isHistory,
     this.isTracking,
-    this.isShowNoti,
   }) : super(key: key);
 
   @override
@@ -32,15 +30,7 @@ class _RentingCardState extends State<RentingCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (!widget.isShowNoti) {
-          helper.pushInto(context, widget.wg, true);
-        } else {
-          showNotificationDialog(
-            "Thông báo!",
-            "Vui lòng hoàn thành các yêu cầu đang xử lý trước khi nhận yêu cầu mới",
-            my_colors.primary,
-          );
-        }
+        helper.pushInto(context, widget.wg, true);
       },
       child: Card(
         margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),

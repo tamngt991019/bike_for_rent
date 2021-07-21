@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bike_for_rent/models/booking_event_model.dart';
 import 'package:bike_for_rent/models/booking_model.dart';
 import 'package:bike_for_rent/models/location_model.dart';
 import 'package:bike_for_rent/models/payment_model.dart';
@@ -9,6 +10,7 @@ import 'package:bike_for_rent/pages/home.dart';
 import 'package:bike_for_rent/pages/rating.dart';
 import 'package:bike_for_rent/pages/rent_bike_manager.dart';
 import 'package:bike_for_rent/services/bike_service.dart';
+import 'package:bike_for_rent/services/booking_event_service.dart';
 import 'package:bike_for_rent/services/booking_service.dart';
 import 'package:bike_for_rent/services/location_service.dart';
 import 'package:bike_for_rent/services/payment_service.dart';
@@ -27,6 +29,7 @@ import 'package:bike_for_rent/helper/helper.dart' as helper;
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // import 'package:dropdown_plus/dropdown_plus.dart';
@@ -149,10 +152,15 @@ class _TrackingBookingState extends State<TrackingBooking> {
         if (!isUpdateSuccess) {
           showNotificationDialog(
             "Cảnh bảo!",
-            "Thao tác thất bại, vui lòng thử lại! update even type",
+            "Thao tác thất bại, vui lòng thử lại!",
             my_colors.danger,
           );
         } else {
+          BookingEventModel beModel = BookingEventModel(
+            bookingId: model.id,
+            eventTypeId: model.id,
+          );
+          createBookingEvent(beModel);
           if (model.eventTypeId == "PAYING" ||
               model.eventTypeId == "FINISHED") {
             _isUpdateBookingSuccess = true;
@@ -189,9 +197,9 @@ class _TrackingBookingState extends State<TrackingBooking> {
   void createPayment(PaymentModel model) {
     Future<PaymentModel> futureCase =
         paymentService.createPayment(model, widget.userModel.token);
-    futureCase.then((model) {
+    futureCase.then((_model) {
       if (this.mounted) {
-        if (model != null) {
+        if (_model != null) {
           _isCreatePaymentSuccess = true;
         } else {
           showNotificationDialog(
@@ -241,6 +249,39 @@ class _TrackingBookingState extends State<TrackingBooking> {
       }
     });
     return null;
+  }
+
+  Position _currentPosition;
+  void getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _currentPosition = position;
+    });
+  }
+
+  BookingEventService bookingEventService = new BookingEventService();
+  // BookingEventModel bookingEventModel;
+  // bool _isCreateBookingEventSuccess = false;
+  void createBookingEvent(BookingEventModel model) {
+    getCurrentLocation();
+    model.latitude = _currentPosition.latitude.toString();
+    model.longtitude = _currentPosition.longitude.toString();
+    Future<BookingEventModel> futuresCase =
+        bookingEventService.createBookingEvent(model, widget.userModel.token);
+    futuresCase.then((_model) {
+      if (this.mounted) {
+        if (_model == null) {
+          showNotificationDialog(
+            "Cảnh bảo!",
+            "Thao tác thất bại, vui lòng thử lại!",
+            my_colors.danger,
+          );
+        } else {
+          // _isCreateBookingEventSuccess = true;
+        }
+      }
+    });
   }
 
   @override
